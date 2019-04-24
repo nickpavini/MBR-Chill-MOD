@@ -5,7 +5,7 @@
 ; Parameters ....: NA
 ; Return values .: NA
 ; Author ........:
-; Modified ......: CodeSlinger69 (01-2018)
+; Modified ......: CodeSlinger69 (01-2018), Chilly-Chill (04-2019)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -333,6 +333,20 @@ EndFunc   ;==>SaveConfig_600_1
 Func SaveConfig_600_6()
 	; <><><><> Village / Misc <><><><>
 	ApplyConfig_600_6(GetApplyConfigSaveAction())
+
+	;-------------------------------------------------------
+	; MOD
+	;-------------------------------------------------------
+	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
+	_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
+	_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
+	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
+	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
+	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+	;-------------------------------------------------------
+	; MOD End.
+	;-------------------------------------------------------
+
 	_Ini_Add("general", "BotStop", $g_bChkBotStop ? 1 : 0)
 	_Ini_Add("general", "Command", $g_iCmbBotCommand)
 	_Ini_Add("general", "Cond", $g_iCmbBotCond)

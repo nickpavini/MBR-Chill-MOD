@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: MyBot.run team
-; Modified ......:
+; Modified ......: Chilly-Chill (04-2019)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -589,6 +589,39 @@ Func ChkTreasuryCollect()
 		GUICtrlSetState($g_hTxtTreasuryDark, $GUI_DISABLE)
 	EndIf
 EndFunc   ;==>ChkTreasuryCollect
+
+;--------------------------------------------------------------
+; MOD
+;--------------------------------------------------------------
+
+Func chkEnableBBAttack()
+	If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
+		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
+		chkBBTrophyRange()
+	Else
+		GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
+		GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
+	EndIf
+EndFunc
+
+Func chkBBTrophyRange()
+	If GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED Then
+		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_ENABLE)
+		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
+		GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
+	EndIf
+EndFunc
+
+;--------------------------------------------------------------
+; MOD End.
+;--------------------------------------------------------------
 
 Func chkStartClockTowerBoost()
 	If GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED Then

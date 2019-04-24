@@ -1128,6 +1128,21 @@ Func QuickAttack()
 
 EndFunc   ;==>QuickAttack
 
+; #FUNCTION# ====================================================================================================================
+; Name ..........: _RunFunction
+; Description ...: Runs a particular bot action or set of actions.
+; Syntax ........:
+; Parameters ....: $action; Case to run
+; Return values .: None
+; Author ........:
+; Modified ......: Chilly-Chill (04-2019)
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2017
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
 Func _RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
 	Switch $action
@@ -1230,7 +1245,7 @@ Func _RunFunction($action)
 			UpgradeWall()
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
-			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades) And SwitchBetweenBases()) Then
+			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
 				$g_bOnBuilderBase = True
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then Return
@@ -1240,6 +1255,17 @@ Func _RunFunction($action)
 				CollectBuilderBase()
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then Return
+
+				;-------------------------------------------------------
+				; MOD
+				;-------------------------------------------------------
+				AttackBB()
+				If _Sleep($DELAYRUNBOT3) Then Return
+				If $g_bRestart = True Then Return
+				;-------------------------------------------------------
+				; MOD End
+				;-------------------------------------------------------
+
 				StartClockTowerBoost()
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then Return

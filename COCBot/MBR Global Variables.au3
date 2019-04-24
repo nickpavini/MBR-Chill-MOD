@@ -936,6 +936,22 @@ Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0,
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
+;--------------------------------------------------------------
+; MOD
+;--------------------------------------------------------------
+
+Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0
+Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
+Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
+Global $g_bBBMachineReady = False
+Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar
+Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
+Global $g_iBBBattleStartedTimeout = 60000 ; 60 seconds before we cancel the BB search
+
+;--------------------------------------------------------------
+; MOD End
+;--------------------------------------------------------------
+
 Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
 
 ; <><><><> Village / Achievements <><><><>

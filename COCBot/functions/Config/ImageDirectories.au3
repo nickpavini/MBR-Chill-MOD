@@ -10,6 +10,7 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
+#include "..\..\Chill-MOD\functions\Config\ImageDirectories.au3" ; Chill MOD
 
 Global $g_sImgImgLocButtons = @ScriptDir & "\imgxml\imglocbuttons"
 
@@ -50,22 +51,6 @@ Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase*"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
-
-;--------------------------------------------------------------
-; MOD
-;--------------------------------------------------------------
-Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBMachReady_0_90.bmp"
-Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.bmp"
-Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBTroopsTraining_0_90.bmp"
-Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleStarted\BBBattleStarted_0_90.bmp"
-Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
-Global $g_sImgOkButton = @ScriptDir & "\imgxml\MOD\OkayButton\OkayButton_0_90.bmp"
-Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\BBTroops"
-
-
-;--------------------------------------------------------------
-; MOD End.
-;--------------------------------------------------------------
 #EndRegion
 
 #Region DonateCC

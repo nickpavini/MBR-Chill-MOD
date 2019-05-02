@@ -155,7 +155,7 @@ Func Okay()
 			Return True
 		EndIf
 
-		If __TimerDiff($timer) >= 120000 Then
+		If __TimerDiff($timer) >= 180000 Then
 			SetLog("Could not find button 'Okay'", $COLOR_ERROR)
 			If $g_bDebugImageSave Then DebugImageSave("BBFindOkay")
 			Return False

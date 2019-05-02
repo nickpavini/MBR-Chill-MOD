@@ -297,22 +297,12 @@
 #include "functions\Village\BuilderBase\CleanBBYard.au3"
 #include "functions\Village\BuilderBase\StarLaboratory.au3"
 
-;-------------------------------------------------------
-; MOD
-;-------------------------------------------------------
-
-#include "functions\Village\BuilderBase\PrepareAttackBB.au3"
-#include "functions\Village\BuilderBase\AttackBB.au3"
-#include "functions\Village\BuilderBase\GetAttackBarBB.au3"
-
-
-;-------------------------------------------------------
-; MOD
-;-------------------------------------------------------
-
 #include "functions\Other\Api.au3"
 #include "functions\Other\ApiClient.au3"
 #include "functions\Other\ForumAuthentication.au3"
+
+; Chill MOD
+#include "Chill-MOD\Functions_Chill_MOD.au3"
 
 ; moved to the end to avoid any global declare issues
 #include "functions\Config\profileFunctions.au3"

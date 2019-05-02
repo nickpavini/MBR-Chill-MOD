@@ -20,21 +20,32 @@ Func PrepareAttackBB()
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")
 			SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
+			_Sleep(1500)
 			Return False
 		EndIf
 	EndIf
 
 	If Not ClickAttack() Then Return False
 
-	If Not CheckArmyReady() Then Return False
+	If Not CheckArmyReady() Then
+		_Sleep(1500)
+		ClickP($aAway)
+		Return False
+	EndIf
 
 	If $g_bChkBBAttIfLootAvail Then
-		If Not CheckLootAvail() Then Return False
+		If Not CheckLootAvail() Then
+			_Sleep(1500)
+			ClickP($aAway)
+			Return False
+		EndIf
 	EndIf
 
 	$g_bBBMachineReady = CheckMachReady()
 	If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
 		SetLog("Battle Machine is not ready.")
+		_Sleep(1500)
+		ClickP($aAway)
 		Return False
 	EndIf
 

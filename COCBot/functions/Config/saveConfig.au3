@@ -241,6 +241,8 @@ Func SaveRegularConfig()
 	SaveConfig_600_56()
 	; <><><> Attack Plan / Train Army / Options <><><>
 	SaveConfig_641_1()
+	; <><><> Chill MOD <><><>
+	SaveConfig_MOD()
 	; <><><><> Bot / Debug <><><><>
 	SaveConfig_Debug()
 	; <><><><> Attack Plan / Strategies <><><><>
@@ -333,19 +335,6 @@ EndFunc   ;==>SaveConfig_600_1
 Func SaveConfig_600_6()
 	; <><><><> Village / Misc <><><><>
 	ApplyConfig_600_6(GetApplyConfigSaveAction())
-
-	;-------------------------------------------------------
-	; MOD
-	;-------------------------------------------------------
-	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
-	_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
-	_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
-	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
-	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
-	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
-	;-------------------------------------------------------
-	; MOD End.
-	;-------------------------------------------------------
 
 	_Ini_Add("general", "BotStop", $g_bChkBotStop ? 1 : 0)
 	_Ini_Add("general", "Command", $g_iCmbBotCommand)

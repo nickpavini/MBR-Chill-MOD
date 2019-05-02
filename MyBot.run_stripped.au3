@@ -5896,6 +5896,12 @@ Local $aResult = DllCall("kernel32.dll", "bool", "QueryPerformanceFrequency", "i
 If @error Then Return SetError(@error, @extended, 0)
 Return SetExtended($aResult[0], $aResult[1])
 EndFunc
+Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0
+Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
+Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
+Global $g_bBBMachineReady = False
+Global $g_iBBMachAbilityTime = 14000
+Global $g_iBBBattleStartedTimeout = 300000
 Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
@@ -6419,12 +6425,6 @@ Global $g_aUpgradeResourceCostDuration[3] = ["", "", ""]
 Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0, $g_iChkBBSuggestedUpgradesIgnoreElixir = 0, $g_iChkBBSuggestedUpgradesIgnoreHall = 0
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bOnBuilderBase = False
-Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0
-Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
-Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
-Global $g_bBBMachineReady = False
-Global $g_iBBMachAbilityTime = 14000
-Global $g_iBBBattleStartedTimeout = 60000
 Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5
 Global $g_iUnbrkMinGold = 50000, $g_iUnbrkMinElixir = 50000, $g_iUnbrkMaxGold = 600000, $g_iUnbrkMaxElixir = 600000, $g_iUnbrkMinDark = 5000, $g_iUnbrkMaxDark = 6000
@@ -7391,6 +7391,13 @@ Global $aLanguageOkay[4] = [510, 420 + $g_iMidOffsetY, 0x6FBD1F, 20]
 Global Const $aPersonalChallengeOpenButton1[4] = [149, 631 + $g_iBottomOffsetY, 0xB5CEE4, 20]
 Global Const $aPersonalChallengeOpenButton2[4] = [149, 631 + $g_iBottomOffsetY, 0xFDE575, 20]
 Global Const $aPersonalChallengeCloseButton[4] = [813, 51 + $g_iMidOffsetY, 0xF51D1E, 20]
+Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBMachReady_0_90.bmp"
+Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.bmp"
+Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBTroopsTraining_0_90.bmp"
+Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleStarted\BBBattleStarted_0_90.bmp"
+Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
+Global $g_sImgOkButton = @ScriptDir & "\imgxml\MOD\OkayButton\OkayButton_0_90.bmp"
+Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\BBTroops"
 Global $g_sImgImgLocButtons = @ScriptDir & "\imgxml\imglocbuttons"
 Global Const $g_sImgAnyoneThere = @ScriptDir & "\imgxml\other\AnyoneThere[[Android]]*"
 Global Const $g_sImgPersonalBreak = @ScriptDir & "\imgxml\other\break*"
@@ -7421,13 +7428,6 @@ Global $g_sImgCleanBBYard = @ScriptDir & "\imgxml\Resources\ObstaclesBB"
 Global $g_sImgIsOnBB = @ScriptDir & "\imgxml\village\Page\BuilderBase*"
 Global $g_sImgStarLaboratory = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLaboratory"
 Global $g_sImgStarLabElex = @ScriptDir & "\imgxml\Resources\BuildersBase\StarLabElex\StarLabElex*"
-Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBMachReady_0_90.bmp"
-Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.bmp"
-Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBTroopsTraining_0_90.bmp"
-Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleStarted\BBBattleStarted_0_90.bmp"
-Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
-Global $g_sImgOkButton = @ScriptDir & "\imgxml\MOD\OkayButton\OkayButton_0_90.bmp"
-Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\BBTroops"
 Global $g_sImgDonateTroops = @ScriptDir & "\imgxml\DonateCC\Troops\"
 Global $g_sImgDonateSpells = @ScriptDir & "\imgxml\DonateCC\Spells\"
 Global $g_sImgDonateSiege = @ScriptDir & "\imgxml\DonateCC\SiegeMachines\"
@@ -67166,250 +67166,6 @@ EndIf
 SetLog("Can not find Star Laboratory.", $COLOR_ERROR)
 Return False
 EndFunc
-Func PrepareAttackBB()
-If Not $g_bChkEnableBBAttack Then Return
-If $g_bChkBBTrophyRange Then
-If($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
-SetLog("Trophies out of range.")
-SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
-Return False
-EndIf
-EndIf
-If Not ClickAttack() Then Return False
-If Not CheckArmyReady() Then Return False
-If $g_bChkBBAttIfLootAvail Then
-If Not CheckLootAvail() Then Return False
-EndIf
-$g_bBBMachineReady = CheckMachReady()
-If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
-SetLog("Battle Machine is not ready.")
-Return False
-EndIf
-Return True
-EndFunc
-Func ClickAttack()
-local $aColors = [[0xfdd79b, 96, 0], [0xffffff, 20, 50], [0xffffff, 69, 50]]
-Local $ButtonPixel = _MultiPixelSearch(8, 640, 120, 755, 1, 1, Hex(0xeac68c, 6), $aColors, 20)
-local $bRet = False
-If IsArray($ButtonPixel) Then
-SetDebugLog(String($ButtonPixel[0]) & " " & String($ButtonPixel[1]))
-PureClick($ButtonPixel[0] + 25, $ButtonPixel[1] + 25)
-$bRet = True
-Else
-SetLog("Can not find button for Builders Base Attack button", $COLOR_ERROR)
-If $g_bDebugImageSave Then DebugImageSave("BBAttack_ButtonCheck_")
-EndIf
-Return $bRet
-EndFunc
-Func CheckLootAvail()
-local $aColors = [[0x292928, 135, 0], [0x74bd2f, 13, 19], [0x74bd2f, 117, 19]]
-local $bRet = False
-local $aGemButton = _MultiPixelSearch(500, 650, 645, 718, 1, 1, Hex(0x2b2b2a, 6), $aColors, 20)
-If Not IsArray($aGemButton) Then
-$bRet = True
-SetLog("Loot is available.")
-Else
-SetLog("No loot available")
-If $g_bDebugImageSave Then DebugImageSave("CheckLootAvail")
-EndIf
-Return $bRet
-EndFunc
-Func CheckMachReady()
-local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
-local $bRet = False
-If IsArray($aCoords) And UBound($aCoords) = 2 Then
-$bRet = True
-SetLog("Battle Machine ready.")
-Else
-If $g_bDebugImageSave Then DebugImageSave("CheckMachReady")
-EndIf
-Return $bRet
-EndFunc
-Func CheckArmyReady()
-local $i = 0
-local $bReady = True, $bNeedTrain = False, $bTraining = False
-local $sSearchDiamond = GetDiamondFromRect("114,384,190,450")
-If _Sleep($DELAYCHECKFULLARMY2) Then Return False
-While $i < 6 And $bReady
-local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
-local $aTroopsTrainingCoords = decodeSingleCoord(findImage("TroopsTrainingBB", $g_sImgBBTroopsTraining, $sSearchDiamond, 1, False))
-If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
-$bReady = False
-$bNeedTrain = True
-EndIf
-If IsArray($aTroopsTrainingCoords) And UBound($aTroopsTrainingCoords) = 2 Then
-$bReady = False
-$bTraining = True
-EndIf
-$i += 1
-WEnd
-If Not $bReady Then
-SetLog("Army is not ready.")
-If $bTraining Then SetLog("Troops are training.")
-If $bNeedTrain Then SetLog("Troops need to be trained in the training tab.")
-If $g_bDebugImageSave Then DebugImageSave("FindIfArmyReadyBB")
-Else
-SetLog("Army is ready.")
-EndIf
-Return $bReady
-EndFunc
-Func AttackBB()
-local $aTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
-local $aTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
-local $iSide = Random(0, 1, 1)
-ClickP($aAway)
-SetLog("Going to attack.", $COLOR_BLUE)
-If Not PrepareAttackBB() Then Return
-SetDebugLog("PrepareAttackBB(): Success.")
-If _Sleep(2000) Then Return
-local $aBBFindNow = [521, 308, 0xffc246, 30]
-If _CheckPixel($aBBFindNow, True) Then
-PureClick($aBBFindNow[0], $aBBFindNow[1])
-Else
-SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
-Return
-EndIf
-If Not CheckBattleStarted() Then Return
-If _Sleep($DELAYRESPOND) Then Return
-local $aBBAttackBar = GetAttackBarBB()
-If _Sleep($DELAYRESPOND) Then Return
-local $bAttackBarEmpty = False
-while Not $bAttackBarEmpty
-For $i=0 To UBound($aBBAttackBar, 1) - 1
-PureClick($aBBAttackBar[$i][1], 660)
-For $j=0 To $aBBAttackBar[$i][4] - 1
-local $iPoint = Random(0, 9, 1)
-If $iSide Then
-PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
-Else
-PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
-EndIf
-If _Sleep(250) Then Return
-Next
-If _Sleep(1750) Then Return
-Next
-$aBBAttackBar = GetAttackBarBB(True)
-If $aBBAttackBar = "" Then $bAttackBarEmpty = True
-WEnd
-SetLog("All troops deployed")
-local $aBMPos = GetMachinePos()
-If $g_bBBMachineReady And IsArray($aBMPos) Then
-local $bMachineAlive = True
-while $bMachineAlive
-PureClickP($aBMPos)
-local $iPoint = Random(0, 9, 1)
-If $iSide Then
-PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
-Else
-PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
-EndIf
-If _Sleep(500) Then Return
-PureClickP($aBMPos)
-SetLog("Battle Machine Deployed.")
-If _Sleep($g_iBBMachAbilityTime) Then Return
-local $timer = __TimerInit()
-$aBMPos = GetMachinePos()
-While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos)
-$aBMPos = GetMachinePos()
-$i+=1
-WEnd
-If Not IsArray($aBMPos) Then
-$bMachineAlive = False
-EndIf
-WEnd
-EndIf
-SetLog("Waiting for end of battle.")
-If Not Okay() Then Return
-SetLog("Battle Ended.")
-If _Sleep(3000) Then Return
-SetLog("Waiting for opponent.")
-Okay()
-SetLog("Done. Attack was successful.")
-ZoomOut()
-EndFunc
-Func CheckBattleStarted()
-local $sSearchDiamond = GetDiamondFromRect("376,11,420,26")
-local $timer = __TimerInit()
-While 1
-local $aCoords = decodeSingleCoord(findImage("BBBattleStarted", $g_sImgBBBattleStarted, $sSearchDiamond, 1, True))
-If IsArray($aCoords) And UBound($aCoords) = 2 Then
-SetLog("Battle Started")
-Return True
-EndIf
-If __TimerDiff($timer) > $g_iBBBattleStartedTimeout Then
-SetLog("Battle did not start after " & String($g_iBBBattleStartedTimeout) & " seconds.")
-If $g_bDebugImageSave Then DebugImageSave("BBBattleStarted")
-Return False
-EndIf
-WEnd
-EndFunc
-Func GetMachinePos()
-If Not $g_bBBMachineReady Then Return
-local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
-local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
-If IsArray($aCoords) And UBound($aCoords) = 2 Then
-Return $aCoords
-Else
-If $g_bDebugImageSave Then DebugImageSave("BBBattleMachinePos")
-EndIf
-Return
-EndFunc
-Func Okay()
-local $timer = __TimerInit()
-While 1
-local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
-If IsArray($aCoords) And UBound($aCoords) = 2 Then
-PureClickP($aCoords)
-Return True
-EndIf
-If __TimerDiff($timer) >= 120000 Then
-SetLog("Could not find button 'Okay'", $COLOR_ERROR)
-If $g_bDebugImageSave Then DebugImageSave("BBFindOkay")
-Return False
-EndIf
-If Mod(__TimerDiff($timer), 3000) Then
-If _Sleep($DELAYRESPOND) Then Return
-EndIf
-WEnd
-Return True
-EndFunc
-Func GetAttackBarBB($bRemaining = False)
-local $iTroopBanners = 640
-local $iSlotOffset = 73
-local $iBarOffset = 66
-local $aBBAttackBar[0][5]
-local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
-local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
-If UBound($aBBAttackBarResult) = 0 Then
-If Not $bRemaining Then
-SetLog("Error in BBAttackBarCheck(): Search did not return any results!", $COLOR_ERROR)
-DebugImageSave("ErrorBBAttackBarCheck", False, Default, Default, "#1")
-EndIf
-Return ""
-EndIf
-For $i = 0 To UBound($aBBAttackBarResult, 1) - 1
-local $aTroop = $aBBAttackBarResult[$i]
-local $aTempMultiCoords = decodeMultipleCoords($aTroop[1])
-For $j=0 To UBound($aTempMultiCoords, 1) - 1
-local $aTempCoords = $aTempMultiCoords[$j]
-If UBound($aTempCoords) < 2 Then ContinueLoop
-local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
-local $iCount = Number(getTroopCountSmall($aTempCoords[0], $iTroopBanners))
-If $iCount == 0 Then $iCount = Number(getTroopCountBig($aTempCoords[0], $iTroopBanners-2))
-If $iCount == 0 Then
-SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
-ContinueLoop
-EndIf
-local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
-_ArrayAdd($aBBAttackBar, $aTempElement)
-Next
-Next
-_ArraySort($aBBAttackBar, 0, 0, 0, 3)
-For $i=0 To UBound($aBBAttackBar, 1) - 1
-SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
-Next
-Return $aBBAttackBar
-EndFunc
 Global $tagSTRUCT_BOT_STATE = "struct" & ";hwnd BotHWnd" & ";hwnd AndroidHWnd" & ";boolean RunState" & ";boolean Paused" & ";boolean Launched" & ";uint64 g_hTimerSinceStarted" & ";uint g_iTimePassed" & ";char Profile[64]" & ";char AndroidEmulator[32]" & ";char AndroidInstance[32]" & ";int StructType" & ";ptr StructPtr" & ";boolean RegisterInHost" & ";endstruct"
 Global Enum $g_eSTRUCT_NONE = 0, $g_eSTRUCT_STATUS_BAR, $g_eSTRUCT_UPDATE_STATS
 Global $tagSTRUCT_STATUS_BAR = "struct;char Text[255];endstruct"
@@ -67862,6 +67618,298 @@ EndFunc
 Func ForumAuthenticationExit()
 $g_hForumAuthenticationState = $g_eForumAuthenticationExit
 EndFunc
+Func PrepareAttackBB()
+If Not $g_bChkEnableBBAttack Then Return
+If $g_bChkBBTrophyRange Then
+If($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
+SetLog("Trophies out of range.")
+SetDebugLog("Current Trophies: " & $g_aiCurrentLootBB[$eLootTrophyBB] & " Lower Limit: " & $g_iTxtBBTrophyLowerLimit & " Upper Limit: " & $g_iTxtBBTrophyUpperLimit)
+_Sleep(1500)
+Return False
+EndIf
+EndIf
+If Not ClickAttack() Then Return False
+If Not CheckArmyReady() Then
+_Sleep(1500)
+ClickP($aAway)
+Return False
+EndIf
+If $g_bChkBBAttIfLootAvail Then
+If Not CheckLootAvail() Then
+_Sleep(1500)
+ClickP($aAway)
+Return False
+EndIf
+EndIf
+$g_bBBMachineReady = CheckMachReady()
+If $g_bChkBBWaitForMachine And Not $g_bBBMachineReady Then
+SetLog("Battle Machine is not ready.")
+_Sleep(1500)
+ClickP($aAway)
+Return False
+EndIf
+Return True
+EndFunc
+Func ClickAttack()
+local $aColors = [[0xfdd79b, 96, 0], [0xffffff, 20, 50], [0xffffff, 69, 50]]
+Local $ButtonPixel = _MultiPixelSearch(8, 640, 120, 755, 1, 1, Hex(0xeac68c, 6), $aColors, 20)
+local $bRet = False
+If IsArray($ButtonPixel) Then
+SetDebugLog(String($ButtonPixel[0]) & " " & String($ButtonPixel[1]))
+PureClick($ButtonPixel[0] + 25, $ButtonPixel[1] + 25)
+$bRet = True
+Else
+SetLog("Can not find button for Builders Base Attack button", $COLOR_ERROR)
+If $g_bDebugImageSave Then DebugImageSave("BBAttack_ButtonCheck_")
+EndIf
+Return $bRet
+EndFunc
+Func CheckLootAvail()
+local $aColors = [[0x292928, 135, 0], [0x74bd2f, 13, 19], [0x74bd2f, 117, 19]]
+local $bRet = False
+local $aGemButton = _MultiPixelSearch(500, 650, 645, 718, 1, 1, Hex(0x2b2b2a, 6), $aColors, 20)
+If Not IsArray($aGemButton) Then
+$bRet = True
+SetLog("Loot is available.")
+Else
+SetLog("No loot available")
+If $g_bDebugImageSave Then DebugImageSave("CheckLootAvail")
+EndIf
+Return $bRet
+EndFunc
+Func CheckMachReady()
+local $aCoords = decodeSingleCoord(findImage("BBMachReady_bmp", $g_sImgBBMachReady, GetDiamondFromRect("113,388,170,448"), 1, True))
+local $bRet = False
+If IsArray($aCoords) And UBound($aCoords) = 2 Then
+$bRet = True
+SetLog("Battle Machine ready.")
+Else
+If $g_bDebugImageSave Then DebugImageSave("CheckMachReady")
+EndIf
+Return $bRet
+EndFunc
+Func CheckArmyReady()
+local $i = 0
+local $bReady = True, $bNeedTrain = False, $bTraining = False
+local $sSearchDiamond = GetDiamondFromRect("114,384,190,450")
+If _Sleep($DELAYCHECKFULLARMY2) Then Return False
+While $i < 6 And $bReady
+local $aNeedTrainCoords = decodeSingleCoord(findImage("NeedTrainBB", $g_sImgBBNeedTrainTroops, $sSearchDiamond, 1, True))
+local $aTroopsTrainingCoords = decodeSingleCoord(findImage("TroopsTrainingBB", $g_sImgBBTroopsTraining, $sSearchDiamond, 1, False))
+If IsArray($aNeedTrainCoords) And UBound($aNeedTrainCoords) = 2 Then
+$bReady = False
+$bNeedTrain = True
+EndIf
+If IsArray($aTroopsTrainingCoords) And UBound($aTroopsTrainingCoords) = 2 Then
+$bReady = False
+$bTraining = True
+EndIf
+$i += 1
+WEnd
+If Not $bReady Then
+SetLog("Army is not ready.")
+If $bTraining Then SetLog("Troops are training.")
+If $bNeedTrain Then SetLog("Troops need to be trained in the training tab.")
+If $g_bDebugImageSave Then DebugImageSave("FindIfArmyReadyBB")
+Else
+SetLog("Army is ready.")
+EndIf
+Return $bReady
+EndFunc
+Func AttackBB()
+local $aTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
+local $aTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
+local $iSide = Random(0, 1, 1)
+ClickP($aAway)
+SetLog("Going to attack.", $COLOR_BLUE)
+If Not PrepareAttackBB() Then Return
+SetDebugLog("PrepareAttackBB(): Success.")
+If _Sleep(2000) Then Return
+local $aBBFindNow = [521, 308, 0xffc246, 30]
+If _CheckPixel($aBBFindNow, True) Then
+PureClick($aBBFindNow[0], $aBBFindNow[1])
+Else
+SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
+Return
+EndIf
+If Not CheckBattleStarted() Then Return
+If _Sleep($DELAYRESPOND) Then Return
+local $aBBAttackBar = GetAttackBarBB()
+If _Sleep($DELAYRESPOND) Then Return
+local $bAttackBarEmpty = False
+while Not $bAttackBarEmpty
+For $i=0 To UBound($aBBAttackBar, 1) - 1
+PureClick($aBBAttackBar[$i][1], 660)
+For $j=0 To $aBBAttackBar[$i][4] - 1
+local $iPoint = Random(0, 9, 1)
+If $iSide Then
+PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
+Else
+PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
+EndIf
+If _Sleep(250) Then Return
+Next
+If _Sleep(1750) Then Return
+Next
+$aBBAttackBar = GetAttackBarBB(True)
+If $aBBAttackBar = "" Then $bAttackBarEmpty = True
+WEnd
+SetLog("All troops deployed")
+local $aBMPos = GetMachinePos()
+If $g_bBBMachineReady And IsArray($aBMPos) Then
+local $bMachineAlive = True
+while $bMachineAlive
+PureClickP($aBMPos)
+local $iPoint = Random(0, 9, 1)
+If $iSide Then
+PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
+Else
+PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
+EndIf
+If _Sleep(500) Then Return
+PureClickP($aBMPos)
+SetLog("Battle Machine Deployed.")
+If _Sleep($g_iBBMachAbilityTime) Then Return
+local $timer = __TimerInit()
+$aBMPos = GetMachinePos()
+While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos)
+$aBMPos = GetMachinePos()
+$i+=1
+WEnd
+If Not IsArray($aBMPos) Then
+$bMachineAlive = False
+EndIf
+WEnd
+EndIf
+SetLog("Waiting for end of battle.")
+If Not Okay() Then Return
+SetLog("Battle Ended.")
+If _Sleep(3000) Then Return
+SetLog("Waiting for opponent.")
+Okay()
+SetLog("Done. Attack was successful.")
+ZoomOut()
+EndFunc
+Func CheckBattleStarted()
+local $sSearchDiamond = GetDiamondFromRect("376,11,420,26")
+local $timer = __TimerInit()
+While 1
+local $aCoords = decodeSingleCoord(findImage("BBBattleStarted", $g_sImgBBBattleStarted, $sSearchDiamond, 1, True))
+If IsArray($aCoords) And UBound($aCoords) = 2 Then
+SetLog("Battle Started")
+Return True
+EndIf
+If __TimerDiff($timer) > $g_iBBBattleStartedTimeout Then
+SetLog("Battle did not start after " & String($g_iBBBattleStartedTimeout) & " seconds.")
+If $g_bDebugImageSave Then DebugImageSave("BBBattleStarted")
+Return False
+EndIf
+WEnd
+EndFunc
+Func GetMachinePos()
+If Not $g_bBBMachineReady Then Return
+local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
+local $aCoords = decodeSingleCoord(findImage("BBBattleMachinePos", $g_sImgBBBattleMachine, $sSearchDiamond, 1, True))
+If IsArray($aCoords) And UBound($aCoords) = 2 Then
+Return $aCoords
+Else
+If $g_bDebugImageSave Then DebugImageSave("BBBattleMachinePos")
+EndIf
+Return
+EndFunc
+Func Okay()
+local $timer = __TimerInit()
+While 1
+local $aCoords = decodeSingleCoord(findImage("OkayButton", $g_sImgOkButton, "FV", 1, True))
+If IsArray($aCoords) And UBound($aCoords) = 2 Then
+PureClickP($aCoords)
+Return True
+EndIf
+If __TimerDiff($timer) >= 180000 Then
+SetLog("Could not find button 'Okay'", $COLOR_ERROR)
+If $g_bDebugImageSave Then DebugImageSave("BBFindOkay")
+Return False
+EndIf
+If Mod(__TimerDiff($timer), 3000) Then
+If _Sleep($DELAYRESPOND) Then Return
+EndIf
+WEnd
+Return True
+EndFunc
+Func GetAttackBarBB($bRemaining = False)
+local $iTroopBanners = 640
+local $iSlotOffset = 73
+local $iBarOffset = 66
+local $aBBAttackBar[0][5]
+local $sSearchDiamond = GetDiamondFromRect("0,630,860,732")
+local $aBBAttackBarResult = findMultiple($g_sImgDirBBTroops, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
+If UBound($aBBAttackBarResult) = 0 Then
+If Not $bRemaining Then
+SetLog("Error in BBAttackBarCheck(): Search did not return any results!", $COLOR_ERROR)
+DebugImageSave("ErrorBBAttackBarCheck", False, Default, Default, "#1")
+EndIf
+Return ""
+EndIf
+For $i = 0 To UBound($aBBAttackBarResult, 1) - 1
+local $aTroop = $aBBAttackBarResult[$i]
+local $aTempMultiCoords = decodeMultipleCoords($aTroop[1])
+For $j=0 To UBound($aTempMultiCoords, 1) - 1
+local $aTempCoords = $aTempMultiCoords[$j]
+If UBound($aTempCoords) < 2 Then ContinueLoop
+local $iSlot = Int(($aTempCoords[0] - $iBarOffset) / $iSlotOffset)
+local $iCount = Number(getTroopCountSmall($aTempCoords[0], $iTroopBanners))
+If $iCount == 0 Then $iCount = Number(getTroopCountBig($aTempCoords[0], $iTroopBanners-2))
+If $iCount == 0 Then
+SetLog("Could not get count for " & $aTroop[0] & " in slot " & String($iSlot), $COLOR_ERROR)
+ContinueLoop
+EndIf
+local $aTempElement[1][5] = [[$aTroop[0], $aTempCoords[0], $aTempCoords[1], $iSlot, $iCount]]
+_ArrayAdd($aBBAttackBar, $aTempElement)
+Next
+Next
+_ArraySort($aBBAttackBar, 0, 0, 0, 3)
+For $i=0 To UBound($aBBAttackBar, 1) - 1
+SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & String($aBBAttackBar[$i][2]) & "), Slot: " & String($aBBAttackBar[$i][3]) & ", Count: " & String($aBBAttackBar[$i][4]), $COLOR_SUCCESS)
+Next
+Return $aBBAttackBar
+EndFunc
+Func ApplyConfig_MOD($TypeReadSave)
+Switch $TypeReadSave
+Case "Read"
+GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkBBTrophyRange, $g_bChkBBTrophyRange ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
+GUICtrlSetData($g_hTxtBBTrophyUpperLimit, $g_iTxtBBTrophyUpperLimit)
+GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
+GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
+chkBBTrophyRange()
+chkEnableBBAttack()
+Case "Save"
+$g_bChkEnableBBAttack =(GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
+$g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
+$g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
+$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
+$g_bChkBBAttIfLootAvail =(GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
+$g_bChkBBWaitForMachine =(GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
+EndSwitch
+EndFunc
+Func ReadConfig_MOD()
+IniReadS($g_bChkEnableBBAttack, $g_sProfileConfigPath, "other", "ChkEnableBBAttack", False, "Bool")
+IniReadS($g_bChkBBTrophyRange, $g_sProfileConfigPath, "other", "ChkBBTrophyRange", False, "Bool")
+IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyLowerLimit", 0, "int")
+IniReadS($g_iTxtBBTrophyUpperLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyUpperLimit", 5000, "int")
+IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
+IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
+EndFunc
+Func SaveConfig_MOD()
+ApplyConfig_MOD(GetApplyConfigSaveAction())
+_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
+_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
+_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
+_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
+_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
+_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+EndFunc
 Func setupProfileComboBox()
 Local $profileString = ""
 Local $aProfiles = _FileListToArray($g_sProfilePath, "*", $FLTA_FOLDERS)
@@ -68191,6 +68239,7 @@ ApplyConfig_600_52_2($TypeReadSave)
 ApplyConfig_600_54($TypeReadSave)
 ApplyConfig_600_56($TypeReadSave)
 ApplyConfig_641_1($TypeReadSave)
+ApplyConfig_MOD($TypeReadSave)
 PopulatePresetComboBox()
 MakeSavePresetMessage()
 GUICtrlSetState($g_hLblLoadPresetMessage, $GUI_SHOW)
@@ -68338,14 +68387,6 @@ ChkTreasuryCollect()
 GUICtrlSetData($g_hTxtTreasuryGold, $g_iTxtTreasuryGold)
 GUICtrlSetData($g_hTxtTreasuryElixir, $g_iTxtTreasuryElixir)
 GUICtrlSetData($g_hTxtTreasuryDark, $g_iTxtTreasuryDark)
-GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
-GUICtrlSetState($g_hChkBBTrophyRange, $g_bChkBBTrophyRange ? $GUI_CHECKED : $GUI_UNCHECKED)
-GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
-GUICtrlSetData($g_hTxtBBTrophyUpperLimit, $g_iTxtBBTrophyUpperLimit)
-GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
-GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
-chkBBTrophyRange()
-chkEnableBBAttack()
 GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkStartClockTowerBoost, $g_bChkStartClockTowerBoost ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -68398,12 +68439,6 @@ $g_bChkTreasuryCollect =(GUICtrlRead($g_hChkTreasuryCollect) = $GUI_CHECKED)
 $g_iTxtTreasuryGold = GUICtrlRead($g_hTxtTreasuryGold)
 $g_iTxtTreasuryElixir = GUICtrlRead($g_hTxtTreasuryElixir)
 $g_iTxtTreasuryDark = GUICtrlRead($g_hTxtTreasuryDark)
-$g_bChkEnableBBAttack =(GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
-$g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
-$g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
-$g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
-$g_bChkBBAttIfLootAvail =(GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
-$g_bChkBBWaitForMachine =(GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
 $g_bChkCollectBuilderBase =(GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 $g_bChkCleanBBYard =(GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
 $g_bChkStartClockTowerBoost =(GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
@@ -70364,6 +70399,7 @@ ReadConfig_600_52_2()
 ReadConfig_600_54()
 ReadConfig_600_56()
 ReadConfig_641_1()
+ReadConfig_MOD()
 EndFunc
 Func ReadConfig_Debug()
 $g_bDebugSetlog = IniRead($g_sProfileConfigPath, "debug", "debugsetlog", 0) = 1 ? True : False
@@ -70441,12 +70477,6 @@ IniReadS($g_iLogDividerY, $g_sProfileConfigPath, "general", "LogDividerY", 243, 
 IniReadS($g_bChkBackgroundMode, $g_sProfileConfigPath, "general", "Background", True, "Bool")
 EndFunc
 Func ReadConfig_600_6()
-IniReadS($g_bChkEnableBBAttack, $g_sProfileConfigPath, "other", "ChkEnableBBAttack", False, "Bool")
-IniReadS($g_bChkBBTrophyRange, $g_sProfileConfigPath, "other", "ChkBBTrophyRange", False, "Bool")
-IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyLowerLimit", 0, "int")
-IniReadS($g_iTxtBBTrophyUpperLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyUpperLimit", 5000, "int")
-IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
-IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
 IniReadS($g_bChkBotStop, $g_sProfileConfigPath, "general", "BotStop", False, "Bool")
 IniReadS($g_iCmbBotCommand, $g_sProfileConfigPath, "general", "Command", 0, "int")
 IniReadS($g_iCmbBotCond, $g_sProfileConfigPath, "general", "Cond", 0, "int")
@@ -71466,6 +71496,7 @@ SaveConfig_600_52_2()
 SaveConfig_600_54()
 SaveConfig_600_56()
 SaveConfig_641_1()
+SaveConfig_MOD()
 SaveConfig_Debug()
 _Ini_Save($g_sProfileConfigPath)
 EndFunc
@@ -71535,12 +71566,6 @@ _Ini_Add("general", "Background", $g_bChkBackgroundMode ? 1 : 0)
 EndFunc
 Func SaveConfig_600_6()
 ApplyConfig_600_6(GetApplyConfigSaveAction())
-_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
-_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
-_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
-_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
-_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
-_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
 _Ini_Add("general", "BotStop", $g_bChkBotStop ? 1 : 0)
 _Ini_Add("general", "Command", $g_iCmbBotCommand)
 _Ini_Add("general", "Cond", $g_iCmbBotCond)

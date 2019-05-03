@@ -121,6 +121,7 @@ Global $g_oGuiNotInMini = ObjCreate("Scripting.Dictionary")
 #include "GUI\MBR GUI Design Attack.au3"
 #include "GUI\MBR GUI Design Bot.au3"
 #include "GUI\MBR GUI Design About.au3"
+#include "Chill-MOD\MOD_GUI_Design.au3" ; Chill MOD
 
 Func CreateMainGUI()
 
@@ -529,7 +530,7 @@ Func CheckDpiAwareness($bCheckOnlyIfAlreadyAware = False, $bForceDpiAware = Fals
 				Or GetProcessDpiAwareness(GetAndroidPid()) ; in normal background mode using WinAPI and Android is DPI Aware, bot must be too or window will be scaled and blury
 				; 2019-04-19 cosote: removed "$g_bAndroidAdbScreencap = False And" from line above
 		$bChanged = $bDpiAware And Not $sbDpiAware
-		If $bChanged Then ; only required when not running with screencap, but even if screencap is running, change it 
+		If $bChanged Then ; only required when not running with screencap, but even if screencap is running, change it
 			$sbDpiAware = True ; do it only once, assume bot will become DPI aware
 			Local $bWasEmbedded = AndroidEmbedded()
 			If $bWasEmbedded Then AndroidEmbed(False)

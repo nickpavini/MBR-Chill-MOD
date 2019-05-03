@@ -23,4 +23,8 @@ Func SaveConfig_MOD()
 	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
 	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
 	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+
+	; Builder Base Drop Order
+	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
+	_Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
 EndFunc

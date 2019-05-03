@@ -25,6 +25,18 @@ Func ApplyConfig_MOD($TypeReadSave) ;Applies the data from config to the control
 			chkBBTrophyRange()
 			chkEnableBBAttack()
 
+			; Builder Base Drop Order
+			If $g_bBBDropOrderSet Then
+				GUICtrlSetState($g_hChkBBCustomDropOrderEnable, $GUI_CHECKED)
+				GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
+				GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
+				Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+				For $i=0 To $g_iBBTroopCount - 1
+					_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], _GUICtrlComboBox_SelectString($g_ahCmbBBDropOrder[$i], $asBBDropOrder[$i+1]))
+				Next
+				GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
+			EndIf
+
 		Case "Save"
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)

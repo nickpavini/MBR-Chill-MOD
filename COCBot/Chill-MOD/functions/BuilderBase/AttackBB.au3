@@ -14,9 +14,8 @@
 ; ===============================================================================================================================
 
 Func AttackBB()
-	local $aTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
-	local $aTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
+	local $aBMPos = 0
 	ClickP($aAway)
 	SetLog("Going to attack.", $COLOR_BLUE)
 
@@ -43,70 +42,89 @@ Func AttackBB()
 	If _Sleep($DELAYRESPOND) Then Return
 
 	; Deploy all troops
-	local $bAttackBarEmpty = False
-	while Not $bAttackBarEmpty
-		For $i=0 To UBound($aBBAttackBar, 1) - 1
-			PureClick($aBBAttackBar[$i][1], 660) ; select troop
-			For $j=0 To $aBBAttackBar[$i][4] - 1
-				local $iPoint = Random(0, 9, 1)
-				If $iSide Then
-					PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
-				Else
-					PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
-				EndIf
-				If _Sleep(250) Then Return ; slow down dropping of troops
+	local $bTroopsDropped = False, $bBMDeployed = False
+	SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
+	While Not $bTroopsDropped
+		local $iNumSlots = UBound($aBBAttackBar, 1)
+		If $g_bBBDropOrderSet = True Then
+			local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+			For $i=0 To $g_iBBTroopCount - 1 ; loop through each name in the drop order
+				local $j=0, $bDone = 0
+				While $j < $iNumSlots And Not $bDone
+					If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
+						DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
+						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
+							$bDone = True
+							If _Sleep($g_iBBNextTroopDelay) Then Return ; wait before next troop
+						Else
+							If _Sleep($DELAYRESPOND) Then Return ; we are still on same troop so lets drop them all down a bit faster
+						EndIf
+					EndIf
+					$j+=1
+				WEnd
 			Next
-			If _Sleep(1750) Then Return ; wait before next troop
-		Next
+		Else
+			For $i=0 To $iNumSlots - 1
+				DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
+				If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
+					If _Sleep($g_iBBNextTroopDelay) Then Return ; wait before next troop
+				Else
+					If _Sleep($DELAYRESPOND) Then Return ; we are still on same troop so lets drop them all down a bit faster
+				EndIf
+			Next
+		EndIf
 		$aBBAttackBar = GetAttackBarBB(True)
-		If $aBBAttackBar = "" Then $bAttackBarEmpty = True
+		If $aBBAttackBar = "" Then $bTroopsDropped = True
 	WEnd
-	SetLog("All troops deployed")
+	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
-	; Find Battle Machine
-	local $aBMPos = GetMachinePos()
-
-	; Deploy machine and continue with abilities until death
-	If $g_bBBMachineReady And IsArray($aBMPos) Then
-		local $bMachineAlive = True
-		while $bMachineAlive
-			; place hero and activate ability
-			PureClickP($aBMPos)
+	; place hero and activate ability
+	SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+	While Not $bBMDeployed And $g_bBBMachineReady
+		$aBMPos = GetMachinePos()
+		If IsArray($aBMPos) Then
 			local $iPoint = Random(0, 9, 1)
 			If $iSide Then
-				PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
+				PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
 			Else
-				PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
+				PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
 			EndIf
-			If _Sleep(500) Then Return
+			If _Sleep(500) Then Return ; wait before clicking ability
 			PureClickP($aBMPos)
-			SetLog("Battle Machine Deployed.")
-			If _Sleep($g_iBBMachAbilityTime) Then Return ; wait for machine to be available
+		Else
+			$bBMDeployed = True
+		EndIf
+	WEnd
+	SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
 
-			; give a bit of time to check if hero is dead because of the random lightning strikes through graphic
-			local $timer = __TimerInit()
+	; Continue with abilities until death
+	local $bMachineAlive = True
+	while $bMachineAlive
+		If _Sleep($g_iBBMachAbilityTime) Then Return ; wait for machine to be available
+		local $timer = __TimerInit() ; give a bit of time to check if hero is dead because of the random lightning strikes through graphic
+		$aBMPos = GetMachinePos()
+		While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos) ; give time to find
 			$aBMPos = GetMachinePos()
-			While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos) ; give time to find
-				$aBMPos = GetMachinePos()
-				$i+=1
-			WEnd
-
-			If Not IsArray($aBMPos) Then
-				$bMachineAlive = False
-			EndIf
 		WEnd
-	EndIf
+
+		If Not IsArray($aBMPos) Then ; if machine wasnt found then it is dead, if not we hit ability
+			$bMachineAlive = False
+		Else
+			PureClickP($aBMPos)
+		EndIf
+	WEnd
+	SetLog("Battle Machine Dead")
 
 	; wait for end of battle
-	SetLog("Waiting for end of battle.")
+	SetLog("Waiting for end of battle.", $COLOR_BLUE)
 	If Not Okay() Then Return
 	SetLog("Battle Ended.")
 	If _Sleep(3000) Then Return
 
 	; wait for ok after both attacks are finished
-	SetLog("Waiting for opponent.")
+	SetLog("Waiting for opponent.", $COLOR_BLUE)
 	Okay()
-	SetLog("Done. Attack was successful.")
+	SetLog("Done.", $COLOR_SUCCESS)
 	ZoomOut()
 EndFunc
 
@@ -168,4 +186,19 @@ Func Okay()
 	WEnd
 
 	Return True
+EndFunc
+
+Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
+	SetLog("Deploying " & $sName & "x" & String($iAmount), $COLOR_ACTION)
+	PureClick($x, $y) ; select troop
+	If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down selecting then dropping troops
+	For $j=0 To $iAmount - 1
+		local $iPoint = Random(0, 9, 1)
+		If $iSide Then ; pick random point on random side
+			PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
+		Else
+			PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
+		EndIf
+		If _Sleep($g_iBBSameTroopDelay) Then Return ; slow down dropping of troops
+	Next
 EndFunc

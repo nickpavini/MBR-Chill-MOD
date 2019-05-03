@@ -49,6 +49,7 @@ Func CheckVersion()
 		Else
 			SetLog("YOU ARE USING A FUTURE VERSION CHIEF!", $COLOR_ACTION)
 		EndIf
+		SetLog("★ MOD by ♔ℂℏⅈℒℒ𝕐-ℂℏⅈℒℒ♔ ★", 0x00AAFF, Default, 16)
 	Else
 		SetDebugLog($Temp)
 	EndIf

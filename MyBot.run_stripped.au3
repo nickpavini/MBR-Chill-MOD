@@ -5902,6 +5902,18 @@ Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global $g_bBBMachineReady = False
 Global $g_iBBMachAbilityTime = 14000
 Global $g_iBBBattleStartedTimeout = 300000
+Global $g_iBBNextTroopDelay = 2000, $g_iBBSameTroopDelay = 300
+Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
+Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
+Global $g_hBtnBBDropOrder = 0
+Global $g_hGUI_BBDropOrder = 0
+Global $g_hChkBBCustomDropOrderEnable = 0
+Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
+Global $g_bBBDropOrderSet = False
+Global Const $g_iBBTroopCount = 10
+Global Const $g_sBBDropOrderDefault = "BoxerGiant|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
+Global $g_sBBDropOrder = $g_sBBDropOrderDefault
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
@@ -12374,6 +12386,7 @@ $g_hGUI_MISC_TAB_ITEM2 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI
 CreateMiscBuilderBaseSubTab()
 $g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Clan Games"))
 CreateMiscClanGamesV3SubTab()
+CreateBBDropOrderGUI()
 GUICtrlCreateTabItem("")
 EndFunc
 Func CreateMiscNormalVillageSubTab()
@@ -12564,9 +12577,13 @@ GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Local $iModY = 80, $iModBBAttackGroupSize = 110
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_13", "Builders Base Attacking"), $x - 10, $iModY, $g_iSizeWGrpTab3, $iModBBAttackGroupSize)
-$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 70, $iModY + 50, -1, -1)
+$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 60, $iModY + 30, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack_Info_01", "Uses the currently queued army to attack."))
 GUICtrlSetOnEvent(-1, "chkEnableBBAttack")
+$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 40, $iModY + 62, -1, -1)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder_Info", "Set a custom dropping order for your troops."))
+GUICtrlSetBkColor(-1, $COLOR_RED)
+GUICtrlSetOnEvent(-1, "btnBBDropOrder")
 $g_hChkBBTrophyRange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBTrophyRange", "Trophies"), $x + 180, $iModY + 30)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBTrophyRange_Info_01", "Enable ability to set a trophy range."))
 GUICtrlSetOnEvent(-1, "chkBBTrophyRange")
@@ -21658,6 +21675,49 @@ WEnd
 GUIDelete($g_hGUI_CommandLineHelp)
 Opt("GUIOnEventMode", $iOpt)
 EndFunc
+Func CreateBBDropOrderGUI()
+$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 288, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+Local $x = 25, $y = 25
+GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 225)
+$x += 10
+$y += 20
+$g_hChkBBCustomDropOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable", "Enable Custom Dropping Order"), $x - 13, $y - 22, -1, -1)
+GUICtrlSetState(-1, $GUI_UNCHECKED)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable_Info_01", "Enable to select a custom troops dropping order"))
+GUICtrlSetOnEvent(-1, "chkBBDropOrder")
+$y+=5
+For $i=0 To $g_iBBTroopCount-1
+If $i < 5 Then
+GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
+$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
+GUICtrlSetData(-1, $g_sBBDropOrderDefault)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
+GUICtrlSetState(-1, $GUI_DISABLE)
+Else
+GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-5), -1, 18)
+$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-5), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
+GUICtrlSetData(-1, $g_sBBDropOrderDefault)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
+GUICtrlSetState(-1, $GUI_DISABLE)
+EndIf
+Next
+$x = 25
+$y = 200
+$g_hBtnBBDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
+GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_01", "Push button when finished selecting custom troops dropping order") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_02", "When not all troop slots are filled, will use default order."))
+GUICtrlSetOnEvent(-1, "BtnBBDropOrderSet")
+$x += 150
+$g_hBtnBBRemoveDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder", "Empty Drop List"), $x, $y, 118, 25)
+GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder_Info_01", "Push button to remove all troops from list and start over"))
+GUICtrlSetOnEvent(-1, "BtnBBRemoveDropOrder")
+$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 233, 85, 25)
+GUICtrlSetOnEvent(-1, "CloseCustomBBDropOrder")
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+EndFunc
 Func CreateMainGUI()
 Local $iStyle = $WS_BORDER
 If BitAND($g_iBotDesignFlags, 1) = 0 Then
@@ -28101,6 +28161,7 @@ If GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED Then
 GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
+GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 chkBBTrophyRange()
 Else
 GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
@@ -28108,6 +28169,7 @@ GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_DISABLE)
 GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
+GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
 EndIf
 EndFunc
 Func chkBBTrophyRange()
@@ -28266,6 +28328,85 @@ EndIf
 EndIf
 Opt("MouseClickDelay", GetClickUpDelay())
 Opt("MouseClickDownDelay", GetClickDownDelay())
+EndFunc
+Func btnBBDropOrder()
+GUICtrlSetState( $g_hBtnBBDropOrder, $GUI_DISABLE )
+GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_DISABLE )
+GUISetState(@SW_SHOW, $g_hGUI_BBDropOrder)
+EndFunc
+Func chkBBDropOrder()
+If GUICtrlRead($g_hChkBBCustomDropOrderEnable) = $GUI_CHECKED Then
+GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
+GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
+For $i=0 To $g_iBBTroopCount-1
+GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
+Next
+Else
+GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_DISABLE)
+GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_DISABLE)
+For $i=0 To $g_iBBTroopCount-1
+GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
+Next
+GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
+$g_bBBDropOrderSet = False
+EndIf
+EndFunc
+Func GUIBBDropOrder()
+Local $iGUI_CtrlId = @GUI_CtrlId
+Local $iDropIndex = _GUICtrlComboBox_GetCurSel($iGUI_CtrlId)
+For $i=0 To $g_iBBTroopCount - 1
+If $iGUI_CtrlId = $g_ahCmbBBDropOrder[$i] Then ContinueLoop
+If $iDropIndex = _GUICtrlComboBox_GetCurSel($g_ahCmbBBDropOrder[$i]) Then
+_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
+GUISetState()
+EndIf
+Next
+EndFunc
+Func BtnBBDropOrderSet()
+$g_sBBDropOrder = ""
+For $i=0 To $g_iBBTroopCount - 1
+GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_DISABLE)
+If GUICtrlRead($g_ahCmbBBDropOrder[$i]) = "" Then
+local $asDefaultOrderSplit = StringSplit($g_sBBDropOrderDefault, "|")
+local $bFound = False, $bSet = False
+local $j=0
+While $j < $g_iBBTroopCount And Not $bSet
+local $k=0
+While $k < $g_iBBTroopCount And Not $bFound
+If $g_ahCmbBBDropOrder[$i] <> $g_ahCmbBBDropOrder[$k] Then
+SetDebugLog("Word: " & $asDefaultOrderSplit[$j+1] & " " & " Word in slot: " & GUICtrlRead($g_ahCmbBBDropOrder[$k]))
+If $asDefaultOrderSplit[$j+1] = GUICtrlRead($g_ahCmbBBDropOrder[$k]) Then $bFound = True
+EndIf
+$k+=1
+WEnd
+If Not $bFound Then
+_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], $j)
+$bSet = True
+Else
+$j+=1
+$bFound = False
+EndIf
+WEnd
+EndIf
+$g_sBBDropOrder &=(GUICtrlRead($g_ahCmbBBDropOrder[$i]) & "|")
+SetDebugLog("DropOrder: " & $g_sBBDropOrder)
+Next
+$g_sBBDropOrder = StringTrimRight($g_sBBDropOrder, 1)
+GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
+$g_bBBDropOrderSet = True
+EndFunc
+Func BtnBBRemoveDropOrder()
+For $i=0 To $g_iBBTroopCount-1
+_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], -1)
+GUICtrlSetState($g_ahCmbBBDropOrder[$i], $GUI_ENABLE)
+Next
+GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_RED)
+$g_bBBDropOrderSet = False
+EndFunc
+Func CloseCustomBBDropOrder()
+GUISetState(@SW_HIDE, $g_hGUI_BBDropOrder)
+GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
+GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_ENABLE )
 EndFunc
 Func BotStart($bAutostartDelay = 0)
 FuncEnter(BotStart)
@@ -54049,6 +54190,7 @@ SetLog("WELCOME CHIEF, YOU HAVE THE LATEST MYBOT VERSION", $COLOR_SUCCESS)
 Else
 SetLog("YOU ARE USING A FUTURE VERSION CHIEF!", $COLOR_ACTION)
 EndIf
+SetLog("★ MOD by ♔ℂℏⅈℒℒ𝕐-ℂℏⅈℒℒ♔ ★", 0x00AAFF, Default, 16)
 Else
 SetDebugLog($Temp)
 EndIf
@@ -67717,9 +67859,8 @@ EndIf
 Return $bReady
 EndFunc
 Func AttackBB()
-local $aTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
-local $aTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
 local $iSide = Random(0, 1, 1)
+local $aBMPos = 0
 ClickP($aAway)
 SetLog("Going to attack.", $COLOR_BLUE)
 If Not PrepareAttackBB() Then Return
@@ -67736,58 +67877,80 @@ If Not CheckBattleStarted() Then Return
 If _Sleep($DELAYRESPOND) Then Return
 local $aBBAttackBar = GetAttackBarBB()
 If _Sleep($DELAYRESPOND) Then Return
-local $bAttackBarEmpty = False
-while Not $bAttackBarEmpty
-For $i=0 To UBound($aBBAttackBar, 1) - 1
-PureClick($aBBAttackBar[$i][1], 660)
-For $j=0 To $aBBAttackBar[$i][4] - 1
-local $iPoint = Random(0, 9, 1)
-If $iSide Then
-PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
+local $bTroopsDropped = False, $bBMDeployed = False
+SetLog( $g_bBBDropOrderSet = True ? "Deploying Troops in Custom Order." : "Deploying Troops in Order of Attack Bar.", $COLOR_BLUE)
+While Not $bTroopsDropped
+local $iNumSlots = UBound($aBBAttackBar, 1)
+If $g_bBBDropOrderSet = True Then
+local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+For $i=0 To $g_iBBTroopCount - 1
+local $j=0, $bDone = 0
+While $j < $iNumSlots And Not $bDone
+If $aBBAttackBar[$j][0] = $asBBDropOrder[$i+1] Then
+DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], $aBBAttackBar[$j][4], $iSide)
+If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
+$bDone = True
+If _Sleep($g_iBBNextTroopDelay) Then Return
 Else
-PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
+If _Sleep($DELAYRESPOND) Then Return
 EndIf
-If _Sleep(250) Then Return
-Next
-If _Sleep(1750) Then Return
-Next
-$aBBAttackBar = GetAttackBarBB(True)
-If $aBBAttackBar = "" Then $bAttackBarEmpty = True
+EndIf
+$j+=1
 WEnd
-SetLog("All troops deployed")
-local $aBMPos = GetMachinePos()
-If $g_bBBMachineReady And IsArray($aBMPos) Then
-local $bMachineAlive = True
-while $bMachineAlive
-PureClickP($aBMPos)
+Next
+Else
+For $i=0 To $iNumSlots - 1
+DeployBBTroop($aBBAttackBar[$i][0], $aBBAttackBar[$i][1], $aBBAttackBar[$i][2], $aBBAttackBar[$i][4], $iSide)
+If $i = $iNumSlots-1 Or $aBBAttackBar[$i][0] <> $aBBAttackBar[$i+1][0] Then
+If _Sleep($g_iBBNextTroopDelay) Then Return
+Else
+If _Sleep($DELAYRESPOND) Then Return
+EndIf
+Next
+EndIf
+$aBBAttackBar = GetAttackBarBB(True)
+If $aBBAttackBar = "" Then $bTroopsDropped = True
+WEnd
+SetLog("All Troops Deployed", $COLOR_SUCCESS)
+SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+While Not $bBMDeployed And $g_bBBMachineReady
+$aBMPos = GetMachinePos()
+If IsArray($aBMPos) Then
 local $iPoint = Random(0, 9, 1)
 If $iSide Then
-PureClick($aTR[$iPoint][0], $aTR[$iPoint][1])
+PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
 Else
-PureClick($aTL[$iPoint][0], $aTL[$iPoint][1])
+PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
 EndIf
 If _Sleep(500) Then Return
 PureClickP($aBMPos)
-SetLog("Battle Machine Deployed.")
+Else
+$bBMDeployed = True
+EndIf
+WEnd
+SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
+local $bMachineAlive = True
+while $bMachineAlive
 If _Sleep($g_iBBMachAbilityTime) Then Return
 local $timer = __TimerInit()
 $aBMPos = GetMachinePos()
 While __TimerDiff($timer) < 3000 And Not IsArray($aBMPos)
 $aBMPos = GetMachinePos()
-$i+=1
 WEnd
 If Not IsArray($aBMPos) Then
 $bMachineAlive = False
+Else
+PureClickP($aBMPos)
 EndIf
 WEnd
-EndIf
-SetLog("Waiting for end of battle.")
+SetLog("Battle Machine Dead")
+SetLog("Waiting for end of battle.", $COLOR_BLUE)
 If Not Okay() Then Return
 SetLog("Battle Ended.")
 If _Sleep(3000) Then Return
-SetLog("Waiting for opponent.")
+SetLog("Waiting for opponent.", $COLOR_BLUE)
 Okay()
-SetLog("Done. Attack was successful.")
+SetLog("Done.", $COLOR_SUCCESS)
 ZoomOut()
 EndFunc
 Func CheckBattleStarted()
@@ -67835,6 +67998,20 @@ If _Sleep($DELAYRESPOND) Then Return
 EndIf
 WEnd
 Return True
+EndFunc
+Func DeployBBTroop($sName, $x, $y, $iAmount, $iSide)
+SetLog("Deploying " & $sName & "x" & String($iAmount), $COLOR_ACTION)
+PureClick($x, $y)
+If _Sleep($g_iBBSameTroopDelay) Then Return
+For $j=0 To $iAmount - 1
+local $iPoint = Random(0, 9, 1)
+If $iSide Then
+PureClick($g_apTR[$iPoint][0], $g_apTR[$iPoint][1])
+Else
+PureClick($g_apTL[$iPoint][0], $g_apTL[$iPoint][1])
+EndIf
+If _Sleep($g_iBBSameTroopDelay) Then Return
+Next
 EndFunc
 Func GetAttackBarBB($bRemaining = False)
 local $iTroopBanners = 640
@@ -67884,6 +68061,16 @@ GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED 
 GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
 chkBBTrophyRange()
 chkEnableBBAttack()
+If $g_bBBDropOrderSet Then
+GUICtrlSetState($g_hChkBBCustomDropOrderEnable, $GUI_CHECKED)
+GUICtrlSetState($g_hBtnBBDropOrderSet, $GUI_ENABLE)
+GUICtrlSetState($g_hBtnBBRemoveDropOrder, $GUI_ENABLE)
+Local $asBBDropOrder = StringSplit($g_sBBDropOrder, "|")
+For $i=0 To $g_iBBTroopCount - 1
+_GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], _GUICtrlComboBox_SelectString($g_ahCmbBBDropOrder[$i], $asBBDropOrder[$i+1]))
+Next
+GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
+EndIf
 Case "Save"
 $g_bChkEnableBBAttack =(GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
 $g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
@@ -67900,6 +68087,8 @@ IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "TxtBBTrophy
 IniReadS($g_iTxtBBTrophyUpperLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyUpperLimit", 5000, "int")
 IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
 IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
+IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
+$g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
 EndFunc
 Func SaveConfig_MOD()
 ApplyConfig_MOD(GetApplyConfigSaveAction())
@@ -67909,6 +68098,8 @@ _Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
 _Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
 _Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
 _Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
+_Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
 EndFunc
 Func setupProfileComboBox()
 Local $profileString = ""

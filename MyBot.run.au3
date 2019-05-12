@@ -131,6 +131,7 @@ Func InitializeBot()
 	;Local $iBotProcessPriority = _ProcessGetPriority(@AutoItPID)
 	;ProcessSetPriority(@AutoItPID, $PROCESS_BELOWNORMAL) ;~ Boost launch time by increasing process priority (will be restored again when finished launching)
 
+	_ITaskBar_Init(False)
 	_Crypt_Startup()
 	__GDIPlus_Startup() ; Start GDI+ Engine (incl. a new thread)
 	TCPStartup() ; Start the TCP service.
@@ -1011,7 +1012,7 @@ Func AttackMain() ;Main control for attack functions
 	ClickP($aAway, 1, 0, "#0000") ;Click Away to prevent any pages on top
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Or IsSearchModeActive($TS) Then
-            If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
+			If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
 			If $g_bUseCCBalanced = True Then ;launch profilereport() only if option balance D/R it's activated
 				ProfileReport()
 				If Not $g_bRunState Then Return
@@ -1088,7 +1089,6 @@ Func Attack() ;Selects which algorithm
 	$g_bAttackActive = False
 EndFunc   ;==>Attack
 
-
 Func QuickAttack()
 
 	Local $quicklymilking = 0
@@ -1144,6 +1144,16 @@ EndFunc   ;==>QuickAttack
 ; ===============================================================================================================================
 
 Func _RunFunction($action)
+	FuncEnter(_RunFunction)
+	; ensure that builder base flag is false
+	$g_bStayOnBuilderBase = False
+	Local $Result = __RunFunction($action)
+	; ensure that builder base flag is false
+	$g_bStayOnBuilderBase = False
+	Return FuncReturn($Result)
+EndFunc   ;==>_RunFunction
+
+Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
 	Switch $action
 		Case "Collect"
@@ -1154,10 +1164,10 @@ Func _RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "CleanYard"
 			CleanYard()
-; Removed cause of April 2019 CoC update
-;		Case "ReArm"
-;			ReArm()
-;			_Sleep($DELAYRUNBOT3)
+			; Removed cause of April 2019 CoC update
+			;		Case "ReArm"
+			;			ReArm()
+			;			_Sleep($DELAYRUNBOT3)
 		Case "ReplayShare"
 			ReplayShare($g_bShareAttackEnableNow)
 			_Sleep($DELAYRUNBOT3)
@@ -1246,12 +1256,12 @@ Func _RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If isOnBuilderBase() Or (($g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades or $g_bChkEnableBBAttack) And SwitchBetweenBases()) Then
-				$g_bOnBuilderBase = True
+				$g_bStayOnBuilderBase = True
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				BuilderBaseReport()
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				CollectBuilderBase()
 				If _Sleep($DELAYRUNBOT3) Then Return
 				If $g_bRestart = True Then Return
@@ -1266,24 +1276,25 @@ Func _RunFunction($action)
 				; MOD End
 				;-------------------------------------------------------
 
+				If checkObstacles() Then Return
 				StartClockTowerBoost()
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				StarLaboratory()
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				CleanBBYard()
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				MainSuggestedUpgradeCode()
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				BuilderBaseReport()
 				If _Sleep($DELAYRUNBOT3) Then Return
-				If $g_bRestart = True Then Return
+				If checkObstacles() Then Return
 				; switch back to normal village
 				SwitchBetweenBases()
-				$g_bOnBuilderBase = False
+				$g_bStayOnBuilderBase = False
 			EndIf
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
@@ -1295,7 +1306,7 @@ Func _RunFunction($action)
 			SetLog("Unknown function call: " & $action, $COLOR_ERROR)
 	EndSwitch
 	SetDebugLog("_RunFunction: " & $action & " END", $COLOR_DEBUG2)
-EndFunc   ;==>_RunFunction
+EndFunc   ;==>__RunFunction
 
 Func FirstCheck()
 

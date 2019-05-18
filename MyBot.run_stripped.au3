@@ -5918,7 +5918,10 @@ Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global $g_bBBMachineReady = False
 Global $g_iBBMachAbilityTime = 14000
 Global $g_iBBBattleStartedTimeout = 300000
-Global $g_iBBNextTroopDelay = 2000, $g_iBBSameTroopDelay = 300
+Global Const $g_iBBNextTroopDelayDefault = 2000, $g_iBBSameTroopDelayDefault = 300
+Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault, $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault
+Global $g_iBBNextTroopDelayIncrement = 400, $g_iBBSameTroopDelayIncrement = 60
+Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
 Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
 Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
 Global $g_hBtnBBDropOrder = 0
@@ -5930,6 +5933,8 @@ Global Const $g_iBBTroopCount = 10
 Global Const $g_sBBDropOrderDefault = "BoxerGiant|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_hChkBBIgnoreWalls = 0
+Global $g_bChkBBIgnoreWalls = 0
 Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
@@ -12793,27 +12798,39 @@ GUICtrlSetFont(-1, 9, $FW_BOLD, Default, "Arial", $CLEARTYPE_QUALITY)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Local $iModY = 80, $iModBBAttackGroupSize = 110
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_13", "Builders Base Attacking"), $x - 10, $iModY, $g_iSizeWGrpTab3, $iModBBAttackGroupSize)
-$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 60, $iModY + 30, -1, -1)
+$g_hChkEnableBBAttack = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack", "Attack"), $x + 20, $iModY + 30, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkEnableBBAttack_Info_01", "Uses the currently queued army to attack."))
 GUICtrlSetOnEvent(-1, "chkEnableBBAttack")
-$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 40, $iModY + 62, -1, -1)
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBNextTroopDelay", "Next Troop Delay"), $x + 113, $iModY + 17)
+$g_hCmbBBNextTroopDelay = GUICtrlCreateCombo( "", $x+138, $iModY + 34, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBNextTroopDelay_Info_01", "Set the delay between different troops. 1 fastest to 9 slowest."))
+GUICtrlSetOnEvent(-1, "cmbBBNextTroopDelay")
+GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
+_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay, 4)
+GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "LblBBSameTroopDelay", "Same Troop Delay"), $x + 113, $iModY + 63)
+$g_hCmbBBSameTroopDelay = GUICtrlCreateCombo( "", $x+138, $iModY + 80, 30, -1, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "CmbBBSameTroopDelay_Info_01", "Set the delay between same troops. 1 fastest to 9 slowest."))
+GUICtrlSetOnEvent(-1, "cmbBBSameTroopDelay")
+GUICtrlSetData(-1, "1|2|3|4|5|6|7|8|9")
+_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay, 4)
+$g_hBtnBBDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder", "Drop Order"), $x + 10, $iModY + 62, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrder_Info", "Set a custom dropping order for your troops."))
 GUICtrlSetBkColor(-1, $COLOR_RED)
 GUICtrlSetOnEvent(-1, "btnBBDropOrder")
-$g_hChkBBTrophyRange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBTrophyRange", "Trophies"), $x + 180, $iModY + 30)
+$g_hChkBBTrophyRange = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBTrophyRange", "Trophies"), $x + 240, $iModY + 30)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBTrophyRange_Info_01", "Enable ability to set a trophy range."))
 GUICtrlSetOnEvent(-1, "chkBBTrophyRange")
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hTxtBBTrophyLowerLimit = GUICtrlCreateInput($g_iTxtBBTrophyLowerLimit, $x + 250, $iModY + 30, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+$g_hTxtBBTrophyLowerLimit = GUICtrlCreateInput($g_iTxtBBTrophyLowerLimit, $x + 310, $iModY + 30, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBTrophyLimit_Info_01", "If your trophies go below this number then attacking is stopped."))
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hTxtBBTrophyUpperLimit = GUICtrlCreateInput($g_iTxtBBTrophyUpperLimit, $x + 300, $iModY + 30, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+$g_hTxtBBTrophyUpperLimit = GUICtrlCreateInput($g_iTxtBBTrophyUpperLimit, $x + 360, $iModY + 30, 40, 18, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBTrophyLimit_Info_02", "If your trophies go above this number then the bot drops trophies"))
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hChkBBAttIfLootAvail = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBAttIfLootAvail", "Only if loot is available"), $x + 180, $iModY + 55)
+$g_hChkBBAttIfLootAvail = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBAttIfLootAvail", "Only if loot is available"), $x + 240, $iModY + 55)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBAttIfLootAvail_Info_01", "Only attack if there is loot available."))
 GUICtrlSetState(-1, $GUI_DISABLE)
-$g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 180, $iModY + 80, -1, -1)
+$g_hChkBBWaitForMachine = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine", "Wait For Battle Machine"), $x + 240, $iModY + 80, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBWaitForMachine_Info_01", "Makes the bot not attack while Machine is down."))
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Local $iOffset = $iModBBAttackGroupSize + 5
@@ -12845,8 +12862,9 @@ $g_hChkBBSuggestedUpgradesIgnoreGold = GUICtrlCreateCheckbox(GetTranslatedFileIn
 GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
 $g_hChkBBSuggestedUpgradesIgnoreElixir = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_02", "Ignore Elixir values"), $x + 200, $y + 40, -1, -1)
 GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesElixir")
-$g_hChkBBSuggestedUpgradesIgnoreHall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_03", "Ignore Builder Hall"), $x + 315, $y + 28, -1, -1)
+$g_hChkBBSuggestedUpgradesIgnoreHall = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_03", "Ignore Builder Hall"), $x + 315, $y + 15, -1, -1)
 GUICtrlSetOnEvent(-1, "chkActivateBBSuggestedUpgradesGold")
+$g_hChkBBIgnoreWalls = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkBBSuggestedUpgradesIgnore_04", "Ignore Walls"), $x + 315, $y + 40, -1, -1)
 Local $x = 15, $y = 200 + $iOffset
 $g_hChkPlacingNewBuildings = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkPlacingNewBuildings", "Build 'New' tagged buildings"), $x + 70, $y + 60, -1, -1)
 GUICtrlSetOnEvent(-1, "chkPlacingNewBuildings")
@@ -28394,6 +28412,8 @@ GUICtrlSetState($g_hChkBBTrophyRange, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBAttIfLootAvail, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_ENABLE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
+GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_ENABLE)
+GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_ENABLE)
 chkBBTrophyRange()
 Else
 GUICtrlSetState($g_hChkBBTrophyRange, $GUI_DISABLE)
@@ -28402,7 +28422,19 @@ GUICtrlSetState($g_hTxtBBTrophyLowerLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hTxtBBTrophyUpperLimit, $GUI_DISABLE)
 GUICtrlSetState($g_hChkBBWaitForMachine, $GUI_DISABLE)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_DISABLE)
+GUICtrlSetState($g_hCmbBBSameTroopDelay, $GUI_DISABLE)
+GUICtrlSetState($g_hCmbBBNextTroopDelay, $GUI_DISABLE)
 EndIf
+EndFunc
+Func cmbBBNextTroopDelay()
+$g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault +((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)*$g_iBBNextTroopDelayIncrement
+SetDebugLog("Next Troop Delay: " & $g_iBBNextTroopDelay)
+SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBNextTroopDelay) + 1) - 5)
+EndFunc
+Func cmbBBSameTroopDelay()
+$g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault +((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)*$g_iBBSameTroopDelayIncrement
+SetDebugLog("Same Troop Delay: " & $g_iBBSameTroopDelay)
+SetDebugLog((_GUICtrlComboBox_GetCurSel($g_hCmbBBSameTroopDelay) + 1) - 5)
 EndFunc
 Func chkBBTrophyRange()
 If GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED Then
@@ -66925,12 +66957,14 @@ GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_ENABLE)
 GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
 GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_ENABLE)
+GUICtrlSetState($g_hChkBBIgnoreWalls, $GUI_ENABLE)
 Else
 $g_iChkBBSuggestedUpgrades = 0
 GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 GUICtrlSetState($g_hChkPlacingNewBuildings, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
+GUICtrlSetState($g_hChkBBIgnoreWalls, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 EndIf
 EndFunc
 Func chkActivateBBSuggestedUpgradesGold()
@@ -67080,6 +67114,10 @@ If $aBuildingName[0] = 2 Then
 SetLog("Building: " & $aBuildingName[1], $COLOR_INFO)
 If StringInStr($aBuildingName[1], "Hall") And $g_iChkBBSuggestedUpgradesIgnoreHall Then
 SetLog("Ups! Builder Hall is not to Upgrade!", $COLOR_ERROR)
+Return False
+EndIf
+If StringInStr($aBuildingName[1], "Wall") And $g_bChkBBIgnoreWalls Then
+SetLog("Ups! Ignoring wall upgrade!", $COLOR_ERROR)
 Return False
 EndIf
 Click($g_iQuickMISX + 300, $g_iQuickMISY + 650, 1)
@@ -68017,7 +68055,6 @@ Func ForumAuthenticationExit()
 $g_hForumAuthenticationState = $g_eForumAuthenticationExit
 EndFunc
 Func PrepareAttackBB()
-If Not $g_bChkEnableBBAttack Then Return
 If $g_bChkBBTrophyRange Then
 If($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 SetLog("Trophies out of range.")
@@ -68115,6 +68152,7 @@ EndIf
 Return $bReady
 EndFunc
 Func AttackBB()
+If Not $g_bChkEnableBBAttack Then Return
 local $iSide = Random(0, 1, 1)
 local $aBMPos = 0
 ClickP($aAway)
@@ -68315,6 +68353,8 @@ GUICtrlSetData($g_hTxtBBTrophyLowerLimit, $g_iTxtBBTrophyLowerLimit)
 GUICtrlSetData($g_hTxtBBTrophyUpperLimit, $g_iTxtBBTrophyUpperLimit)
 GUICtrlSetState($g_hChkBBAttIfLootAvail, $g_bChkBBAttIfLootAvail ? $GUI_CHECKED : $GUI_UNCHECKED)
 GUICtrlSetState($g_hChkBBWaitForMachine, $g_bChkBBWaitForMachine ? $GUI_CHECKED : $GUI_UNCHECKED)
+_GUICtrlComboBox_SetCurSel($g_hCmbBBNextTroopDelay,(($g_iBBNextTroopDelay - $g_iBBNextTroopDelayDefault) / $g_iBBNextTroopDelayIncrement) + 4)
+_GUICtrlComboBox_SetCurSel($g_hCmbBBSameTroopDelay,(($g_iBBSameTroopDelay - $g_iBBSameTroopDelayDefault) / $g_iBBSameTroopDelayIncrement) + 4)
 chkBBTrophyRange()
 chkEnableBBAttack()
 If $g_bBBDropOrderSet Then
@@ -68327,6 +68367,7 @@ _GUICtrlComboBox_SetCurSel($g_ahCmbBBDropOrder[$i], _GUICtrlComboBox_SelectStrin
 Next
 GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 EndIf
+GUICtrlSetState($g_hChkBBIgnoreWalls, $g_bChkBBIgnoreWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
 Case "Save"
 $g_bChkEnableBBAttack =(GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
 $g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
@@ -68334,6 +68375,7 @@ $g_iTxtBBTrophyLowerLimit = GUICtrlRead($g_hTxtBBTrophyLowerLimit)
 $g_iTxtBBTrophyUpperLimit = GUICtrlRead($g_hTxtBBTrophyUpperLimit)
 $g_bChkBBAttIfLootAvail =(GUICtrlRead($g_hChkBBAttIfLootAvail) = $GUI_CHECKED)
 $g_bChkBBWaitForMachine =(GUICtrlRead($g_hChkBBWaitForMachine) = $GUI_CHECKED)
+$g_bChkBBIgnoreWalls =(GUICtrlRead($g_hChkBBIgnoreWalls) = $GUI_CHECKED)
 EndSwitch
 EndFunc
 Func ReadConfig_MOD()
@@ -68343,8 +68385,11 @@ IniReadS($g_iTxtBBTrophyLowerLimit, $g_sProfileConfigPath, "other", "TxtBBTrophy
 IniReadS($g_iTxtBBTrophyUpperLimit, $g_sProfileConfigPath, "other", "TxtBBTrophyUpperLimit", 5000, "int")
 IniReadS($g_bChkBBAttIfLootAvail, $g_sProfileConfigPath, "other", "ChkBBAttIfLootAvail", False, "Bool")
 IniReadS($g_bChkBBWaitForMachine, $g_sProfileConfigPath, "other", "ChkBBWaitForMachine", False, "Bool")
+IniReadS($g_iBBNextTroopDelay, $g_sProfileConfigPath, "other", "iBBNextTroopDelay", $g_iBBNextTroopDelayDefault, "int")
+IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDelay", $g_iBBSameTroopDelayDefault, "int")
 IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 $g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
+IniReadS($g_bChkBBIgnoreWalls, $g_sProfileConfigPath, "other", "ChkBBIgnoreWalls", False, "Bool")
 EndFunc
 Func SaveConfig_MOD()
 ApplyConfig_MOD(GetApplyConfigSaveAction())
@@ -68354,8 +68399,11 @@ _Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
 _Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
 _Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
 _Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
+_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
+_Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
 _Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 _Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
+_Ini_Add("other", "ChkBBIgnoreWalls", $g_bChkBBIgnoreWalls)
 EndFunc
 Func setupProfileComboBox()
 Local $profileString = ""

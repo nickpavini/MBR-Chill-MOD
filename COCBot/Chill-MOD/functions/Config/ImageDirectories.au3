@@ -12,10 +12,10 @@
 ; ===============================================================================================================================
 
 ; Builder Base Attack
-Global $g_sImgBBMachReady = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBMachReady_0_90.bmp"
-Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.bmp"
-Global $g_sImgBBTroopsTraining = @ScriptDir & "\imgxml\MOD\BuilderBase\TroopStatus\BBTroopsTraining_0_90.bmp"
-Global $g_sImgBBBattleStarted = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleStarted\BBBattleStarted_0_90.bmp"
-Global $g_sImgBBBattleMachine = @ScriptDir & "\imgxml\MOD\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
-Global $g_sImgOkButton = @ScriptDir & "\imgxml\MOD\OkayButton\OkayButton_0_90.bmp"
-Global $g_sImgDirBBTroops = @ScriptDir & "\imgxml\MOD\BuilderBase\BBTroops"
+Global $g_sImgBBMachReady = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BattleMachine\BBMachReady_0_90.bmp"
+Global $g_sImgBBNeedTrainTroops = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\TroopStatus\BBNeedTrainTroops_0_90.bmp"
+Global $g_sImgBBTroopsTraining = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\TroopStatus\BBTroopsTraining_0_90.bmp"
+Global $g_sImgBBBattleStarted = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BattleStarted\BBBattleStarted_0_90.bmp"
+Global $g_sImgBBBattleMachine = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
+Global $g_sImgOkButton = @ScriptDir & "\COCBot\Chill-MOD\Images\OkayButton\OkayButton_0_90.bmp"
+Global $g_sImgDirBBTroops = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BBTroops"

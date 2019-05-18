@@ -14,8 +14,6 @@
 ; ===============================================================================================================================
 
 Func PrepareAttackBB()
-	If Not $g_bChkEnableBBAttack Then Return
-
 	If $g_bChkBBTrophyRange Then
 		If ($g_aiCurrentLootBB[$eLootTrophyBB] > $g_iTxtBBTrophyUpperLimit or $g_aiCurrentLootBB[$eLootTrophyBB] < $g_iTxtBBTrophyLowerLimit) Then
 			SetLog("Trophies out of range.")

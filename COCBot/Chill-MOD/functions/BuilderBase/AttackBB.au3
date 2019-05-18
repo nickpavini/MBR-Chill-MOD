@@ -14,6 +14,8 @@
 ; ===============================================================================================================================
 
 Func AttackBB()
+	If Not $g_bChkEnableBBAttack Then Return
+
 	local $iSide = Random(0, 1, 1) ; randomly choose top left or top right
 	local $aBMPos = 0
 	ClickP($aAway)

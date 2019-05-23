@@ -765,7 +765,7 @@ Func runBot() ;Bot that runs everything in order
 			If _Sleep($DELAYRUNBOT5) Then Return
 			checkMainScreen(False)
 			If $g_bRestart Then ContinueLoop
-			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems']
+			Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyDiscounts']
 			While UBound($aRndFuncList) > 0
 				If $g_bRunState = False Then Return
 				Local $Index = Random(0, UBound($aRndFuncList) - 1, 1)
@@ -1299,6 +1299,9 @@ Func __RunFunction($action)
 			_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
+			_Sleep($DELAYRUNBOT3)
+		Case "DailyDiscounts" ; Chill MOD
+			DailyDiscounts()
 			_Sleep($DELAYRUNBOT3)
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)

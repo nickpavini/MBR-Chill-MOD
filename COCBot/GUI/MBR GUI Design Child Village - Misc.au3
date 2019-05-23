@@ -48,7 +48,8 @@ Func CreateVillageMisc()
 		CreateMiscBuilderBaseSubTab()
 	$g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Clan Games"))
 		CreateMiscClanGamesV3SubTab()
-	CreateBBDropOrderGUI()
+	CreateBBDropOrderGUI() ; Chill MOD
+	CreateDailyDiscountGUI() ; Chill MOD
 	GUICtrlCreateTabItem("")
 
 EndFunc   ;==>CreateVillageMisc
@@ -258,6 +259,13 @@ Func CreateMiscNormalVillageSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems_Info", "Check this to automatically collect free magic items.\r\nMust be at least Th8."))
 			GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 			GUICtrlSetColor ( -1, $COLOR_ERROR )
+
+	; Chill MOD
+	$y += 28
+		$g_hBtnDailyDiscounts = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Daily Discounts"), $x + 300, $y, -1, -1)
+		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Custom select magic items you would like from trader."))
+		GUICtrlSetBkColor(-1, $COLOR_RED)
+		GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
 
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

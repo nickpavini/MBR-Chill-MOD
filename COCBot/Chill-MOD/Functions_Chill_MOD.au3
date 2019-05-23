@@ -18,6 +18,9 @@
 #include "functions\BuilderBase\AttackBB.au3"
 #include "functions\BuilderBase\GetAttackBarBB.au3"
 
+; Daily Discounts
+#include "functions\Village\DailyDiscounts.au3"
+
 ; moved to the end to avoid any global declare issues
 #include "functions\Config\applyConfig.au3"
 #include "functions\Config\readConfig.au3"

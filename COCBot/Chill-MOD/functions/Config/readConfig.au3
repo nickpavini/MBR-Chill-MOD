@@ -30,4 +30,10 @@ Func ReadConfig_MOD()
 
 	; BB Suggested Upgrades
 	IniReadS($g_bChkBBIgnoreWalls, $g_sProfileConfigPath, "other", "ChkBBIgnoreWalls", False, "Bool")
+
+	; Daily Discounts
+	For $i=0 To $g_iDDCount-1
+		IniReadS($g_abChkDD_Deals[$i], $g_sProfileConfigPath, "other", "ChkDD_Deals" & String($i), $g_abChkDD_Deals[$i], "Bool")
+	Next
+	IniReadS($g_bDD_DealsSet, $g_sProfileConfigPath, "other", "DD_DealsSet", $g_bDD_DealsSet, "Bool")
 EndFunc

@@ -15,3 +15,4 @@
 #include-once
 
 #include "GUI\MOD_GUI_Design_BBDropOrder.au3"
+#include "GUI\MOD_GUI_Design_Daily_Discounts.au3"

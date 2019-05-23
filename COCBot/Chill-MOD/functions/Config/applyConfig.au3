@@ -42,6 +42,12 @@ Func ApplyConfig_MOD($TypeReadSave) ;Applies the data from config to the control
 			; BB Suggested Upgrades
 			GUICtrlSetState($g_hChkBBIgnoreWalls, $g_bChkBBIgnoreWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
 
+			; Daily Discounts
+			For $i=0 To $g_iDDCount-1
+				GUICtrlSetState($g_ahChkDD_Deals[$i], $g_abChkDD_Deals[$i] = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+			Next
+			GUICtrlSetBkColor($g_hBtnDailyDiscounts, $g_bDD_DealsSet = True ? $COLOR_GREEN : $COLOR_RED)
+
 		Case "Save"
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)

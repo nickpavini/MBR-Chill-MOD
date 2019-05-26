@@ -17,7 +17,7 @@ Func DailyDiscounts()
 	If Not $g_bRunState Then Return
 
 	Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
-	;If $iLastTimeChecked[$g_iCurAccount] = @MDAY Then Return
+	If $iLastTimeChecked[$g_iCurAccount] = @MDAY Then Return
 
 	ClickP($aAway, 1, 0, "#0332") ;Click Away
 	SetLog("Checking gem deals.", $COLOR_BLUE)

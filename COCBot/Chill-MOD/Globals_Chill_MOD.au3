@@ -20,7 +20,6 @@ Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global $g_bBBMachineReady = False
 Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar
 Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
-Global $g_iBBBattleStartedTimeout = 300000 ; time before we cancel the BB search
 Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
 Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault,  $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault; delay time between different and same troops
 Global $g_iBBNextTroopDelayIncrement = 400,  $g_iBBSameTroopDelayIncrement = 60 ; used for math to calculate delays based on selection

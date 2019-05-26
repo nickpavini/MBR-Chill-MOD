@@ -36,8 +36,17 @@ Func AttackBB()
 	EndIf
 
 	; wait for the clouds to clear
-	If Not CheckBattleStarted() Then Return
-	If _Sleep($DELAYRESPOND) Then Return
+	SetLog("Searching for Opponent.", $COLOR_BLUE)
+	local $timer = __TimerInit()
+	local $iPrevTime = 0
+	While Not CheckBattleStarted()
+		local $iTime = Int(__TimerDiff($timer)/ 60000)
+		If $iTime > $iPrevTime Then ; if we have increased by a minute
+			SetLog("Clouds: " & $iTime & "-Minute(s)")
+			$iPrevTime = $iTime
+		EndIf
+		If _Sleep($DELAYRESPOND) Then Return
+	WEnd
 
 	; Get troops on attack bar and their quantities
 	local $aBBAttackBar = GetAttackBarBB()
@@ -58,8 +67,6 @@ Func AttackBB()
 						If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 							$bDone = True
 							If _Sleep($g_iBBNextTroopDelay) Then Return ; wait before next troop
-						Else
-							If _Sleep($DELAYRESPOND) Then Return ; we are still on same troop so lets drop them all down a bit faster
 						EndIf
 					EndIf
 					$j+=1
@@ -81,7 +88,7 @@ Func AttackBB()
 	SetLog("All Troops Deployed", $COLOR_SUCCESS)
 
 	; place hero and activate ability
-	SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+	If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 	While Not $bBMDeployed And $g_bBBMachineReady
 		$aBMPos = GetMachinePos()
 		If IsArray($aBMPos) Then
@@ -97,11 +104,11 @@ Func AttackBB()
 			$bBMDeployed = True
 		EndIf
 	WEnd
-	SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
+	If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
 
 	; Continue with abilities until death
 	local $bMachineAlive = True
-	while $bMachineAlive
+	while $bMachineAlive And $bBMDeployed
 		If _Sleep($g_iBBMachAbilityTime) Then Return ; wait for machine to be available
 		local $timer = __TimerInit() ; give a bit of time to check if hero is dead because of the random lightning strikes through graphic
 		$aBMPos = GetMachinePos()
@@ -115,7 +122,7 @@ Func AttackBB()
 			PureClickP($aBMPos)
 		EndIf
 	WEnd
-	SetLog("Battle Machine Dead")
+	If $bBMDeployed And Not $bMachineAlive Then SetLog("Battle Machine Dead")
 
 	; wait for end of battle
 	SetLog("Waiting for end of battle.", $COLOR_BLUE)
@@ -130,24 +137,16 @@ Func AttackBB()
 	ZoomOut()
 EndFunc
 
-; need pics for the BB searching screen.. rn just waits 30 seconds and craps out so there is room for bugs
 Func CheckBattleStarted()
 	local $sSearchDiamond = GetDiamondFromRect("376,11,420,26")
-	local $timer = __TimerInit()
 
-	While 1
-		local $aCoords = decodeSingleCoord(findImage("BBBattleStarted", $g_sImgBBBattleStarted, $sSearchDiamond, 1, True))
-		If IsArray($aCoords) And UBound($aCoords) = 2 Then
-			SetLog("Battle Started")
-			Return True
-		EndIf
+	local $aCoords = decodeSingleCoord(findImage("BBBattleStarted", $g_sImgBBBattleStarted, $sSearchDiamond, 1, True))
+	If IsArray($aCoords) And UBound($aCoords) = 2 Then
+		SetLog("Battle Started", $COLOR_SUCCESS)
+		Return True
+	EndIf
 
-		If __TimerDiff($timer) > $g_iBBBattleStartedTimeout Then
-			SetLog("Battle did not start after " & String($g_iBBBattleStartedTimeout) & " seconds.")
-			If $g_bDebugImageSave Then DebugImageSave("BBBattleStarted")
-			Return False
-		EndIf
-	WEnd
+	Return False ; If battle not started
 EndFunc
 
 Func GetMachinePos()

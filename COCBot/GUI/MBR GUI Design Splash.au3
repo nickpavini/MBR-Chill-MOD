@@ -45,7 +45,7 @@ Func CreateSplashScreen($iSteps = Default)
 
 	Local $sSplashImg = $g_sLogoPath
 	Local $hImage, $iX, $iY
-	Local $iT = 20 ; Top of logo (additional space)
+	Local $iT = 10 ; Top of logo (additional space)
 	Local $iB = 10 ; Bottom of logo (additional space)
 
 	If Not $bCustomWindow Then

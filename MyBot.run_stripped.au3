@@ -5917,7 +5917,6 @@ Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAtt
 Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
 Global $g_bBBMachineReady = False
 Global $g_iBBMachAbilityTime = 14000
-Global $g_iBBBattleStartedTimeout = 300000
 Global Const $g_iBBNextTroopDelayDefault = 2000, $g_iBBSameTroopDelayDefault = 300
 Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault, $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault
 Global $g_iBBNextTroopDelayIncrement = 400, $g_iBBSameTroopDelayIncrement = 60
@@ -5935,6 +5934,15 @@ Global $g_sBBDropOrder = $g_sBBDropOrderDefault
 Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBBIgnoreWalls = 0
 Global $g_bChkBBIgnoreWalls = 0
+Global $g_iDDCount = 18
+Global $g_hGUI_DailyDiscounts = 0
+Global $g_hBtnDailyDiscounts = 0
+Global $g_ahChkDD_Deals[$g_iDDCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_abChkDD_Deals[$g_iDDCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aiDD_DealsCosts[$g_iDDCount] = [25, 75, 115, 285, 300, 300, 500, 1000, 500, 500, 925, 925, 925, 1500, 1500, 3000, 1500, 1500]
+Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResource = 2, $g_eDDPotionBuilder = 3, $g_eDDPotionPower = 4, $g_eDDPotionHero = 5, $g_eDDWallRing5 = 6, $g_eDDWallRing10 = 7, $g_eDDShovel = 8, $g_eDDBookHeros = 9, $g_eDDBookFighting = 10, $g_eDDBookSpells = 11, $g_eDDBookBuilding = 12, $g_eDDRuneGold = 13, $g_eDDRuneElixir = 14, $g_eDDRuneDarkElixir = 15, $g_eDDRuneBBGold = 16, $g_eDDRuneBBElixir = 17
+Global $g_hBtnDDCancel = 0, $g_hBtnDDApply = 0, $g_hBtnDDClear = 0
+Global $g_bDD_DealsSet = 0
 Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
 Global Const $g_sLogoUrlSmallPath = @ScriptDir & "\Images\LogoURLsmall.png"
@@ -7213,7 +7221,7 @@ EndIf
 EndIf
 Local $sSplashImg = $g_sLogoPath
 Local $hImage, $iX, $iY
-Local $iT = 20
+Local $iT = 10
 Local $iB = 10
 If Not $bCustomWindow Then
 Switch $g_iGuiMode
@@ -7431,6 +7439,9 @@ Global $g_sImgBBBattleStarted = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBa
 Global $g_sImgBBBattleMachine = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
 Global $g_sImgOkButton = @ScriptDir & "\COCBot\Chill-MOD\Images\OkayButton\OkayButton_0_90.bmp"
 Global $g_sImgDirBBTroops = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BBTroops"
+Global $g_sImgDirDailyDiscounts = @ScriptDir & "\COCBot\Chill-MOD\Images\DailyDiscounts\"
+Global $g_sImgDDWallRingx5 = $g_sImgDirDailyDiscounts & "WallRingAmount\x5_0_90.bmp"
+Global $g_sImgDDWallRingx10 = $g_sImgDirDailyDiscounts & "WallRingAmount\x10_0_90.bmp"
 Global $g_sImgImgLocButtons = @ScriptDir & "\imgxml\imglocbuttons"
 Global Const $g_sImgAnyoneThere = @ScriptDir & "\imgxml\other\AnyoneThere[[Android]]*"
 Global Const $g_sImgPersonalBreak = @ScriptDir & "\imgxml\other\break*"
@@ -12607,6 +12618,7 @@ CreateMiscBuilderBaseSubTab()
 $g_hGUI_MISC_TAB_ITEM3 = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "MISC_TAB_ITEM3", "Clan Games"))
 CreateMiscClanGamesV3SubTab()
 CreateBBDropOrderGUI()
+CreateDailyDiscountGUI()
 GUICtrlCreateTabItem("")
 EndFunc
 Func CreateMiscNormalVillageSubTab()
@@ -12741,6 +12753,11 @@ $g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Desi
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems_Info", "Check this to automatically collect free magic items.\r\nMust be at least Th8."))
 GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 GUICtrlSetColor(-1, $COLOR_ERROR )
+$y += 28
+$g_hBtnDailyDiscounts = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Daily Discounts"), $x + 300, $y, -1, -1)
+_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Custom select magic items you would like from trader."))
+GUICtrlSetBkColor(-1, $COLOR_RED)
+GUICtrlSetOnEvent(-1, "btnDailyDiscounts")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 Local $x = 20, $y = 363
 GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "Group_03", "Locate Manually"), $x - 15, $y - 20, $g_iSizeWGrpTab3, 60)
@@ -21952,6 +21969,38 @@ $g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child 
 GUICtrlSetOnEvent(-1, "CloseCustomBBDropOrder")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc
+Func CreateDailyDiscountGUI()
+$g_hGUI_DailyDiscounts = _GUICreate(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "GUI_DailyDiscounts", "Village Trader Daily Discounts"), 410, 310, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+GUICtrlCreateGroup( "Gem Deals", 10, 10, 386, 225 )
+$g_ahChkDD_Deals[$g_eDDPotionTrain] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionTrain", "Training Potion" & "(" & String($g_aiDD_DealsCosts[$g_eDDPotionTrain]) & " gems)"), 25, 40, -1, -1)
+$g_ahChkDD_Deals[$g_eDDPotionClock] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionClock", "Clock Tower Potion" & "(" & String($g_aiDD_DealsCosts[$g_eDDPotionClock]) & " gems)"), 25, 60, -1, -1)
+$g_ahChkDD_Deals[$g_eDDPotionResource] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionResource", "Resource Potion" & "(" & String($g_aiDD_DealsCosts[$g_eDDPotionResource]) & " gems)"), 25, 80, -1, -1)
+$g_ahChkDD_Deals[$g_eDDPotionBuilder] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionBuilder", "Builder Potion" & "(" & String($g_aiDD_DealsCosts[$g_eDDPotionBuilder]) & " gems)"), 25, 100, -1, -1)
+$g_ahChkDD_Deals[$g_eDDPotionPower] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionPower", "Power Potion" & "(" & String($g_aiDD_DealsCosts[$g_eDDPotionPower]) & " gems)"), 25, 120, -1, -1)
+$g_ahChkDD_Deals[$g_eDDPotionHero] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDPotionHero", "Hero Potion" & "(" & String($g_aiDD_DealsCosts[$g_eDDPotionHero]) & " gems)"), 25, 140, -1, -1)
+$g_ahChkDD_Deals[$g_eDDWallRing5] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDWallRing5", "Wall Ring x5" & "(" & String($g_aiDD_DealsCosts[$g_eDDWallRing5]) & " gems)"), 25, 160, -1, -1)
+$g_ahChkDD_Deals[$g_eDDWallRing10] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "$g_hChkDDWallRing10", "Wall Ring x10" & "(" & String($g_aiDD_DealsCosts[$g_eDDWallRing10]) & " gems)"), 25, 180, -1, -1)
+$g_ahChkDD_Deals[$g_eDDShovel] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDShovel", "Shovel x1" & "(" & String($g_aiDD_DealsCosts[$g_eDDShovel]) & " gems)"), 25, 200, -1, -1)
+$g_ahChkDD_Deals[$g_eDDBookHeros] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookHeros", "Book of Heros" & "(" & String($g_aiDD_DealsCosts[$g_eDDBookHeros]) & " gems)"), 225, 40, -1, -1)
+$g_ahChkDD_Deals[$g_eDDBookFighting] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookFighting", "Book of Fighting" & "(" & String($g_aiDD_DealsCosts[$g_eDDBookFighting]) & " gems)"), 225, 60, -1, -1)
+$g_ahChkDD_Deals[$g_eDDBookSpells] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookSpells", "Book of Spells" & "(" & String($g_aiDD_DealsCosts[$g_eDDBookSpells]) & " gems)"), 225, 80, -1, -1)
+$g_ahChkDD_Deals[$g_eDDBookBuilding] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDBookBuilding", "Book of Building" & "(" & String($g_aiDD_DealsCosts[$g_eDDBookBuilding]) & " gems)"), 225, 100, -1, -1)
+$g_ahChkDD_Deals[$g_eDDRuneGold] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneGold", "Rune of Gold" & "(" & String($g_aiDD_DealsCosts[$g_eDDRuneGold]) & " gems)"), 225, 120, -1, -1)
+$g_ahChkDD_Deals[$g_eDDRuneElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneElixir", "Rune of Elixir" & "(" & String($g_aiDD_DealsCosts[$g_eDDRuneElixir]) & " gems)"), 225, 140, -1, -1)
+$g_ahChkDD_Deals[$g_eDDRuneDarkElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneDarkElixir", "Rune of Dark Elixir" & "(" & String($g_aiDD_DealsCosts[$g_eDDRuneDarkElixir]) & " gems)"), 225, 160, -1, -1)
+$g_ahChkDD_Deals[$g_eDDRuneBBGold] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneBBGold", "Rune of BB Gold" & "(" & String($g_aiDD_DealsCosts[$g_eDDRuneBBGold]) & " gems)"), 225, 180, -1, -1)
+$g_ahChkDD_Deals[$g_eDDRuneBBElixir] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "ChkDDRuneBBElixir", "Rune of BB Elixir" & "(" & String($g_aiDD_DealsCosts[$g_eDDRuneBBElixir]) & " gems)"), 225, 200, -1, -1)
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+$g_hBtnDDApply = GUICtrlCreateButton(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "BtnDDApply", "Apply ✔"), 237, 245, -1, -1)
+GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "BtnDDApply_info", "Set the gem deals you would like to be purchased on your behalf."))
+GUICtrlSetOnEvent(-1, "btnDDApply")
+$g_hBtnDDCancel = GUICtrlCreateButton(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "BtnDDCancel", "Cancel ❌"), 312, 245, -1, -1)
+GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "BtnDDCancel_info", "Exit without setting any gem deals to be purchased."))
+GUICtrlSetOnEvent(-1, "btnDDCancel")
+$g_hBtnDDClear = GUICtrlCreateButton(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "BtnDDClear", "Clear All"), 40, 245, -1, -1)
+GUICtrlSetTip(-1, GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "BtnDDClear_info", "Clear selected deals."))
+GUICtrlSetOnEvent(-1, "btnDDClear")
+EndFunc
 Func CreateMainGUI()
 Local $iStyle = $WS_BORDER
 If BitAND($g_iBotDesignFlags, 1) = 0 Then
@@ -28678,6 +28727,43 @@ Func CloseCustomBBDropOrder()
 GUISetState(@SW_HIDE, $g_hGUI_BBDropOrder)
 GUICtrlSetState($g_hBtnBBDropOrder, $GUI_ENABLE)
 GUICtrlSetState( $g_hChkEnableBBAttack, $GUI_ENABLE )
+EndFunc
+Func btnDailyDiscounts()
+GUICtrlSetState( $g_hBtnDailyDiscounts, $GUI_DISABLE )
+GUISetState(@SW_SHOW, $g_hGUI_DailyDiscounts)
+EndFunc
+Func btnDDApply()
+GUISetState(@SW_HIDE, $g_hGUI_DailyDiscounts)
+local $iDealsChked = 0
+For $i=0 To $g_iDDCount-1
+If GUICtrlRead($g_ahChkDD_Deals[$i]) = $GUI_CHECKED Then
+$g_abChkDD_Deals[$i] = True
+$g_bDD_DealsSet = True
+$iDealsChked+=1
+Else
+$g_abChkDD_Deals[$i] = False
+EndIf
+Next
+If $g_bDD_DealsSet And $iDealsChked <> 0 Then
+GUICtrlSetBkColor($g_hBtnDailyDiscounts, $COLOR_GREEN)
+Else
+$g_bDD_DealsSet = False
+GUICtrlSetBkColor($g_hBtnDailyDiscounts, $COLOR_RED)
+EndIf
+GUICtrlSetState( $g_hBtnDailyDiscounts, $GUI_ENABLE )
+EndFunc
+Func btnDDCancel()
+GUISetState( @SW_HIDE, $g_hGUI_DailyDiscounts )
+For $i=0 To $g_iDDCount-1
+If Not $g_abChkDD_Deals[$i] Then GUICtrlSetState($g_ahChkDD_Deals[$i], $GUI_UNCHECKED)
+If $g_abChkDD_Deals[$i] Then GUICtrlSetState($g_ahChkDD_Deals[$i], $GUI_CHECKED)
+Next
+GUICtrlSetState( $g_hBtnDailyDiscounts, $GUI_ENABLE )
+EndFunc
+Func btnDDClear()
+For $i=0 To $g_iDDCount-1
+GUICtrlSetState($g_ahChkDD_Deals[$i], $GUI_UNCHECKED)
+Next
 EndFunc
 Func BotStart($bAutostartDelay = 0)
 FuncEnter(BotStart)
@@ -68167,8 +68253,17 @@ Else
 SetLog("Could not locate search button to go find an attack.", $COLOR_ERROR)
 Return
 EndIf
-If Not CheckBattleStarted() Then Return
+SetLog("Searching for Opponent.", $COLOR_BLUE)
+local $timer = __TimerInit()
+local $iPrevTime = 0
+While Not CheckBattleStarted()
+local $iTime = Int(__TimerDiff($timer)/ 60000)
+If $iTime > $iPrevTime Then
+SetLog("Clouds: " & $iTime & "-Minute(s)")
+$iPrevTime = $iTime
+EndIf
 If _Sleep($DELAYRESPOND) Then Return
+WEnd
 local $aBBAttackBar = GetAttackBarBB()
 If _Sleep($DELAYRESPOND) Then Return
 local $bTroopsDropped = False, $bBMDeployed = False
@@ -68185,8 +68280,6 @@ DeployBBTroop($aBBAttackBar[$j][0], $aBBAttackBar[$j][1], $aBBAttackBar[$j][2], 
 If $j = $iNumSlots-1 Or $aBBAttackBar[$j][0] <> $aBBAttackBar[$j+1][0] Then
 $bDone = True
 If _Sleep($g_iBBNextTroopDelay) Then Return
-Else
-If _Sleep($DELAYRESPOND) Then Return
 EndIf
 EndIf
 $j+=1
@@ -68206,7 +68299,7 @@ $aBBAttackBar = GetAttackBarBB(True)
 If $aBBAttackBar = "" Then $bTroopsDropped = True
 WEnd
 SetLog("All Troops Deployed", $COLOR_SUCCESS)
-SetLog("Deploying Battle Machine.", $COLOR_BLUE)
+If $g_bBBMachineReady And Not $bBMDeployed Then SetLog("Deploying Battle Machine.", $COLOR_BLUE)
 While Not $bBMDeployed And $g_bBBMachineReady
 $aBMPos = GetMachinePos()
 If IsArray($aBMPos) Then
@@ -68222,9 +68315,9 @@ Else
 $bBMDeployed = True
 EndIf
 WEnd
-SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
+If $bBMDeployed Then SetLog("Battle Machine Deployed", $COLOR_SUCCESS)
 local $bMachineAlive = True
-while $bMachineAlive
+while $bMachineAlive And $bBMDeployed
 If _Sleep($g_iBBMachAbilityTime) Then Return
 local $timer = __TimerInit()
 $aBMPos = GetMachinePos()
@@ -68237,7 +68330,7 @@ Else
 PureClickP($aBMPos)
 EndIf
 WEnd
-SetLog("Battle Machine Dead")
+If $bBMDeployed And Not $bMachineAlive Then SetLog("Battle Machine Dead")
 SetLog("Waiting for end of battle.", $COLOR_BLUE)
 If Not Okay() Then Return
 SetLog("Battle Ended.")
@@ -68249,19 +68342,12 @@ ZoomOut()
 EndFunc
 Func CheckBattleStarted()
 local $sSearchDiamond = GetDiamondFromRect("376,11,420,26")
-local $timer = __TimerInit()
-While 1
 local $aCoords = decodeSingleCoord(findImage("BBBattleStarted", $g_sImgBBBattleStarted, $sSearchDiamond, 1, True))
 If IsArray($aCoords) And UBound($aCoords) = 2 Then
-SetLog("Battle Started")
+SetLog("Battle Started", $COLOR_SUCCESS)
 Return True
 EndIf
-If __TimerDiff($timer) > $g_iBBBattleStartedTimeout Then
-SetLog("Battle did not start after " & String($g_iBBBattleStartedTimeout) & " seconds.")
-If $g_bDebugImageSave Then DebugImageSave("BBBattleStarted")
 Return False
-EndIf
-WEnd
 EndFunc
 Func GetMachinePos()
 If Not $g_bBBMachineReady Then Return
@@ -68344,6 +68430,143 @@ SetLog($aBBAttackBar[$i][0] & ", (" & String($aBBAttackBar[$i][1]) & "," & Strin
 Next
 Return $aBBAttackBar
 EndFunc
+Func DailyDiscounts()
+If Not $g_bDD_DealsSet Then Return
+If Not $g_bRunState Then Return
+Local Static $iLastTimeChecked[8] = [0, 0, 0, 0, 0, 0, 0, 0]
+If $iLastTimeChecked[$g_iCurAccount] = @MDAY Then Return
+ClickP($aAway, 1, 0, "#0332")
+SetLog("Checking gem deals.", $COLOR_BLUE)
+If QuickMIS("BC1", $g_sImgTrader, 120, 160, 210, 215, True, False) Then
+SetLog("Trader available, listing all deals.", $COLOR_SUCCESS)
+Click($g_iQuickMISX + 120, $g_iQuickMISY + 160)
+If _Sleep(500) Then Return
+Else
+SetLog("Trader unavailable", $COLOR_INFO)
+Return
+EndIf
+If Not QuickMIS("BC1", $g_sImgDailyDiscountWindow, 280, 175, 345, 210, True, False) Then
+ClickP($aAway, 1, 0, "#0332")
+Return
+EndIf
+If Not $g_bRunState Then Return
+Local $aOcrPositions[3][2] = [[200, 439], [390, 439], [580, 439]]
+local $sSearchDiamond = GetDiamondFromRect("140,240,720,485")
+local $iSlotOffset = 192
+local $iWindowOffset = 158
+local $aDeals[0][6]
+local $aDealsResult = findMultiple($g_sImgDirDailyDiscounts, $sSearchDiamond, $sSearchDiamond, 0, 1000, 0, "objectname,objectpoints", True)
+If UBound($aDealsResult) = 0 Then
+SetLog("All deals collected or clan castle has no room for the current deals.")
+Return
+EndIf
+For $i=0 To UBound($aDealsResult, 1)-1
+local $aCurrDeal = $aDealsResult[$i]
+local $aCoords = decodeSingleCoord($aCurrDeal[1])
+local $iSlot = Int(($aCoords[0] - $iWindowOffset) / $iSlotOffset)
+local $iCost = 0, $iIndex = 0
+If getOcrAndCapture("coc-freemagicitems", $aOcrPositions[$iSlot][0], $aOcrPositions[$iSlot][1], 80, 25, True) = "FREE" Then ContinueLoop
+If $aCurrDeal[0] = "WallRing" Then
+If UBound(decodeSingleCoord(findImage("WallRingAmountx5", $g_sImgDDWallRingx5, $sSearchDiamond, 1, True))) > 1 Then
+$iIndex = $g_eDDWallRing5
+$aCurrDeal[0] = $aCurrDeal[0] & " x5"
+ElseIf UBound(decodeSingleCoord(findImage("WallRingAmountx10", $g_sImgDDWallRingx10, $sSearchDiamond, 1, False))) > 1 Then
+$iIndex = $g_eDDWallRing10
+$aCurrDeal[0] = $aCurrDeal[0] & " x10"
+Else
+SetLog("ERROR: Could not find the amount of wall rings.", $COLOR_ERROR)
+ContinueLoop
+EndIf
+Else
+$iIndex = GetDealIndex($aCurrDeal[0])
+If $iIndex = -1 Then
+SetLog("ERROR: Invalid deal name.", $COLOR_ERROR)
+ContinueLoop
+EndIf
+EndIf
+$iCost = $g_aiDD_DealsCosts[$iIndex]
+local $aTempElement[1][6] = [[$aCurrDeal[0], $aCoords[0], $aCoords[1], $iSlot, $iCost, $iIndex]]
+_ArrayAdd($aDeals, $aTempElement)
+_Sleep($DELAYRESPOND)
+Next
+For $i=0 To UBound($aDeals, 1)-1
+SetLog($aDeals[$i][0] & " - " & String($aDeals[$i][4]) & " Gems", $COLOR_SUCCESS)
+If $g_bDebugSetlog Then SetDebugLog($aDeals[$i][0] & " x: " & String($aDeals[$i][1]) & " y: " & String($aDeals[$i][2]) & " Slot: " & String($aDeals[$i][3]) & " Cost: " & String($aDeals[$i][4]) & " Index: " & String($aDeals[$i][5]))
+Next
+_Sleep(1500)
+For $i=0 To UBound($aDeals, 1)-1
+If $g_abChkDD_Deals[$aDeals[$i][5]] = True Then
+SetLog("Buying " & $aDeals[$i][0], $COLOR_BLUE)
+If $g_iGemAmount < $aDeals[$i][4] Then
+SetLog("Not enough gems.")
+ContinueLoop
+EndIf
+If Not _ColorCheck(_GetPixelColor($aOcrPositions[$aDeals[$i][3]][0], $aOcrPositions[$aDeals[$i][3]][1] + 5, True), Hex(0x5D79C5, 6), 5) Then
+SetLog("No Space In Castle")
+ContinueLoop
+EndIf
+Click($aDeals[$i][1], $aDeals[$i][2])
+_Sleep(750)
+If Not ConfirmPurchase() Then
+ClickP($aAway, 2, 50, "#0332")
+Return
+EndIf
+$g_iGemAmount -= $aDeals[$i][4]
+_Sleep(1200)
+EndIf
+Next
+$iLastTimeChecked[$g_iCurAccount] = @MDAY
+ClickP($aAway, 1, 0, "#0332")
+EndFunc
+Func GetDealIndex($sName)
+switch($sName)
+Case "TrainPotion"
+Return $g_eDDPotionTrain
+Case "ClockPotion"
+Return $g_eDDPotionClock
+Case "ResourcePotion"
+Return $g_eDDPotionResource
+Case "BuilderPotion"
+Return $g_eDDPotionBuilder
+Case "PowerPotion"
+Return $g_eDDPotionPower
+Case "HeroPotion"
+Return $g_eDDPotionHero
+Case "Shovel"
+Return $g_eDDShovel
+Case "BookHeros"
+Return $g_eDDBookHeros
+Case "BookFighting"
+Return $g_eDDBookFighting
+Case "BookSpells"
+Return $g_eDDBookSpells
+Case "BookBuilding"
+Return $g_eDDBookBuilding
+Case "RuneGold"
+Return $g_eDDRuneGold
+Case "RuneElixir"
+Return $g_eDDRuneElixir
+Case "RuneDarkElixir"
+Return $g_eDDRuneDarkElixir
+Case "RuneBBGold"
+Return $g_eDDRuneBBGold
+Case "RuneBBElixir"
+Return $g_eDDRuneBBElixir
+Case Else
+Return -1
+EndSwitch
+EndFunc
+Func ConfirmPurchase()
+Local $offColors[3][3] = [[0x0D0D0D, 144, 0], [0xDEF885, 13, 3], [0x6DBC1f, 131, 38]]
+Local $ButtonPixel = _MultiPixelSearch(340, 385, 506, 461, 1, 1, Hex(0x0D0D0D, 6), $offColors, 20)
+If IsArray($ButtonPixel) Then
+PureClick($ButtonPixel[0] + 50, $ButtonPixel[1] + 25)
+Return True
+Else
+SetLog("ERROR: Could not confirm purchase", $COLOR_ERROR)
+Return False
+EndIf
+EndFunc
 Func ApplyConfig_MOD($TypeReadSave)
 Switch $TypeReadSave
 Case "Read"
@@ -68368,6 +68591,10 @@ Next
 GUICtrlSetBkColor($g_hBtnBBDropOrder, $COLOR_GREEN)
 EndIf
 GUICtrlSetState($g_hChkBBIgnoreWalls, $g_bChkBBIgnoreWalls ? $GUI_CHECKED : $GUI_UNCHECKED)
+For $i=0 To $g_iDDCount-1
+GUICtrlSetState($g_ahChkDD_Deals[$i], $g_abChkDD_Deals[$i] = True ? $GUI_CHECKED : $GUI_UNCHECKED)
+Next
+GUICtrlSetBkColor($g_hBtnDailyDiscounts, $g_bDD_DealsSet = True ? $COLOR_GREEN : $COLOR_RED)
 Case "Save"
 $g_bChkEnableBBAttack =(GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)
 $g_bChkBBTrophyRange =(GUICtrlRead($g_hChkBBTrophyRange) = $GUI_CHECKED)
@@ -68390,6 +68617,10 @@ IniReadS($g_iBBSameTroopDelay, $g_sProfileConfigPath, "other", "iBBSameTroopDela
 IniReadS($g_bBBDropOrderSet, $g_sProfileConfigPath, "other", "bBBDropOrderSet", False, "Bool")
 $g_sBBDropOrder = IniRead($g_sProfileConfigPath, "other", "sBBDropOrder", $g_sBBDropOrderDefault)
 IniReadS($g_bChkBBIgnoreWalls, $g_sProfileConfigPath, "other", "ChkBBIgnoreWalls", False, "Bool")
+For $i=0 To $g_iDDCount-1
+IniReadS($g_abChkDD_Deals[$i], $g_sProfileConfigPath, "other", "ChkDD_Deals" & String($i), $g_abChkDD_Deals[$i], "Bool")
+Next
+IniReadS($g_bDD_DealsSet, $g_sProfileConfigPath, "other", "DD_DealsSet", $g_bDD_DealsSet, "Bool")
 EndFunc
 Func SaveConfig_MOD()
 ApplyConfig_MOD(GetApplyConfigSaveAction())
@@ -68404,6 +68635,10 @@ _Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
 _Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
 _Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
 _Ini_Add("other", "ChkBBIgnoreWalls", $g_bChkBBIgnoreWalls)
+For $i=0 To $g_iDDCount-1
+_Ini_Add("other", "ChkDD_Deals" & String($i), $g_abChkDD_Deals[$i] = True ? 1 : 0)
+Next
+_Ini_Add("other", "DD_DealsSet", $g_bDD_DealsSet = True ? 1 : 0)
 EndFunc
 Func setupProfileComboBox()
 Local $profileString = ""
@@ -74971,7 +75206,7 @@ EndIf
 If _Sleep($DELAYRUNBOT5) Then Return
 checkMainScreen(False)
 If $g_bRestart Then ContinueLoop
-Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems']
+Local $aRndFuncList = ['LabCheck', 'Collect', 'CheckTombs', 'CleanYard', 'CollectFreeMagicItems', 'DailyDiscounts']
 While UBound($aRndFuncList) > 0
 If $g_bRunState = False Then Return
 Local $Index = Random(0, UBound($aRndFuncList) - 1, 1)
@@ -75431,6 +75666,9 @@ EndIf
 _Sleep($DELAYRUNBOT3)
 Case "CollectFreeMagicItems"
 CollectFreeMagicItems()
+_Sleep($DELAYRUNBOT3)
+Case "DailyDiscounts"
+DailyDiscounts()
 _Sleep($DELAYRUNBOT3)
 Case ""
 SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)

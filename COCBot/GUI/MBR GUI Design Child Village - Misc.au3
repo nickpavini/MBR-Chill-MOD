@@ -298,14 +298,13 @@ Func CreateMiscNormalVillageSubTab()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkGemsBox_Info_01", "Check this to automatically clear GemBox."))
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 
-		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPowerPotion, $x + 230, $y + 1 , 24, 24)
-		$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 270, $y + 4, -1, -1)
+		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPowerPotion, $x + 230, $y + 1 - 30, 24, 24)
+		$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 270, $y + 4 - 30, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems_Info", "Check this to automatically collect free magic items.\r\nMust be at least Th8."))
 			GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 			GUICtrlSetColor ( -1, $COLOR_ERROR )
 
 	; Chill MOD
-	$y += 28
 		$g_hBtnDailyDiscounts = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Daily Discounts"), $x + 300, $y, -1, -1)
 		_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Custom select magic items you would like from trader."))
 		GUICtrlSetBkColor(-1, $COLOR_RED)

@@ -19,6 +19,7 @@ Global $g_sImgBBBattleStarted = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBa
 Global $g_sImgBBBattleMachine = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BattleMachine\BBBattleMachine_0_90.bmp"
 Global $g_sImgOkButton = @ScriptDir & "\COCBot\Chill-MOD\Images\OkayButton\OkayButton_0_90.bmp"
 Global $g_sImgDirBBTroops = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\BBTroops"
+Global $g_sImgBBLootAvail = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\LootAvail\LootAvail_0_90.bmp"
 
 ; Daily Discounts
 Global $g_sImgDirDailyDiscounts = @ScriptDir & "\COCBot\Chill-MOD\Images\DailyDiscounts\"

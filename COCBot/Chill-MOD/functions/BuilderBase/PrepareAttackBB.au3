@@ -67,15 +67,14 @@ Func ClickAttack()
 EndFunc
 
 Func CheckLootAvail()
-	local $aColors = [[0x292928, 135, 0], [0x74bd2f, 13, 19], [0x74bd2f, 117, 19]]
+	local $aCoords = decodeSingleCoord(findImage("BBLootAvail_bmp", $g_sImgBBLootAvail, GetDiamondFromRect("210,622,658,721"), 1, True))
 	local $bRet = False
-	local $aGemButton = _MultiPixelSearch(500, 650, 645, 718, 1, 1, Hex(0x2b2b2a, 6), $aColors, 20)
 
-	If Not IsArray($aGemButton) Then
+	If IsArray($aCoords) And UBound($aCoords) = 2 Then
 		$bRet = True
-		SetLog("Loot is available.")
+		SetLog("Loot is Available.")
 	Else
-		SetLog("No loot available")
+		SetLog("No loot available.")
 		If $g_bDebugImageSave Then DebugImageSave("CheckLootAvail")
 	EndIf
 

@@ -5928,10 +5928,10 @@ Global $g_hGUI_BBDropOrder = 0
 Global $g_hChkBBCustomDropOrderEnable = 0
 Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
 Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 10
-Global Const $g_sBBDropOrderDefault = "BoxerGiant|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
+Global Const $g_iBBTroopCount = 11
+Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
-Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBBIgnoreWalls = 0
 Global $g_bChkBBIgnoreWalls = 0
 Global $g_iDDCount = 18
@@ -12795,12 +12795,11 @@ _GUICtrlCreateIcon($g_sLibIconPath, $eIcnGembox, $x + 32, $y, 24, 24)
 $g_hChkGemsBox = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkGemsBox", "Remove GemBox"), $x + 100, $y + 4, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkGemsBox_Info_01", "Check this to automatically clear GemBox."))
 GUICtrlSetState(-1, $GUI_UNCHECKED)
-_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPowerPotion, $x + 230, $y + 1 , 24, 24)
-$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 270, $y + 4, -1, -1)
+_GUICtrlCreateIcon($g_sLibIconPath, $eIcnPowerPotion, $x + 230, $y + 1 - 30, 24, 24)
+$g_hChkFreeMagicItems = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems", "Collect Free Magic Items"), $x + 270, $y + 4 - 30, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "ChkFreeMagicItems_Info", "Check this to automatically collect free magic items.\r\nMust be at least Th8."))
 GUICtrlSetOnEvent(-1, "ChkFreeMagicItems")
 GUICtrlSetColor(-1, $COLOR_ERROR )
-$y += 28
 $g_hBtnDailyDiscounts = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Daily Discounts"), $x + 300, $y, -1, -1)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "SetDailyDiscounts", "Custom select magic items you would like from trader."))
 GUICtrlSetBkColor(-1, $COLOR_RED)
@@ -22092,9 +22091,9 @@ GUIDelete($g_hGUI_CommandLineHelp)
 Opt("GUIOnEventMode", $iOpt)
 EndFunc
 Func CreateBBDropOrderGUI()
-$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 288, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 313, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 Local $x = 25, $y = 25
-GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 225)
+GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 250)
 $x += 10
 $y += 20
 $g_hChkBBCustomDropOrderEnable = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBChkCustomDropOrderEnable", "Enable Custom Dropping Order"), $x - 13, $y - 22, -1, -1)
@@ -22103,7 +22102,7 @@ _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "
 GUICtrlSetOnEvent(-1, "chkBBDropOrder")
 $y+=5
 For $i=0 To $g_iBBTroopCount-1
-If $i < 5 Then
+If $i < 6 Then
 GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
 $g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
@@ -22111,8 +22110,8 @@ GUICtrlSetData(-1, $g_sBBDropOrderDefault)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
 GUICtrlSetState(-1, $GUI_DISABLE)
 Else
-GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-5), -1, 18)
-$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-5), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-6), -1, 18)
+$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-6), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
 GUICtrlSetData(-1, $g_sBBDropOrderDefault)
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
@@ -22120,7 +22119,7 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 EndIf
 Next
 $x = 25
-$y = 200
+$y = 225
 $g_hBtnBBDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
 GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_01", "Push button when finished selecting custom troops dropping order") & @CRLF & GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet_Info_02", "When not all troop slots are filled, will use default order."))
@@ -22130,7 +22129,7 @@ $g_hBtnBBRemoveDropOrder = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Des
 GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 _GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder_Info_01", "Push button to remove all troops from list and start over"))
 GUICtrlSetOnEvent(-1, "BtnBBRemoveDropOrder")
-$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 233, 85, 25)
+$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 258, 85, 25)
 GUICtrlSetOnEvent(-1, "CloseCustomBBDropOrder")
 GUICtrlCreateGroup("", -99, -99, 1, 1)
 EndFunc

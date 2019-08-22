@@ -14,11 +14,11 @@
 ; ===============================================================================================================================
 
 Func CreateBBDropOrderGUI()
-	$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 288, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
+	$g_hGUI_BBDropOrder = _GUICreate(GetTranslatedFileIni("MOD GUI Design Child Village - Misc", "GUI_BBDropOrder", "BB Custom Drop Order"), 322, 313, -1, -1, $WS_BORDER, $WS_EX_CONTROLPARENT)
 
 
 	Local $x = 25, $y = 25
-	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 225)
+	GUICtrlCreateGroup(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BBDropOrderGroup", "BB Custom Dropping Order"), $x - 20, $y - 20, 308, 250)
 		$x += 10
 		$y += 20
 
@@ -29,7 +29,7 @@ Func CreateBBDropOrderGUI()
 
 		$y+=5
 		For $i=0 To $g_iBBTroopCount-1
-			If $i < 5 Then
+			If $i < 6 Then
 				GUICtrlCreateLabel($i + 1 & ":", $x - 19, $y + 3 + 25*$i, -1, 18)
 				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x, $y + 25*$i, 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
@@ -37,8 +37,8 @@ Func CreateBBDropOrderGUI()
 					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
 					GUICtrlSetState(-1, $GUI_DISABLE)
 			Else
-				GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-5), -1, 18)
-				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-5), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
+				GUICtrlCreateLabel($i + 1 & ":", $x + 150 - 19, $y + 3 + 25*($i-6), -1, 18)
+				$g_ahCmbBBDropOrder[$i] = GUICtrlCreateCombo("", $x+150, $y + 25*($i-6), 94, 18, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 					GUICtrlSetOnEvent(-1, "GUIBBDropOrder")
 					GUICtrlSetData(-1,  $g_sBBDropOrderDefault)
 					_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "TxtBBDropOrder", "Enter sequence order for drop of troop #" & $i + 1))
@@ -47,7 +47,7 @@ Func CreateBBDropOrderGUI()
 		Next
 
 		$x = 25
-		$y = 200
+		$y = 225
 		; Create push button to set training order once completed
 		$g_hBtnBBDropOrderSet = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderSet", "Apply New Order"), $x, $y, 100, 25)
 			GUICtrlSetState(-1, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
@@ -61,7 +61,7 @@ Func CreateBBDropOrderGUI()
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBRemoveDropOrder_Info_01", "Push button to remove all troops from list and start over"))
 			GUICtrlSetOnEvent(-1, "BtnBBRemoveDropOrder")
 
-		$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 233, 85, 25)
+		$g_hBtnBBClose = GUICtrlCreateButton(GetTranslatedFileIni("MBR GUI Design Child Village - Misc", "BtnBBDropOrderClose", "Close"), 229, 258, 85, 25)
 			GUICtrlSetOnEvent(-1, "CloseCustomBBDropOrder")
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 

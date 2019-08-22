@@ -33,10 +33,10 @@ Global $g_hGUI_BBDropOrder = 0
 Global $g_hChkBBCustomDropOrderEnable = 0
 Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
 Global $g_bBBDropOrderSet = False
-Global Const $g_iBBTroopCount = 10
-Global Const $g_sBBDropOrderDefault = "BoxerGiant|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
+Global Const $g_iBBTroopCount = 11
+Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
 Global $g_sBBDropOrder = $g_sBBDropOrderDefault
-Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; BB Suggested Upgrades
 Global $g_hChkBBIgnoreWalls = 0

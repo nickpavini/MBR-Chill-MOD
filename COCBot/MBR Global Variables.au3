@@ -56,7 +56,6 @@
 #include <GUIToolTip.au3>
 #include <Crypt.au3>
 #include <Timers.au3>
-#include "Chill-MOD\Globals_Chill_MOD.au3"
 
 Global Const $g_sLogoPath = @ScriptDir & "\Images\Logo.png"
 Global Const $g_sLogoUrlPath = @ScriptDir & "\Images\LogoURL.png"
@@ -1804,3 +1803,6 @@ Global $g_sStarsEarned = Null
 Func _ArrayIndexValid(Const ByRef $a, Const $idx)
 	Return $idx >= 0 And $idx < UBound($a)
 EndFunc   ;==>_ArrayIndexValid
+
+
+#include "Chill-MOD\Globals_Chill_MOD.au3" ; Moved to bottom to avoid issues with not finding variables for MOD globals

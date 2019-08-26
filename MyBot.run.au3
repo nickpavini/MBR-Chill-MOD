@@ -749,6 +749,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bRestart Then ContinueLoop
 			If _Sleep($DELAYRUNBOT3) Then Return
 			VillageReport()
+			CheckStopForWar()
 			If _Sleep($DELAYRUNBOT2) Then Return
 			If BotCommand() Then btnStop()
 			If Not $g_bRunState Then Return

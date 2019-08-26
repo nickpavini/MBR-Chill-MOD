@@ -26,9 +26,11 @@ Func btnResetStats()
 	ResetStats()
 EndFunc   ;==>btnResetStats
 
-Func UpdateMultiStats()
+Func UpdateMultiStats($bCheckSwitchAccEnable = True)
 	Local $bEnableSwitchAcc = $g_iCmbSwitchAcc > 0
 	Local $iCmbTotalAcc = _GUICtrlComboBox_GetCurSel($g_hCmbTotalAccount) + 1 ; combobox data starts with 2
+	If Not $bCheckSwitchAccEnable Then $bEnableSwitchAcc = True ; added for StopForWar
+
 	For $i = 0 To 7
 		If $bEnableSwitchAcc And $i <= $iCmbTotalAcc Then
 			_GUI_Value_STATE("SHOW", $g_ahGrpDefaultAcc[$i])

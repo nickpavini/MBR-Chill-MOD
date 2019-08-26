@@ -42,6 +42,12 @@ Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_hChkBBIgnoreWalls = 0
 Global $g_bChkBBIgnoreWalls = 0
 
+; Stop for war - War Preparation Demen
+Global $g_bStopForWar
+Global $g_iStopTime, $g_iReturnTime
+Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompTroops[$eTroopCount], $g_aiWarCompSpells[$eSpellCount]
+Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
+
 ; Daily Discounts
 #Region
 Global $g_iDDCount = 18

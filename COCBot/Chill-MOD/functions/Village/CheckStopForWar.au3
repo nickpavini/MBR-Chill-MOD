@@ -144,7 +144,7 @@ EndFunc   ;==>IsWarMenu
 Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
 
 	$sResult = ""
-	Local $directory = @ScriptDir & "COCBot\Chill-MOD\Images\WarPage"
+	Local $directory = @ScriptDir & "\COCBot\Chill-MOD\Images\WarPage"
 	Local $bBattleDay_InWar = False, $sWarDay, $sTime
 
 	If IsMainPage() Then
@@ -178,6 +178,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 			Local $iConvertedTime = ConvertOCRTime("War", $sTime, False)
 			If $iConvertedTime = 0 Then Return SetError(1, 0, "Error converting war time")
 
+			; set $sResult to be the date and time of war end
 			If StringInStr($sWarDay, "Preparation") Then
 				SetLog("Clan war is now in preparation. Battle will start in " & $sTime, $COLOR_INFO)
 				$sResult = _DateAdd("n", $iConvertedTime + 24 * 60, _NowCalc()) ; $iBattleFinishTime

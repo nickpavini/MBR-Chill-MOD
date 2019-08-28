@@ -260,7 +260,7 @@ Func CheckQuickTrainTroop()
 
 		If _ColorCheck(_GetPixelColor($aEditButton[$i][0], $aEditButton[$i][1], True), Hex($aEditButton[$i][2], 6), $aEditButton[$i][3]) Then
 			Click($aEditButton[$i][0], $aEditButton[$i][1]) ; Click edit army 1, 2, 3
-			If _Sleep(500) Then Return
+			If _Sleep(1000) Then Return
 
 			Local $TempTroopTotal = 0, $TempSpellTotal = 0
 

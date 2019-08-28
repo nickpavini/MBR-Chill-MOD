@@ -160,7 +160,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 			$bResult = True
 		Else
 			$sWarDay = QuickMIS("N1", $directory, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
-			$bResult = QuickMIS("BC1", $directory, 795, 555, 795 + 20, 555 + 60, True) ; $bInWar
+			$bResult = Not(QuickMIS("BC1", $directory, 359, 127, 510, 154, True)); $bInWar.... Fixed (08/2019)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
 			If $sWarDay = "none" Then Return SetError(1, 0, "Error reading war day")
 		EndIf
@@ -243,6 +243,7 @@ Func StopAndPrepareForWar($iSleepTime)
 		EndIf
 
 		; Train
+		OpenArmyOverview(False, "StopAndPrepareForWar()")
 		DoubleTrain(True)
 		If _Sleep(500) Then Return
 	EndIf

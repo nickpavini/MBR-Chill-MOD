@@ -218,6 +218,8 @@ Func StopAndPrepareForWar($iSleepTime)
 				$g_aiArmyCompTroops[$i] = 0
 				If $i < $eSpellCount Then $g_aiArmyCompSpells[$i] = 0
 			Next
+			$g_aiArmyCompTroops[0] = 1 ; set troop training to be a single barbarian
+			$g_aiArmyCompSpells[10] = 1 ; set spell training to be a single bat spell
 			; removing current army
 			OpenArmyOverview(False, "StopAndPrepareForWar()")
 			If Not IsQueueEmpty("Troops", False, False) Then DeleteQueued("Troops")
@@ -226,7 +228,9 @@ Func StopAndPrepareForWar($iSleepTime)
 
 			If Not OpenArmyTab(False, "StopAndPrepareForWar()") Then Return
 			If _Sleep(300) Then Return
-			Local $toTrainFake[1][2] = [["Barb", 0]]
+			Local $toTrainFake[2][2] = [["Barb", 1], ["BtSpell", 1]] ; if the user had a bat spell or barb, delete the left over
+			local $toRemove = WhatToTrain(True)
+			RemoveExtraTroops($toRemove) ; delete all troops except one barb and a bat spell
 			getArmySpells(False, False, False, False)
 			For $i = 0 To $eSpellCount - 1
 				If $g_aiCurrentSpells[$i] = 0 Then
@@ -234,17 +238,17 @@ Func StopAndPrepareForWar($iSleepTime)
 					ExitLoop
 				EndIf
 			Next
-			RemoveExtraTroops($toTrainFake)
+			RemoveExtraTroops($toTrainFake) ; delete the leftover barb and bat... easy trick to delete all troops
 			ClickP($aAway, 2, 0, "#0346") ;Click Away
 			If _Sleep(300) Then Return
+			QuickTrain() ; train
 		Else
 			$g_aiArmyCompTroops = $g_aiWarCompTroops
 			$g_aiArmyCompSpells = $g_aiWarCompSpells
+			OpenArmyOverview(False, "StopAndPrepareForWar()") ; train
+			DoubleTrain(True)
 		EndIf
 
-		; Train
-		OpenArmyOverview(False, "StopAndPrepareForWar()")
-		DoubleTrain(True)
 		If _Sleep(500) Then Return
 	EndIf
 

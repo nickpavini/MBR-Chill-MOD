@@ -239,7 +239,6 @@ Func StopAndPrepareForWar($iSleepTime)
 				EndIf
 			Next
 			RemoveExtraTroops($toTrainFake) ; delete the leftover barb and bat... easy trick to delete all troops
-			ClickP($aAway, 2, 0, "#0346") ;Click Away
 			If _Sleep(300) Then Return
 			QuickTrain() ; train
 		Else
@@ -249,6 +248,7 @@ Func StopAndPrepareForWar($iSleepTime)
 			DoubleTrain(True)
 		EndIf
 
+		ClickP($aAway, 2, 0, "#0346") ;Click Away
 		If _Sleep(500) Then Return
 	EndIf
 
@@ -268,8 +268,6 @@ Func StopAndPrepareForWar($iSleepTime)
 			$g_aiCCTroopsExpected[$i] = 0 ; remove all troops
 		Next
 		$g_iCurrentCCSpells = $g_iTotalCCSpells
-		$g_iClanCastleSpellsWaitFirst = 10 ; fake to cheat CompareCCSpellWithGUI()
-		$g_iClanCastleSpellsWaitSecond = 6 ; fake to cheat CompareCCSpellWithGUI()
 
 		SetLog("Let's request again for war", $COLOR_ACTION)
 		RequestCC()

@@ -381,9 +381,7 @@ EndFunc   ;==>DoWhatToTrainContainTroop
 Func DoWhatToTrainContainSpell($rWTT)
 	For $i = 0 To (UBound($rWTT) - 1)
 		If Not $g_bRunState Then Return
-		If IsSpellToBrew($rWTT[$i][0]) Then
-			If $rWTT[$i][1] > 0 Then Return True
-		EndIf
+		If _ArraySearch($g_asSpellShortNames, $rWTT[$i][0]) >= 0 Then Return True
 	Next
 	Return False
 EndFunc   ;==>DoWhatToTrainContainSpell

@@ -315,6 +315,6 @@ Func StopAndPrepareForWar($iSleepTime)
 		EndIf
 	EndIf
 
-	UniversalCloseWaitOpenCoC($iSleepTime * 60 * 1000, "StopAndPrepareForWar", False, True) ; wake up & full restart
+	UniversalCloseWaitOpenCoC($iSleepTime * 60 * 60 * 1000, "StopAndPrepareForWar", False, True) ; wake up & full restart ; Fixed, math was off by one multiple of 60
 
 EndFunc   ;==>StopAndPrepareForWar

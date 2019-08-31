@@ -69750,7 +69750,7 @@ SetLog("This is the last active account for switching, close CoC anyway")
 EndIf
 EndIf
 EndIf
-UniversalCloseWaitOpenCoC($iSleepTime * 60 * 1000, "StopAndPrepareForWar", False, True)
+UniversalCloseWaitOpenCoC($iSleepTime * 60 * 60 * 1000, "StopAndPrepareForWar", False, True)
 EndFunc
 Func ApplyConfig_MOD($TypeReadSave)
 Switch $TypeReadSave

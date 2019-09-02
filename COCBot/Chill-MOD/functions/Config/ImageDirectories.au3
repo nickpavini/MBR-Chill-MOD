@@ -25,3 +25,14 @@ Global $g_sImgBBLootAvail = @ScriptDir & "\COCBot\Chill-MOD\Images\BuilderBase\L
 Global $g_sImgDirDailyDiscounts = @ScriptDir & "\COCBot\Chill-MOD\Images\DailyDiscounts\"
 Global $g_sImgDDWallRingx5 = $g_sImgDirDailyDiscounts & "WallRingAmount\x5_0_90.bmp"
 Global $g_sImgDDWallRingx10 = $g_sImgDirDailyDiscounts & "WallRingAmount\x10_0_90.bmp"
+
+; Humanization
+Global $g_sImgHumanizationWarLog = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\WarLog"
+Global $g_sImgHumanizationDuration = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\Duration"
+Global $g_sImgHumanizationFriend = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\Friend"
+Global $g_sImgHumanizationClaimReward = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\ClaimReward"
+Global $g_sImgHumanizationCurrentWar = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\CurrentWar"
+Global $g_sImgHumanizationWarDetails = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\WarDetails"
+Global $g_sImgHumanizationReplay = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\Replay"
+Global $g_sImgHumanizationVisit = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\Visit"
+Global $g_sImgChatIUnterstandMultiLang = @ScriptDir & "\COCBot\Chill-MOD\Images\Humanization\Chat"

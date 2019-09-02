@@ -937,7 +937,7 @@ Global $g_iChkBBSuggestedUpgrades = 0, $g_iChkBBSuggestedUpgradesIgnoreGold = 0,
 Global $g_iChkPlacingNewBuildings = 0
 Global $g_bStayOnBuilderBase = False ; set to True in MyBot.run.au3 _RunFunction when on builder base
 
-Global $g_iQuickMISX = 0, $g_iQuickMISY = 0
+Global $g_iQuickMISX = 0, $g_iQuickMISY = 0, $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSety = 0 ; Chill MOD
 
 ; <><><><> Village / Achievements <><><><>
 Global $g_iUnbrkMode = 0, $g_iUnbrkWait = 5

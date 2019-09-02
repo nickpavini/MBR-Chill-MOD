@@ -24,6 +24,14 @@
 ; War Preparation
 #include "functions\Village\CheckStopForWar.au3"
 
+; Humanization
+#include "functions\Humanization\BotHumanization.au3"
+#include "functions\Humanization\AttackNDefenseActions.au3"
+#include "functions\Humanization\BestClansNPlayersActions.au3"
+#include "functions\Humanization\ChatActions.au3"
+#include "functions\Humanization\ClanActions.au3"
+#include "functions\Humanization\ClanWarActions.au3"
+
 ; moved to the end to avoid any global declare issues
 #include "functions\Config\applyConfig.au3"
 #include "functions\Config\readConfig.au3"

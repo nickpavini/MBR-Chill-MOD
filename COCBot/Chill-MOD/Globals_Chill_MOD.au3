@@ -49,7 +49,6 @@ Global $g_bTrainWarTroop, $g_bUseQuickTrainWar, $g_aChkArmyWar[3], $g_aiWarCompT
 Global $g_bRequestCCForWar,	$g_sTxtRequestCCForWar
 
 ; Daily Discounts
-#Region
 Global $g_iDDCount = 18
 Global $g_hGUI_DailyDiscounts = 0
 Global $g_hBtnDailyDiscounts = 0
@@ -62,4 +61,22 @@ Global $g_eDDPotionTrain = 0, $g_eDDPotionClock = 1, $g_eDDPotionResource = 2, $
 		$g_eDDRuneBBGold = 16, $g_eDDRuneBBElixir = 17
 Global $g_hBtnDDCancel = 0, $g_hBtnDDApply = 0, $g_hBtnDDClear = 0
 Global $g_bDD_DealsSet = 0
-#EndRegion
+
+; Humanization
+Global $g_iacmbPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_iacmbMaxSpeed[2] = [1, 1]
+Global $g_iacmbPause[2] = [0, 0]
+Global $g_iahumanMessage[2] = ["Hello !", "Hello !"]
+Global $g_iTxtChallengeMessage = "Can you beat my village?"
+
+Global $g_iMinimumPriority, $g_iMaxActionsNumber, $g_iActionToDo
+Global $g_aSetActionPriority[13] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+Global $g_sFrequenceChain = "Never|Sometimes|Frequently|Often|Very Often"
+Global $g_sReplayChain = "1|2|4"
+Global $g_bUseBotHumanization = False, $g_bUseAltRClick = False, $g_iCmbMaxActionsNumber = 1, $g_bCollectAchievements = False, $g_bLookAtRedNotifications = False
+
+Global $g_aReplayDuration[2] = [0, 0] ; An array, [0] = Minute | [1] = Seconds
+Global $g_bOnReplayWindow, $g_iReplayToPause
+
+Global $g_iLastLayout = 0

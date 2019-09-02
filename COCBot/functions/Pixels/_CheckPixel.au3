@@ -57,3 +57,31 @@ Func _WaitForCheckPixel($aScreenCode, $bNeedCapture = Default, $Ignore = Default
 	WEnd
 	Return True
 EndFunc
+
+; Samkie Method
+Func _Wait4Pixel($x, $y, $sColor, $iColorVariation, $iWait = 1000, $sMsglog = Default, $iDelay = 100)
+	Local $hTimer = __TimerInit()
+	Local $iMaxCount = Int($iWait / $iDelay)
+	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
+	For $i = 1 To $iMaxCount
+		;ForceCaptureRegion()
+		If _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) Then Return True
+		If _Sleep($iDelay) Then Return False
+		If __TimerDiff($hTimer) >= $iWait Then ExitLoop
+	Next
+	Return False
+EndFunc   ;==>_Wait4Pixel
+
+; Samkie Method
+Func _Wait4PixelGone($x, $y, $sColor, $iColorVariation, $iWait = 1000, $sMsglog = Default, $iDelay = 100)
+	Local $hTimer = __TimerInit()
+	Local $iMaxCount = Int($iWait / $iDelay)
+	Local $aTemp[4] = [$x, $y, $sColor, $iColorVariation]
+	For $i = 1 To $iMaxCount
+		;ForceCaptureRegion()
+		If Not _CheckPixel($aTemp, $g_bCapturePixel, Default, $sMsglog) Then Return True
+		If _Sleep($iDelay) Then Return False
+		If __TimerDiff($hTimer) >= $iWait Then ExitLoop
+	Next
+	Return False
+EndFunc   ;==>_Wait4PixelGone

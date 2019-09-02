@@ -770,6 +770,8 @@ Func GUIControl_WM_NOTIFY($hWind, $iMsg, $wParam, $lParam)
 			tabActivebase()
 		Case $g_hGUI_THSNIPE_TAB
 			tabTHSnipe()
+		Case $g_hGUI_MOD_TAB ; Chill MOD
+			tabMOD()
 		Case $g_hGUI_BOT_TAB
 			tabBot()
 		Case Else
@@ -1184,6 +1186,7 @@ Func BotGuiModeToggle()
 			GUICtrlDelete($g_hGUI_THSNIPE_TAB)
 			GUICtrlDelete($g_hGUI_ATTACKOPTION_TAB)
 			GUICtrlDelete($g_hGUI_STRATEGIES_TAB)
+			GUICtrlDelete($g_hGUI_MOD_TAB) ; Chill MOD
 			GUICtrlDelete($g_hGUI_BOT_TAB)
 			GUICtrlDelete($g_hGUI_LOG_SA)
 			GUICtrlDelete($g_hGUI_STATS_TAB)
@@ -1712,6 +1715,7 @@ Func tabMain()
 		Case $tabidx = 0 ; Log
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; Chill MOD
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_LOG)
@@ -1719,6 +1723,7 @@ Func tabMain()
 		Case $tabidx = 1 ; Village
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; Chill MOD
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_VILLAGE)
@@ -1727,23 +1732,35 @@ Func tabMain()
 		Case $tabidx = 2 ; Attack
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; Chill MOD
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ATTACK)
 			tabAttack()
 
-		Case $tabidx = 3 ; Options
+		Case $tabidx = 3 ; MOD
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_BOT)
+			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD)
+			tabMOD()
+
+		Case $tabidx = 4 ; Options
+			GUISetState(@SW_HIDE, $g_hGUI_LOG)
+			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
+			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; Chill MOD
 			GUISetState(@SW_HIDE, $g_hGUI_ABOUT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_BOT)
 			tabBot()
 
-		Case $tabidx = 4 ; About
+		Case $tabidx = 5 ; About
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; Chill MOD
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_ABOUT)
 
@@ -1751,6 +1768,7 @@ Func tabMain()
 			GUISetState(@SW_HIDE, $g_hGUI_LOG)
 			GUISetState(@SW_HIDE, $g_hGUI_VILLAGE)
 			GUISetState(@SW_HIDE, $g_hGUI_ATTACK)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD) ; Chill MOD
 			GUISetState(@SW_HIDE, $g_hGUI_BOT)
 	EndSelect
 
@@ -1988,6 +2006,15 @@ Func tabDONATE()
 
 EndFunc   ;==>tabDONATE
 
+; Chill MOD
+Func tabMOD()
+	Local $tabidx = GUICtrlRead($g_hGUI_MOD_TAB)
+	Select
+		Case $tabidx = 0 ; Humanization Tab
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD_TAB_HUMANIZATION)
+	EndSelect
+EndFunc   ;==>tabMOD
+
 Func tabBot()
 	If $g_iGuiMode <> 1 Then Return
 	Local $tabidx = GUICtrlRead($g_hGUI_BOT_TAB)
@@ -2089,7 +2116,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 	Switch $nCtrl
 		Case $g_hTabMain
 			; the icons for main tab
-			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH12, $eIcnAttack, $eIcnGUI, $eIcnInfo]
+			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH12, $eIcnAttack, $eBtnTest, $eIcnGUI, $eIcnInfo]
 
 		Case $g_hGUI_VILLAGE_TAB
 			; the icons for village tab
@@ -2137,6 +2164,11 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 		Case $g_hGUI_ATTACKOPTION_TAB
 			; the icons for Attack Options tab
 			Local $aIconIndex = [$eIcnMagnifier, $eIcnCamp, $eIcnLightSpell, $eIcnSilverStar, $eIcnTrophy]
+
+
+		Case $g_hGUI_MOD_TAB
+			; the icons for Mods tab
+			;Local $aIconIndex = [$eIcnModHumanization]
 
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab

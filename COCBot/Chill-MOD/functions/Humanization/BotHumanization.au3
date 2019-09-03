@@ -70,7 +70,7 @@ Func BotHumanization()
 	If $g_bUseBotHumanization = True Then
 		If Not $g_bRunState Then Return
 		Local $NoActionsToDo = 0
-		SetLog("Now, let the FENIX MOD Team make your BOT more human ... :)", $COLOR_SUCCESS1)
+		SetLog("Now, let Chill MOD make your BOT more human ... :)", $COLOR_SUCCESS1)
 
 		If $g_bLookAtRedNotifications = True Then LookAtRedNotifications()
 		If $g_bCollectAchievements = True Then CollectAchievements()
@@ -83,7 +83,7 @@ Func BotHumanization()
 
 		If $NoActionsToDo <> 13 Then
 			$g_iMaxActionsNumber = Random(1, _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber) + 1, 1)
-			SetLog("FENIX MOD will do " & $g_iMaxActionsNumber & " human actions during this loop...", $COLOR_INFO)
+			SetLog("Chill MOD will do " & $g_iMaxActionsNumber & " human actions during this loop...", $COLOR_INFO)
 			For $i = 1 To $g_iMaxActionsNumber
 				randomSleep(4000)
 				ReturnAtHome()
@@ -104,43 +104,43 @@ Func RandomHumanAction()
 	$g_iActionToDo = _ArrayMaxIndex($g_aSetActionPriority)
 	Switch $g_iActionToDo
 		Case 0
-			SetLog("The spirit of FENIX MOD choose to read Clan Chat... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to read Clan Chat... Let's go !!! :)", $COLOR_INFO)
 			ReadClanChat()
 		Case 1
-			SetLog("The spirit of FENIX MOD choose to read Global Chat... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to read Global Chat... Let's go !!! :)", $COLOR_INFO)
 			ReadGlobalChat()
 		Case 2
-			SetLog("The spirit of FENIX MOD choose to talk with your Clan... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to talk with your Clan... Let's go !!! :)", $COLOR_INFO)
 			SaySomeChat()
 		Case 3
-			SetLog("The spirit of FENIX MOD choose to Watch a Defense... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Watch a Defense... Let's go !!! :)", $COLOR_INFO)
 			WatchDefense()
 		Case 4
-			SetLog("The spirit of FENIX MOD choose to Watch an Attack... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Watch an Attack... Let's go !!! :)", $COLOR_INFO)
 			WatchAttack()
 		Case 5
-			SetLog("The spirit of FENIX MOD choose to Look at War Log... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Look at War Log... Let's go !!! :)", $COLOR_INFO)
 			LookAtWarLog()
 		Case 6
-			SetLog("The spirit of FENIX MOD choose to Visit Clanmates... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Visit Clanmates... Let's go !!! :)", $COLOR_INFO)
 			VisitClanmates()
 		Case 7
-			SetLog("The spirit of FENIX MOD choose to Visit Best Players... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Visit Best Players... Let's go !!! :)", $COLOR_INFO)
 			VisitBestPlayers()
 		Case 8
-			SetLog("The spirit of FENIX MOD choose to Look at Best Clans... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Look at Best Clans... Let's go !!! :)", $COLOR_INFO)
 			LookAtBestClans()
 		Case 9
-			SetLog("The spirit of FENIX MOD choose to Look at Current War... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Look at Current War... Let's go !!! :)", $COLOR_INFO)
 			LookAtCurrentWar()
 		Case 10
-			SetLog("The spirit of FENIX MOD choose to Watch War replays... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to Watch War replays... Let's go !!! :)", $COLOR_INFO)
 			WatchWarReplays()
 		Case 11
-			SetLog("The spirit of FENIX MOD choose to do nothing... Stupid BOT... :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to do nothing... Stupid BOT... :)", $COLOR_INFO)
 			DoNothing()
 		Case 12
-			SetLog("The spirit of FENIX MOD choose to launch Challenges... Let's go !!! :)", $COLOR_INFO)
+			SetLog("The spirit of Chill MOD choose to launch Challenges... Let's go !!! :)", $COLOR_INFO)
 			LaunchChallenges()
 	EndSwitch
 EndFunc   ;==>RandomHumanAction

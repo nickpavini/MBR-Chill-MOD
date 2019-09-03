@@ -910,6 +910,8 @@ Func _Idle() ;Sequence that runs until Full Army
 		If _Sleep($DELAYIDLE1) Then Return
 		If $g_iCommandStop = -1 Then SetLog("====== Waiting for full army ======", $COLOR_SUCCESS)
 		Local $hTimer = __TimerInit()
+		BotHumanization() ; Chill MOD
+
 		If _Sleep($DELAYIDLE1) Then ExitLoop
 		checkObstacles() ; trap common error messages also check for reconnecting animation
 		checkMainScreen(False) ; required here due to many possible exits
@@ -1329,6 +1331,8 @@ Func FirstCheck()
 
 	VillageReport()
 	If Not $g_bRunState Then Return
+
+	BotHumanization() ; Chill MOD
 
 	If $g_bOutOfGold = True And (Number($g_aiCurrentLoot[$eLootGold]) >= Number($g_iTxtRestartGold)) Then ; check if enough gold to begin searching again
 		$g_bOutOfGold = False ; reset out of gold flag

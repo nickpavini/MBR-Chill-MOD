@@ -1,6 +1,6 @@
 ; #FUNCTION# ====================================================================================================================
 ; Name ..........: MBR GUI Control MOD Tab Humanization
-; Description ...: This file is used for Fenix MOD GUI functions of Humanization Tab will be here.
+; Description ...: This file is used for Chill MOD GUI functions of Humanization Tab will be here.
 ; Author ........: Fahid.Mahmood
 ; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2018

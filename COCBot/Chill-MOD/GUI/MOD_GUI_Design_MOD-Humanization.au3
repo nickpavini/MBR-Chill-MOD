@@ -40,7 +40,7 @@ Func CreateHumanizationTab()
 
 	$x -= 15
 	$y += 30
-	;GUICtrlCreateIcon($g_sLibModIconPath, $eIcnChat, $x, $y + 5, 32, 32)
+	GUICtrlCreateIcon($g_sLibIconPath, $eIcnChat, $x, $y + 5, 32, 32)
 	$g_hLabel1 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_01", "Read the Clan Chat"), $x + 40, $y + 5, 110, 17)
 	$g_acmbPriority[0] = GUICtrlCreateCombo("", $x + 155, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", $g_sFrequenceChain), GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", "Never"))
@@ -60,7 +60,7 @@ Func CreateHumanizationTab()
 
 	$y += 81
 
-	;GUICtrlCreateIcon($g_sLibModIconPath, $eIcnRepeat, $x, $y + 5, 32, 32)
+	GUICtrlCreateIcon($g_sLibIconPath, $eIcnRepeat, $x, $y + 5, 32, 32)
 	$g_hLabel5 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_05", "Watch Defenses"), $x + 40, $y + 5, 110, 17)
 	$g_acmbPriority[3] = GUICtrlCreateCombo("", $x + 155, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
@@ -78,7 +78,7 @@ Func CreateHumanizationTab()
 
 	$y += 56
 
-	;GUICtrlCreateIcon($g_sLibModIconPath, $eIcnClan, $x, $y + 5, 32, 32)
+	GUICtrlCreateIcon($g_sLibIconPath, $eIcnClan, $x, $y + 5, 32, 32)
 	$g_hLabel9 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_09", "Look at War log"), $x + 40, $y + 5, 110, 17)
 	$g_acmbPriority[5] = GUICtrlCreateCombo("", $x + 155, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
@@ -94,7 +94,7 @@ Func CreateHumanizationTab()
 
 	$y += 56
 
-	;GUICtrlCreateIcon($g_sLibModIconPath, $eIcnTarget, $x, $y + 5, 32, 32)
+	GUICtrlCreateIcon($g_sLibIconPath, $eIcnTarget, $x, $y + 5, 32, 32)
 	$g_hLabel14 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_14", "Look at Current War"), $x + 40, $y + 5, 110, 17)
 	$g_acmbPriority[9] = GUICtrlCreateCombo("", $x + 155, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))
@@ -111,7 +111,7 @@ Func CreateHumanizationTab()
 
 	$y += 56
 
-	;GUICtrlCreateIcon($g_sLibModIconPath, $eIcnSettings, $x, $y + 5, 32, 32)
+	GUICtrlCreateIcon($g_sLibIconPath, $eIcnSettings, $x, $y + 5, 32, 32)
 	$g_hLabel17 = GUICtrlCreateLabel(GetTranslatedFileIni("MOD GUI Design - BotHumanization", "Label_17", "Do nothing"), $x + 40, $y + 5, 110, 17)
 	$g_acmbPriority[11] = GUICtrlCreateCombo("", $x + 155, $y, 75, 25, BitOR($CBS_DROPDOWNLIST, $CBS_AUTOHSCROLL))
 	GUICtrlSetData(-1, GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptions", -1),  GetTranslatedFileIni("MOD GUI Design - BotHumanization", "LblHumanizationOptionNever", -1))

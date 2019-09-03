@@ -2116,7 +2116,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 	Switch $nCtrl
 		Case $g_hTabMain
 			; the icons for main tab
-			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH12, $eIcnAttack, $eBtnTest, $eIcnGUI, $eIcnInfo]
+			Local $aIconIndex = [$eIcnHourGlass, $eIcnTH12, $eIcnAttack, $eIcnMod, $eIcnGUI, $eIcnInfo]
 
 		Case $g_hGUI_VILLAGE_TAB
 			; the icons for village tab
@@ -2168,7 +2168,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
-			;Local $aIconIndex = [$eIcnModHumanization]
+			Local $aIconIndex = [$eIcnModHumanization]
 
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab

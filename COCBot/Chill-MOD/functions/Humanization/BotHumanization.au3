@@ -506,7 +506,7 @@ Func IsGlobalChat()
 EndFunc   ;==>IsGlobalChat
 
 Func IsTextBox()
-	Local $Result = _Wait4Pixel(190, 710 + $g_iBottomOffsetY, 0xFFFFFF, 20, 3000, "IsTextBox") ;Wait for Text Box To Be Appear
+	Local $Result = _Wait4Pixel(190, 650 + $g_iBottomOffsetY, 0xFFFFFF, 20, 3000, "IsTextBox") ;Wait for Text Box To Be Appear
 	Return $Result
 EndFunc   ;==>IsTextBox
 

@@ -70,7 +70,7 @@ Func SaySomeChat()
 		randomSleep(1500)
 		If Not IsClanChat() Then SetLog("Warning, we will chat on Global chat...", $COLOR_WARNING)
 		ClickIUnderstandIfExist()
-		Click(280, 710 + $g_iBottomOffsetY) ; click message button
+		Click(280, 650 + $g_iBottomOffsetY) ; click message button
 		randomSleep(2000)
 		If IsTextBox() Then
 			Local $ChatToSay = Random(0, 1, 1)
@@ -79,7 +79,7 @@ Func SaySomeChat()
 			SendText($CleanMessage)
 
 			randomSleep(500)
-			Click(840, 710 + $g_iBottomOffsetY) ; click send message
+			Click(840, 650 + $g_iBottomOffsetY) ; click send message
 
 			randomSleep(1500)
 			Click(330, 380 + $g_iMidOffsetY) ; close chat

@@ -38,6 +38,29 @@ Func ApplyConfig_MOD($TypeReadSave) ;Applies the data from config to the control
 			ReadConfig_600_52_2()
 			ChkStopForWar()
 
+			; Humanization
+			GUICtrlSetState($g_hChkUseBotHumanization, $g_bUseBotHumanization ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkUseAltRClick, $g_bUseAltRClick ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkCollectAchievements, $g_bCollectAchievements ? $GUI_CHECKED : $GUI_UNCHECKED)
+			GUICtrlSetState($g_hChkLookAtRedNotifications, $g_bLookAtRedNotifications ? $GUI_CHECKED : $GUI_UNCHECKED)
+			chkUseBotHumanization()
+			For $i = 0 To 12
+				_GUICtrlComboBox_SetCurSel($g_acmbPriority[$i], $g_iacmbPriority[$i])
+			Next
+			For $i = 0 To 1
+				_GUICtrlComboBox_SetCurSel($g_acmbMaxSpeed[$i], $g_iacmbMaxSpeed[$i])
+			Next
+			For $i = 0 To 1
+				_GUICtrlComboBox_SetCurSel($g_acmbPause[$i], $g_iacmbPause[$i])
+			Next
+			For $i = 0 To 1
+				GUICtrlSetData($g_ahumanMessage[$i], $g_iahumanMessage[$i])
+			Next
+			_GUICtrlComboBox_SetCurSel($g_hCmbMaxActionsNumber, $g_iCmbMaxActionsNumber)
+			GUICtrlSetData($g_hChallengeMessage, $g_iTxtChallengeMessage)
+			cmbStandardReplay()
+			cmbWarReplay()
+
 			; Builder Base Attack
 			GUICtrlSetState($g_hChkEnableBBAttack, $g_bChkEnableBBAttack ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkBBTrophyRange, $g_bChkBBTrophyRange ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -93,6 +116,26 @@ Func ApplyConfig_MOD($TypeReadSave) ;Applies the data from config to the control
 
 			$g_bRequestCCForWar = GUICtrlRead($g_hChkRequestCCForWar) = $GUI_CHECKED
 			$g_sTxtRequestCCForWar = GUICtrlRead($g_hTxtRequestCCForWar)
+
+			; Humanization
+			$g_bUseBotHumanization = (GUICtrlRead($g_hChkUseBotHumanization) = $GUI_CHECKED)
+			$g_bUseAltRClick = (GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED)
+			$g_bCollectAchievements = (GUICtrlRead($g_hChkCollectAchievements) = $GUI_CHECKED)
+			$g_bLookAtRedNotifications = (GUICtrlRead($g_hChkLookAtRedNotifications) = $GUI_CHECKED)
+			For $i = 0 To 12
+				$g_iacmbPriority[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPriority[$i])
+			Next
+			For $i = 0 To 1
+				$g_iacmbMaxSpeed[$i] = _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$i])
+			Next
+			For $i = 0 To 1
+				$g_iacmbPause[$i] = _GUICtrlComboBox_GetCurSel($g_acmbPause[$i])
+			Next
+			For $i = 0 To 1
+				$g_iahumanMessage[$i] = GUICtrlRead($g_ahumanMessage[$i])
+			Next
+			$g_iCmbMaxActionsNumber = _GUICtrlComboBox_GetCurSel($g_iCmbMaxActionsNumber)
+			$g_iTxtChallengeMessage = GUICtrlRead($g_hChallengeMessage)
 
 			; Builder Base Attack
 			$g_bChkEnableBBAttack = (GUICtrlRead($g_hChkEnableBBAttack) = $GUI_CHECKED)

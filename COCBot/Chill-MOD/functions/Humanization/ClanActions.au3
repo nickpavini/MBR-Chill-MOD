@@ -65,11 +65,11 @@ Func VisitClanmates()
 
 			If IsClanOverview() Then
 				SetLog("Let's visit a random Player...", $COLOR_ACTION1)
-				Click(660, 400 + $g_iMidOffsetY + (52 * Random(0, 5, 1))) ; click on a random player
+				Click(660, 428 + $g_iMidOffsetY + (52 * Random(0, 5, 1))) ; click on a random player
 				randomSleep(1500) ;Was less due to that bot was unable to detect visit button
 				VisitAPlayer()
 				randomSleep(500)
-				Click(70, 680 + $g_iBottomOffsetY) ; return home
+				Click(70, 620 + $g_iBottomOffsetY) ; return home
 			Else
 				SetLog("Error when trying to open Clan overview... skipping...", $COLOR_WARNING)
 			EndIf

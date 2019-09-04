@@ -184,7 +184,7 @@ Func IsReplayWindow()
 	Return $g_bOnReplayWindow
 EndFunc   ;==>IsReplayWindow
 
-Func GetReplayDuration() ; will work with this but can update to make time exact.
+Func GetReplayDuration($g_iReplayToPause) ; will work with this but can update to make time exact.
 	Local $MaxSpeed = _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$g_iReplayToPause])
 	Local $Result = QuickMIS("N1", $g_sImgHumanizationDuration, 375, 535 + $g_iBottomOffsetY, 430, 570 + $g_iBottomOffsetY)
 	If $Result = "OneMinute" Then

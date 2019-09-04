@@ -26,7 +26,7 @@ Func WatchDefense()
 			WaitForReplayWindow()
 
 			If IsReplayWindow() Then
-				GetReplayDuration()
+				GetReplayDuration(0)
 				randomSleep(1000)
 
 				If IsReplayWindow() Then
@@ -83,7 +83,7 @@ Func WatchAttack()
 			WaitForReplayWindow()
 
 			If IsReplayWindow() Then
-				GetReplayDuration()
+				GetReplayDuration(0)
 				randomSleep(1000)
 
 				If IsReplayWindow() Then

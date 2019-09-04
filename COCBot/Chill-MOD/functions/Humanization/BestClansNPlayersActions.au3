@@ -25,19 +25,19 @@ Func VisitBestPlayers()
 			Local $PlayerList = Random(1, 2, 1)
 			Switch $PlayerList
 				Case 1
-					Click(270, 140 + $g_iMidOffsetY) ; look at global list
+					Click(270, 110 + $g_iMidOffsetY) ; look at global list
 					randomSleep(1000)
-					Click(580, 350 + $g_iMidOffsetY + (52 * Random(0, 6, 1)))
+					Click(580, 320 + $g_iMidOffsetY + (52 * Random(0, 6, 1)))
 					randomSleep(500)
 					VisitAPlayer()
-					Click(70, 680 + $g_iBottomOffsetY) ; return home
+					Click(70, 620 + $g_iBottomOffsetY) ; return home
 				Case 2
-					Click(640, 140 + $g_iMidOffsetY) ; look at local list
+					Click(640, 110 + $g_iMidOffsetY) ; look at local list
 					randomSleep(1000)
-					Click(580, 190 + $g_iMidOffsetY + (52 * Random(0, 9, 1)))
+					Click(580, 160 + $g_iMidOffsetY + (52 * Random(0, 9, 1)))
 					randomSleep(500)
 					VisitAPlayer()
-					Click(70, 680 + $g_iBottomOffsetY) ; return home
+					Click(70, 620 + $g_iBottomOffsetY) ; return home
 			EndSwitch
 		Else
 			SetLog("Error when trying to open Best Players menu... skipping...", $COLOR_WARNING)

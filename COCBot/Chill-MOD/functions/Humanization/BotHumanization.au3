@@ -254,13 +254,13 @@ Func VisitAPlayer()
 		For $i = 0 To Random(1, 4, 1)
 			SetLog("We will click on a random builing...", $COLOR_ACTION1)
 			Local $xInfo = Random(300, 500, 1)
-			Local $yInfo = Random(300, 432 + $g_iMidOffsetY, 1)
+			Local $yInfo = Random(300, 402 + $g_iMidOffsetY, 1)
 			Click($xInfo, $yInfo) ; click on a random builing
 			randomSleep(1500)
 			SetLog("... and open his Info window...", $COLOR_ACTION1)
-			Click(430, 660 + $g_iBottomOffsetY) ; open the info window about building
+			Click(430, 575 + $g_iBottomOffsetY) ; open the info window about building
 			randomSleep(8000)
-			Click(685, 175 + $g_iMidOffsetY) ;Click Away
+			Click(685, 145 + $g_iMidOffsetY) ;Click Away
 			randomSleep(3000)
 		Next
 	Else

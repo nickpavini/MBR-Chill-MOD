@@ -117,7 +117,7 @@ Func WatchAttack()
 					WEnd
 
 					randomSleep(1000)
-					Click(70, 680 + $g_iBottomOffsetY) ; return home
+					Click(70, 620 + $g_iBottomOffsetY) ; return home
 				EndIf
 			EndIf
 		Else

@@ -277,39 +277,39 @@ Func LookAtRedNotifications()
 	SetLog("Looking for notifications...", $COLOR_INFO)
 	Local $NoNotif = 0
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(55, 142, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 137, True), "F5151D", 20) Then
 		SetLog("You have a new message...", $COLOR_ACTION1)
 		Click(40, 150) ; open Messages button
 		randomSleep(8000, 3000)
-		Click(760, 120 + $g_iMidOffsetY) ; close window
+		Click(765, 87 + $g_iMidOffsetY) ; close window
 		randomSleep(2000)
 	Else
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(54, 83, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 76, True), "F5151D", 20) Then
 		SetLog("You changed of league...", $COLOR_ACTION1)
-		Click(40, 80) ; open Cup button
+		Click(40, 90) ; open Cup button
 		randomSleep(4000)
-		Click(445, 610 + $g_iMidOffsetY) ; click Okay
+		Click(445, 580 + $g_iMidOffsetY) ; click Okay
 		randomSleep(1500)
-		Click(830, 80 + $g_iMidOffsetY) ; close window
+		Click(830, 50 + $g_iMidOffsetY) ; close window
 		randomSleep(2000)
 	Else
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(56, 511 + $g_iBottomOffsetY, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 451 + $g_iBottomOffsetY, True), "F5151D", 20) Then
 		SetLog("Current War to look at...", $COLOR_ACTION1)
-		Click(40, 520 + $g_iMidOffsetY) ; open War menu
+		Click(40, 490 + $g_iMidOffsetY) ; open War menu
 		randomSleep(8000, 3000)
-		Click(70, 680 + $g_iBottomOffsetY) ; return home
+		Click(70, 620 + $g_iBottomOffsetY) ; return home
 		randomSleep(2000)
 	Else
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(28, 353 + $g_iMidOffsetY, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(28, 323 + $g_iMidOffsetY, True), "F5151D", 20) Then
 		SetLog("New messages on the chat room...", $COLOR_ACTION1)
 		Click(20, 380 + $g_iMidOffsetY) ; open chat
 		randomSleep(3000)
@@ -319,41 +319,41 @@ Func LookAtRedNotifications()
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(834, 512 + $g_iMidOffsetY, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(722, 614 + $g_iBottomOffsetY, True), "F5151D", 20) Then
 		SetLog("New messages or events from SC to read...", $COLOR_ACTION1)
-		Click(820, 520 + $g_iMidOffsetY) ; open events
+		Click(715, 630 + $g_iBottomOffsetY) ; open events
 		randomSleep(3000)
 
-		If _ColorCheck(_GetPixelColor(245, 110 + $g_iMidOffsetY, True), "F0F4F0", 20) Then ; check if we are on events/news tab
-			Click(435, 110 + $g_iMidOffsetY) ; open new tab
+		If _ColorCheck(_GetPixelColor(245, 80 + $g_iMidOffsetY, True), "F0F4F0", 20) Then ; check if we are on events/news tab
+			Click(435, 80 + $g_iMidOffsetY) ; open new tab
 			randomSleep(3000)
 		Else
-			Click(245, 110 + $g_iMidOffsetY) ; open events tab
+			Click(245, 80 + $g_iMidOffsetY) ; open events tab
 			randomSleep(3000)
 		EndIf
 
-		Click(760, 120 + $g_iMidOffsetY) ; close settings
+		Click(760, 90 + $g_iMidOffsetY) ; close settings
 		randomSleep(2000)
 	Else
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(832, 638 + $g_iBottomOffsetY, True), "683072", 20) Or _ColorCheck(_GetPixelColor(832, 637 + $g_iBottomOffsetY, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(832, 578 + $g_iBottomOffsetY, True), "683072", 20) Or _ColorCheck(_GetPixelColor(832, 577 + $g_iBottomOffsetY, True), "F5151D", 20) Then
 		SetLog("There is something new on the shop...", $COLOR_ACTION1)
-		Click(800, 670 + $g_iBottomOffsetY) ; open Shop
+		Click(800, 610 + $g_iBottomOffsetY) ; open Shop
 		randomSleep(2000)
 		Local $NeedScroll = Random(0, 1, 1)
 		Local $NeedScroll2 = Random(0, 1, 1)
 		If $NeedScroll = 1 Then
 			Local $xStart = Random(300, 800, 1)
 			Local $xEnd = Random($xStart - 250, $xStart - 220, 1)
-			Local $y = Random(360 - 10 + $g_iMidOffsetY, 360 + 10 + $g_iMidOffsetY, 1)
+			Local $y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1)
 			ClickDrag($xStart, $y, $xEnd, $y) ; scroll the shop
 			If $NeedScroll2 = 1 Then
 				randomSleep(2000)
 				$xEnd = Random(300, 800, 1)
 				$xStart = Random($xEnd - 250, $xEnd - 220, 1)
-				$y = Random(360 - 10 + $g_iMidOffsetY, 360 + 10 + $g_iMidOffsetY, 1)
+				$y = Random(330 - 10 + $g_iMidOffsetY, 330 + 10 + $g_iMidOffsetY, 1)
 				ClickDrag($xStart, $y, $xEnd, $y) ; scroll the shop
 			EndIf
 		EndIf
@@ -365,20 +365,20 @@ Func LookAtRedNotifications()
 		$NoNotif += 1
 	EndIf
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(53, 24, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 17, True), "F5151D", 20) Then
 		SetLog("Maybe you have a new friend request, lemme check...", $COLOR_ACTION1)
 		Click(40, 40) ; open profile
 		randomSleep(2000)
 
 		If IsClanOverview() Then
-			If _ColorCheck(_GetPixelColor(772, 70, True), "D00818", 20) Then
+			If _ColorCheck(_GetPixelColor(773, 63, True), "E20814", 20) Then
 				SetLog("It's confirmed, you have a new friend request, lemme check...", $COLOR_ACTION1)
-				Click(700, 80 + $g_iMidOffsetY)
+				Click(720, 50 + $g_iMidOffsetY)
 				randomSleep(2000)
-				If QuickMIS("BC1", $g_sImgHumanizationFriend, 720, 165 + $g_iMidOffsetY, 780, 600 + $g_iMidOffsetY) Then
+				If QuickMIS("BC1", $g_sImgHumanizationFriend, 720, 130 + $g_iMidOffsetY, 780, 570 + $g_iMidOffsetY) Then
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
 					randomSleep(1500)
-					If QuickMIS("BC1", $g_sImgHumanizationFriend, 440, 380 + $g_iMidOffsetY, 590, 470 + $g_iMidOffsetY) Then
+					If QuickMIS("BC1", $g_sImgHumanizationFriend, 440, 350 + $g_iMidOffsetY, 590, 440 + $g_iMidOffsetY) Then
 						Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY)
 					Else
 						SetLog("Error when trying to find Okay button... skipping...", $COLOR_WARNING)

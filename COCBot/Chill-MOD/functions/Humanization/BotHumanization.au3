@@ -5,7 +5,7 @@
 ; Parameters ....: ---
 ; Return values .: ---
 ; Author ........: RoroTiti
-; Modified ......: TheRevenor 22/10/2016, RoroTiti 08/05/2017, ProMac 02/2017
+; Modified ......: TheRevenor 22/10/2016, RoroTiti 08/05/2017, ProMac 02/2017, Chilly-Chill (08/2019)
 ; Remarks .......: This file is part of MyBotRun. Copyright 2018
 ;                  MyBotRun is distributed under the terms of the GNU GPL
 ; Related .......: ---
@@ -491,7 +491,7 @@ Func IsBestClans()
 EndFunc   ;==>IsBestClans
 
 Func ChatOpen()
-	Local $Result = _Wait4Pixel(330, 382 + $g_iMidOffsetY, 0xFFFFFF, 20, 3000, "ChatOpen") ;Wait for Chat To Be Appear
+	Local $Result = _Wait4Pixel(330, 382 + $g_iMidOffsetY, 0xC75315, 20, 3000, "ChatOpen") ;Wait for Chat To Be Appear
 	Return $Result
 EndFunc   ;==>ChatOpen
 

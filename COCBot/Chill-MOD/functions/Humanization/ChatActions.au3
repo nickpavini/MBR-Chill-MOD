@@ -5,7 +5,7 @@
 ; Parameters ....: ---
 ; Return values .: ---
 ; Author ........: RoroTiti
-; Modified ......: 04/12/2016
+; Modified ......: 04/12/2016, Chilly-Chill (08/2019)
 ; Remarks .......: This file is part of MyBotRun. Copyright 2018
 ;                  MyBotRun is distributed under the terms of the GNU GPL
 ; Related .......: ---
@@ -154,10 +154,17 @@ Func LaunchChallenges()
 EndFunc   ;==>LaunchChallenges
 
 Func ClickIUnderstandIfExist() ; December Update(2018) Check for "I Understand" Warning
-	Local $aButtonCoords = decodeSingleCoord(findImage("I Understand", $g_sImgChatIUnterstandMultiLang, GetDiamondFromRect("30,336,285,516")))
-	If IsArray($aButtonCoords) And UBound($aButtonCoords) > 1 Then
-		SetLog("Chat Rules: Clicking 'I Understand' button", $COLOR_ACTION)
-		ClickP($aButtonCoords)
-		If _Sleep($DELAYDONATECC2) Then Return
+	Local $aButtonCoords = findMultiple($g_sImgChatIUnterstandMultiLang, GetDiamondFromRect("50,475,260,520"), GetDiamondFromRect("50,475,260,520"), 0, 1000, 0, "objectpoints") ; not working so maybe I will loop through all language options
+
+	If UBound($aButtonCoords) = 0 Then ; button not found
+		Return
 	EndIf
+
+	local $button = $aButtonCoords[0] ; always one button
+	local $aTempMultiCoords = decodeMultipleCoords($button[0]) ; object points
+	local $aButtonCoords = $aTempMultiCoords[0] ; one location of button again... must do for some reason or arrays glitch
+
+	SetLog("Chat Rules: Clicking 'I Understand' button", $COLOR_ACTION)
+	Click($aButtonCoords[0], $aButtonCoords[1])
+	If _Sleep($DELAYDONATECC2) Then Return
 EndFunc   ;==>ClickIUnderstandIfExist

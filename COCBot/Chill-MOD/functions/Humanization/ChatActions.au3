@@ -100,7 +100,7 @@ Func LaunchChallenges()
 		randomSleep(1500)
 		If IsClanChat() Then
 			ClickIUnderstandIfExist()
-			Click(200, 705 + $g_iBottomOffsetY) ; click challenge button
+			Click(200, 650 + $g_iBottomOffsetY) ; click challenge button
 			randomSleep(1500)
 			If IsChallengeWindow() Then
 				Click(530, 175 + $g_iMidOffsetY) ; click text box

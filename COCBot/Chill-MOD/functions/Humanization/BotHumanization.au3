@@ -23,7 +23,7 @@ Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		Local $xclick = Random($x - 5, $x, 1)
 		Local $yclick = Random($y, $y + 5, 1)
 		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 680 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
+		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
 		FClick($xclick, $yclick, $times, $speed, $debugtxt)
 	Else
 		FClick($x, $y, $times, $speed, $debugtxt)
@@ -40,7 +40,7 @@ Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		Local $xclick = Random($x - 5, $x, 1)
 		Local $yclick = Random($y, $y + 5, 1)
 		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 680 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
+		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
 		FPureClick($xclick, $yclick, $times, $speed, $debugtxt)
 	Else
 		FPureClick($x, $y, $times, $speed, $debugtxt)
@@ -57,7 +57,7 @@ Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
 		Local $xclick = Random($x - 5, $x, 1)
 		Local $yclick = Random($y, $y + 5, 1)
 		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 680 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
+		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
 		FGemClick($xclick, $yclick, $times, $speed, $debugtxt)
 	Else
 		FGemClick($x, $y, $times, $speed, $debugtxt)

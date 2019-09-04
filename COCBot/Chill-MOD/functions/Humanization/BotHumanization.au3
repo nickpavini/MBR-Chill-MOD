@@ -180,13 +180,13 @@ Func WaitForReplayWindow()
 EndFunc   ;==>WaitForReplayWindow
 
 Func IsReplayWindow()
-	$g_bOnReplayWindow = _ColorCheck(_GetPixelColor(799, 619 + $g_iBottomOffsetY, True), "FF5151", 20)
+	$g_bOnReplayWindow = _ColorCheck(_GetPixelColor(799, 559 + $g_iBottomOffsetY, True), "FF5151", 20)
 	Return $g_bOnReplayWindow
 EndFunc   ;==>IsReplayWindow
 
-Func GetReplayDuration()
+Func GetReplayDuration() ; will work with this but can update to make time exact.
 	Local $MaxSpeed = _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$g_iReplayToPause])
-	Local $Result = QuickMIS("N1", $g_sImgHumanizationDuration, 380, 600 + $g_iBottomOffsetY, 490, 630 + $g_iBottomOffsetY)
+	Local $Result = QuickMIS("N1", $g_sImgHumanizationDuration, 375, 535 + $g_iBottomOffsetY, 430, 570 + $g_iBottomOffsetY)
 	If $Result = "OneMinute" Then
 		$g_aReplayDuration[0] = 1
 		$g_aReplayDuration[1] = 90000
@@ -214,7 +214,7 @@ Func AccelerateReplay($g_iReplayToPause)
 	Local $MaxSpeed = _GUICtrlComboBox_GetCurSel($g_acmbMaxSpeed[$g_iReplayToPause])
 	If $CurrentSpeed <> $MaxSpeed Then SetLog("Let's make the replay faster...", $COLOR_ACTION1)
 	While $CurrentSpeed < $MaxSpeed
-		Click(820, 690 + $g_iBottomOffsetY) ; click on the speed button
+		Click(820, 630 + $g_iBottomOffsetY) ; click on the speed button
 		randomSleep(500)
 		$CurrentSpeed += 1
 	WEnd
@@ -237,10 +237,10 @@ Func DoAPauseDuringReplay($g_iReplayToPause)
 		$PauseScore = Random(0, 100, 1)
 		If $PauseScore > $MinimumToPause Then
 			SetLog("Let's do a small pause to see what happens...", $COLOR_ACTION1)
-			Click(750, 690 + $g_iBottomOffsetY) ; click pause button
+			Click(750, 630 + $g_iBottomOffsetY) ; click pause button
 			randomSleep(10000, 3000)
 			SetLog("Pause finished, let's relaunch replay !!!", $COLOR_ACTION1)
-			Click(750, 690 + $g_iBottomOffsetY) ; click play button
+			Click(750, 630 + $g_iBottomOffsetY) ; click play button
 		EndIf
 	EndIf
 EndFunc   ;==>DoAPauseDuringReplay
@@ -466,12 +466,12 @@ Func IsMainScreen()
 EndFunc   ;==>IsMainScreen
 
 Func IsMessagesReplayWindow()
-	Local $Result = _Wait4Pixel(760, 112 + $g_iMidOffsetY, 0xFFFFFF, 20, 3000, "IsMessagesReplayWindow") ;Wait for Replay Message Window To Be Appear
+	Local $Result = _Wait4Pixel(750, 93 + $g_iMidOffsetY, 0xED1115, 20, 3000, "IsMessagesReplayWindow") ;Wait for Replay Message Window To Be Appear
 	Return $Result
 EndFunc   ;==>IsMessagesReplayWindow
 
 Func IsDefensesTab()
-	Local $Result = _Wait4Pixel(180, 110 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsDefensesTab") ;Wait for Defence To Be Selected
+	Local $Result = _Wait4Pixel(180, 80 + $g_iMidOffsetY, 0xF0F4F0, 20, 3000, "IsDefensesTab") ;Wait for Defence To Be Selected
 	Return $Result
 EndFunc   ;==>IsDefensesTab
 

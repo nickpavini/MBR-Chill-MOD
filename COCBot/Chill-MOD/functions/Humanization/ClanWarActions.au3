@@ -14,11 +14,11 @@
 ;================================================================================================================================
 
 Func LookAtCurrentWar()
-	Click(40, 530 + $g_iBottomOffsetY) ; open war menu
+	Click(40, 470 + $g_iBottomOffsetY) ; open war menu
 	randomSleep(5000)
 
 	If IsWarMenu() Then
-		Local $bWarType = QuickMIS("N1", $g_sImgHumanizationCurrentWar, 740, 320 + $g_iMidOffsetY, 835, 580 + $g_iMidOffsetY) ;October Update
+		Local $bWarType = QuickMIS("N1", $g_sImgHumanizationCurrentWar, 740, 290 + $g_iMidOffsetY, 850, 600 + $g_iMidOffsetY) ;October Update
 		If $bWarType = "CurrentWar" Or $bWarType = "CurrentWarCwl" Then ;Check if it is Simple War Or Cwl War
 			SetLog("Let's examine the " & $bWarType & " map...", $COLOR_ACTION1)
 			Scroll(Random(2, 5, 1)) ; scroll enemy
@@ -28,15 +28,15 @@ Func LookAtCurrentWar()
 				Local $LookAtHome = Random(0, 1, 1)
 				If $LookAtHome = 1 Then
 					SetLog("Looking at home territory...", $COLOR_ACTION1)
-					Click(790, 370 + $g_iMidOffsetY) ; go to home territory
+					Click(790, 340 + $g_iMidOffsetY) ; go to home territory
 					Scroll(Random(2, 5, 1)) ; scroll home
 					randomSleep(3000)
 				EndIf
 			EndIf
 
 			SetLog("Open War details menu...", $COLOR_ACTION1)
-			If $bWarType = "CurrentWar" Then Click(800, 670 + $g_iBottomOffsetY) ; go to war details
-			If $bWarType = "CurrentWarCwl" Then Click(810, 570 + $g_iMidOffsetY) ; go to Cwl war details
+			If $bWarType = "CurrentWar" Then Click(800, 610 + $g_iBottomOffsetY) ; go to war details
+			If $bWarType = "CurrentWarCwl" Then Click(810, 540 + $g_iMidOffsetY) ; go to Cwl war details
 			randomSleep(1500)
 
 			If IsClanOverview() Then
@@ -44,10 +44,10 @@ Func LookAtCurrentWar()
 				Switch $FirstMenu
 					Case 1
 						SetLog("Looking at first tab...", $COLOR_ACTION1)
-						Click(180, 80 + $g_iMidOffsetY) ; click first tab
+						Click(180, 50 + $g_iMidOffsetY) ; click first tab
 					Case 2
 						SetLog("Looking at second tab...", $COLOR_ACTION1)
-						Click(360, 80 + $g_iMidOffsetY) ; click second tab
+						Click(360, 50 + $g_iMidOffsetY) ; click second tab
 				EndSwitch
 				randomSleep(1500)
 
@@ -57,25 +57,25 @@ Func LookAtCurrentWar()
 				Switch $SecondMenu
 					Case 1
 						SetLog("Looking at third tab...", $COLOR_ACTION1)
-						Click(530, 80 + $g_iMidOffsetY) ; click the third tab
+						Click(530, 50 + $g_iMidOffsetY) ; click the third tab
 					Case 2
 						SetLog("Looking at fourth tab...", $COLOR_ACTION1)
-						Click(700, 80 + $g_iMidOffsetY) ; click the fourth tab
+						Click(700, 50 + $g_iMidOffsetY) ; click the fourth tab
 				EndSwitch
 				randomSleep(1500)
 
 				Scroll(Random(2, 4, 1)) ; scroll the tab
 
-				Click(830, 80 + $g_iMidOffsetY) ; close window
+				Click(830, 50 + $g_iMidOffsetY) ; close window
 				randomSleep(1500)
-				Click(70, 680 + $g_iBottomOffsetY) ; return home
+				Click(70, 620 + $g_iBottomOffsetY) ; return home
 			Else
 				SetLog("Error when trying to open War Details window... skipping...", $COLOR_WARNING)
 			EndIf
 		Else
 			SetLog("Your Clan is not in active war yet... skipping...", $COLOR_WARNING)
 			randomSleep(1500)
-			Click(70, 680 + $g_iBottomOffsetY) ; return home
+			Click(70, 620 + $g_iBottomOffsetY) ; return home
 		EndIf
 	Else
 		SetLog("Error when trying to open War window... skipping...", $COLOR_WARNING)

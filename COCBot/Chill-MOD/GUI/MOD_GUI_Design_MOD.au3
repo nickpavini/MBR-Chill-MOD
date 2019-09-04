@@ -17,7 +17,7 @@
 #include "MOD_GUI_Design_MOD-Humanization.au3"
 
 Global $g_hGUI_MOD = 0
-Global $g_hGUI_MOD_TAB = 0, $g_hGUI_MOD_TAB_HUMANIZATION = 0, $g_hGUI_MOD_TAB_DEBUG = 0
+Global $g_hGUI_MOD_TAB = 0, $g_hGUI_MOD_TAB_HUMANIZATION = 0, $g_hGUI_MOD_TAB_WAR_PREPARATION = 0, $g_hGUI_MOD_TAB_DEBUG = 0
 
 Func CreateMODTab()
 
@@ -27,7 +27,9 @@ Func CreateMODTab()
 	$g_hGUI_MOD_TAB = GUICtrlCreateTab(0, 0, $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, BitOR($TCS_MULTILINE, $TCS_RIGHTJUSTIFY))
 	$g_hGUI_MOD_TAB_HUMANIZATION = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10_STab_01", "Humanization"))
 	CreateHumanizationTab()
-	$g_hGUI_MOD_TAB_DEBUG = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10_STab_02", "Mod Debug"))
+	$g_hGUI_MOD_TAB_WAR_PREPARATION = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10_STab_02", "War Preparation"))
+	CreateMODWarPreparationSubTab()
+	$g_hGUI_MOD_TAB_DEBUG = GUICtrlCreateTabItem(GetTranslatedFileIni("MBR Main GUI", "Tab_10_STab_03", "Mod Debug"))
 	CreateDebugTab()
 
 	GUICtrlCreateTabItem("")

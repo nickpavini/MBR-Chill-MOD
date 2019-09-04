@@ -2012,9 +2012,15 @@ Func tabMOD()
 	Select
 		Case $tabidx = 0 ; Humanization Tab
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD_TAB_HUMANIZATION)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD_TAB_WAR_PREPARATION)
 			GUISetState(@SW_HIDE, $g_hGUI_MOD_TAB_DEBUG)
-		Case $tabidx = 1 ; Debug Teab
+		Case $tabidx = 1 ; War Preparation Tab
 			GUISetState(@SW_HIDE, $g_hGUI_MOD_TAB_HUMANIZATION)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD_TAB_DEBUG)
+			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD_TAB_WAR_PREPARATION)
+		Case $tabidx = 2 ; Debug Tab
+			GUISetState(@SW_HIDE, $g_hGUI_MOD_TAB_HUMANIZATION)
+			GUISetState(@SW_HIDE, $g_hGUI_MOD_TAB_WAR_PREPARATION)
 			GUISetState(@SW_SHOWNOACTIVATE, $g_hGUI_MOD_TAB_DEBUG)
 	EndSelect
 EndFunc   ;==>tabMOD
@@ -2172,7 +2178,7 @@ Func Bind_ImageList($nCtrl, ByRef $hImageList)
 
 		Case $g_hGUI_MOD_TAB
 			; the icons for Mods tab
-			Local $aIconIndex = [$eIcnModHumanization, $eIcnModDebug]
+			Local $aIconIndex = [$eIcnModHumanization, $eIcnModWar, $eIcnModDebug]
 
 		Case $g_hGUI_BOT_TAB
 			; the icons for Bot tab

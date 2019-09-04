@@ -144,14 +144,15 @@ EndFunc   ;==>IsWarMenu
 Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult = $sBattleEndTime, $bResult = $bInWar] OR Failure
 
 	$sResult = ""
-	Local $directory = @ScriptDir & "\COCBot\Chill-MOD\Images\WarPage"
+	Local $directoryDay = @ScriptDir & "\COCBot\Chill-MOD\Images\WarPage\Day"
+	Local $directoryTime = @ScriptDir & "\COCBot\Chill-MOD\Images\WarPage\Time"
 	Local $bBattleDay_InWar = False, $sWarDay, $sTime
 
 	If IsMainPage() Then
 		$bBattleDay_InWar = _ColorCheck(_GetPixelColor(45, 500, True), "ED151D", 20) ; Red color in war button
 		If $g_bDebugSetlog Then SetDebugLog("Checking battle notification, $bBattleDay_InWar = " & $bBattleDay_InWar)
 		Click(40, 530) ; open war menu
-		If _Sleep(1000) Then Return
+		If _Sleep(2000) Then Return
 	EndIf
 
 	If IsWarMenu() Then
@@ -159,8 +160,8 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 			$sWarDay = "Battle"
 			$bResult = True
 		Else
-			$sWarDay = QuickMIS("N1", $directory, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
-			$bResult = Not(QuickMIS("BC1", $directory, 359, 127, 510, 154, True)); $bInWar.... Fixed (08/2019)
+			$sWarDay = QuickMIS("N1", $directoryDay, 360, 85, 360 + 145, 85 + 28, True) ; Prepare or Battle
+			$bResult = Not(QuickMIS("BC1", $directoryDay, 359, 127, 510, 154, True)); $bInWar.... Fixed (08/2019)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS N1/BC1: " & $sWarDay & "/ " & $bResult)
 			If $sWarDay = "none" Then Return SetError(1, 0, "Error reading war day")
 		EndIf
@@ -171,7 +172,7 @@ Func CheckWarTime(ByRef $sResult, ByRef $bResult) ; return [Success + $sResult =
 			Return False
 
 		Else
-			$sTime = QuickMIS("OCR", $directory, 396, 65, 396 + 70, 70 + 20, True)
+			$sTime = QuickMIS("OCR", $directoryTime, 396, 65, 396 + 70, 70 + 30, True)
 			If $g_bDebugSetlog Then SetDebugLog("$sResult QuickMIS OCR: " & ($bBattleDay_InWar ? $sWarDay & ", " : "") & $sTime)
 			If $sTime = "none" Then Return SetError(1, 0, "Error reading war time")
 

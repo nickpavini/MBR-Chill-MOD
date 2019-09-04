@@ -521,7 +521,7 @@ Func IsChangeLayoutMenu()
 EndFunc   ;==>IsChangeLayoutMenu
 
 Func IsClanOverview()
-	Local $Result = _Wait4Pixel(822, 70 + $g_iMidOffsetY, 0xFFFFFF, 20, 3000, "IsClanOverview") ;Wait for Is Clan Overview To Be Appear
+	Local $Result = _Wait4Pixel(822, 40 + $g_iMidOffsetY, 0xFFFFFF, 20, 3000, "IsClanOverview") ;Wait for Is Clan Overview To Be Appear
 	Return $Result
 EndFunc   ;==>IsClanOverview
 

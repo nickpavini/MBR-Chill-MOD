@@ -26,10 +26,10 @@ Func LookAtWarLog()
 			randomSleep(1500)
 
 			If IsClanOverview() Then
-				If QuickMIS("BC1", $g_sImgHumanizationWarLog, 20, 390 + $g_iMidOffsetY, 70, 430 + $g_iMidOffsetY) Then ; October Update Changed
+				If QuickMIS("BC1", $g_sImgHumanizationWarLog, 20, 360 + $g_iMidOffsetY, 150, 390 + $g_iMidOffsetY) Then ; October Update Changed
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY) ; open war log
 					randomSleep(500)
-					Click(258, 90) ;Click Classic War Log
+					Click(258, 135) ;Click Classic War Log
 					randomSleep(500)
 					SetLog("Let's scrolling the War log...", $COLOR_ACTION1)
 					Scroll(Random(1, 3, 1)) ; scroll the war log
@@ -37,7 +37,7 @@ Func LookAtWarLog()
 					SetLog("No War log button found... skipping...", $COLOR_WARNING)
 				EndIf
 
-				Click(830, 75 + $g_iMidOffsetY) ; close window
+				Click(830, 45 + $g_iMidOffsetY) ; close window
 				randomSleep(1000)
 				Click(330, 380 + $g_iMidOffsetY) ; close chat
 			Else

@@ -402,7 +402,7 @@ EndFunc   ;==>LookAtRedNotifications
 Func CollectAchievements()
 	SetLog("Looking for achievement to collect...", $COLOR_INFO)
 	ReturnAtHome()
-	If _ColorCheck(_GetPixelColor(53, 24, True), "D00818", 20) Then
+	If _ColorCheck(_GetPixelColor(50, 17, True), "F5151D", 20) Then
 		SetLog("WoW, maybe an achievement to collect !!!", $COLOR_ACTION1)
 		Click(40, 40) ; open profile
 		randomSleep(4000)

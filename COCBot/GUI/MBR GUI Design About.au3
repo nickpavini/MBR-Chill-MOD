@@ -20,12 +20,10 @@ Global $g_hGUI_CommandLineHelp = 0
 
 Func CreateAboutTab()
 	$g_hGUI_ABOUT = _GUICreate("", $g_iSizeWGrpTab1, $g_iSizeHGrpTab1, $_GUI_CHILD_LEFT, $_GUI_CHILD_TOP, BitOR($WS_CHILD, $WS_TABSTOP), -1, $g_hFrmBotEx)
-	; GUISetBkColor($COLOR_WHITE, $g_hGUI_ABOUT)
 
 	Local $sText = ""
 	Local $x = 18, $y = 10 + $_GUI_MAIN_TOP
-	;$g_hLblCreditsBckGrnd = GUICtrlCreateLabel("", $x - 20, $y - 20, 454, 380)  ; adds fixed white background for entire tab, if using "Labels"
-	;GUICtrlSetBkColor(-1, $COLOR_WHITE)
+
 	$sText = "My Bot is brought to you by a worldwide team of open source" & @CRLF & _
 			"programmers and a vibrant community of forum members!"
 	GUICtrlCreateLabel($sText, $x + 8, $y - 10, 400, 35, $SS_CENTER)
@@ -50,16 +48,16 @@ Func CreateAboutTab()
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
-	$sText = "Cosote, Demen, Fliegerfaust and TripleM"
+	$sText = "Chilly-Chill, Fliegerfaust and TFKNazGul"
 	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
 	$y += 35
-	$sText = "Special participation at v7.6.6: "
+	$sText = "Special participation at v7.8: "
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
-	$sText = "ViperZ"
+	$sText = "HarchH, Nytol and of course Beta Tester Team"
 	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 
@@ -68,7 +66,7 @@ Func CreateAboutTab()
 	GUICtrlCreateLabel($sText, $x - 5, $y, 410, 20, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9.5, $FW_BOLD, Default, "Arial")
 	GUICtrlSetColor(-1, $COLOR_NAVY)
-	$sText = "Hervidero, Kaganus, Sardo, Trlopes"
+	$sText = "Cosote, Demen, Hervidero, Kaganus, Sardo, Trlopes, TripleM"
 	GUICtrlCreateLabel($sText, $x + 5, $y + 15, 410, 50, BitOR($WS_VISIBLE, $ES_AUTOVSCROLL, $SS_LEFT), 0)
 	GUICtrlSetFont(-1, 9, $FW_MEDIUM, Default, "Arial")
 

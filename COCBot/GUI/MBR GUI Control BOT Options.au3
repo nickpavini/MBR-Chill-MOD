@@ -365,26 +365,6 @@ Func cmbSwitchAccProfileX()
 	Next
 EndFunc   ;==>cmbSwitchAccProfileX
 
-Func chkAccSwitchMode()
-	If GUICtrlRead($g_hRadSwitchGooglePlay) = $GUI_CHECKED Then
-		$g_bChkGooglePlay = True
-		$g_bChkSuperCellID = False
-		$g_bChkSharedPrefs = False
-	ElseIf GUICtrlRead($g_hRadSwitchSuperCellID) = $GUI_CHECKED Then
-		$g_bChkGooglePlay = False
-		$g_bChkSuperCellID = True
-		$g_bChkSharedPrefs = False
-	ElseIf GUICtrlRead($g_hRadSwitchSharedPrefs) = $GUI_CHECKED Then
-		$g_bChkGooglePlay = False
-		$g_bChkSuperCellID = False
-		$g_bChkSharedPrefs = True
-	Else
-		$g_bChkGooglePlay = False
-		$g_bChkSuperCellID = False
-		$g_bChkSharedPrefs = False
-	EndIf
-EndFunc   ;==>chkAccSwitchMode
-
 ; #DEBUG FUNCTION# ==============================================================================================================
 
 Func chkDebugSetLog()
@@ -562,10 +542,10 @@ Func btnTestClickDrag()
 	SetLog("Sleep 3 seconds...", $COLOR_DEBUG)
 	_Sleep(3000, True, False)
 
-	SetLog("Save the image...", $COLOR_DEBUG)
-	DebugImageSave("TestClickDrag", Default, Default, Default, "_" & $asCoor[1] & "x." & $asCoor[2] & "y." & $asCoor[3] & "x." & $asCoor[4] & "y_")
+	SetLog("Save the image", $COLOR_DEBUG)
+	SaveDebugImage("TestClickDrag", Default, Default, "_" & $asCoor[1] & "x." & $asCoor[2] & "y." & $asCoor[3] & "x." & $asCoor[4] & "y_")
 
-	SetLog("Sleep 1 seconds...", $COLOR_DEBUG)
+	SetLog("Sleep 1 seconds", $COLOR_DEBUG)
 	_Sleep(1000, True, False)
 
 	SetLog("Drag back", $COLOR_DEBUG)
@@ -605,16 +585,6 @@ Func btnTestImage()
 		SetLog("$aNoCloudsAttack pixel check: " & _CheckPixel($aNoCloudsAttack, $g_bCapturePixel))
 		SetLog("Testing WaitForClouds DONE", $COLOR_SUCCESS)
 
-		#cs
-			SetLog("Testing checkAttackDisable...", $COLOR_SUCCESS)
-			SetLog("Testing checkAttackDisable($g_iTaBChkAttack)...", $COLOR_SUCCESS)
-			SetLog("checkAttackDisable($g_iTaBChkAttack) = " & checkAttackDisable($g_iTaBChkAttack))
-			SetLog("Testing checkAttackDisable($g_iTaBChkIdle)...", $COLOR_SUCCESS)
-			SetLog("checkAttackDisable($g_iTaBChkIdle) = " & checkAttackDisable($g_iTaBChkIdle))
-			SetLog("Testing checkAttackDisable($g_iTaBChkTime)...", $COLOR_SUCCESS)
-			SetLog("checkAttackDisable($g_iTaBChkTime) = " & checkAttackDisable($g_iTaBChkTime))
-			SetLog("Testing checkAttackDisable DONE", $COLOR_SUCCESS)
-		#ce
 	Next
 
 	SetLog("Testing finished", $COLOR_INFO)
@@ -1100,16 +1070,16 @@ Func btnTestUpgradeWindow()
 EndFunc   ;==>btnTestUpgradeWindow
 
 Func btnTestSmartWait()
-	Local $currentRunState = $g_bRunState
-	Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
+    Local $currentRunState = $g_bRunState
+    Local $bCloseWhileTrainingEnable = $g_bCloseWhileTrainingEnable
 
-	$g_bRunState = True
-	$g_bCloseWhileTrainingEnable = True
+    $g_bRunState = True
+    $g_bCloseWhileTrainingEnable = True
 
-	SmartWait4Train(20)
+    SmartWait4Train(20)
 
-	$g_bRunState = $currentRunState
-	$g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
+    $g_bRunState = $currentRunState
+    $g_bCloseWhileTrainingEnable = $bCloseWhileTrainingEnable
 EndFunc   ;==>btnTestSmartWait
 
 Func btnConsoleWindow()

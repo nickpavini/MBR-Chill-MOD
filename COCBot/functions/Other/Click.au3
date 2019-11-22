@@ -16,10 +16,20 @@
 #include-once
 #include <WinAPISys.au3>
 
-Func FClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-	If $g_bDebugClick Or TestCapture() Then
-		Local $txt = _DecodeDebug($debugtxt)
-		SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+	Local $txt = "", $aPrevCoor[2] = [$x, $y]
+    If $g_bUseRandomClick Then
+		$x = Random($x - 5, $x + 5, 1)
+		$y = Random($y - 5, $y + 5, 1)
+		If $g_bDebugClick Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("Random Click X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+		EndIf
+    Else
+		If $g_bDebugClick Or TestCapture() Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("Click " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+        EndIf
 	EndIf
 
 	If TestCapture() Then Return
@@ -107,10 +117,20 @@ Func BuildingClickP($point, $debugtxt = "")
 	Return BuildingClick($point[0], $point[1], $debugtxt)
 EndFunc   ;==>BuildingClickP
 
-Func FPureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-	If $g_bDebugClick Then
-		Local $txt = _DecodeDebug($debugtxt)
-		SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+	Local $txt = "", $aPrevCoor[2] = [$x, $y]
+    If $g_bUseRandomClick Then
+		$x = Random($x - 5, $x + 5, 1)
+		$y = Random($y - 5, $y + 5, 1)
+		If $g_bDebugClick Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("Random PureClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+		EndIf
+    Else
+		If $g_bDebugClick Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("PureClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+        EndIf
 	EndIf
 
 	If TestCapture() Then Return
@@ -141,10 +161,20 @@ Func PureClickP($point, $howMuch = 1, $speed = 0, $debugtxt = "")
 	PureClick($point[0], $point[1], $howMuch, $speed, $debugtxt)
 EndFunc   ;==>PureClickP
 
-Func FGemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-	If $g_bDebugClick Then
-		Local $txt = _DecodeDebug($debugtxt)
-		SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
+	Local $txt = "", $aPrevCoor[2] = [$x, $y]
+    If $g_bUseRandomClick Then
+		$x = Random($x - 5, $x + 5, 1)
+		$y = Random($y - 5, $y + 5, 1)
+		If $g_bDebugClick Then
+			$txt = _DecodeDebug($debugtxt)
+			SetLog("Random GemClick X: " & $aPrevCoor[0] & " To " & $x & ", Y: " & $aPrevCoor[1] & " To " & $y & ", Times: " & $times & ", Speed: " & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+		EndIf
+    Else
+		If $g_bDebugClick Then
+			Local $txt = _DecodeDebug($debugtxt)
+			SetLog("GemClick " & $x & "," & $y & "," & $times & "," & $speed & " " & $debugtxt & $txt, $COLOR_ACTION, "Verdana", "7.5", 0)
+		EndIf
 	EndIf
 
 	If TestCapture() Then Return

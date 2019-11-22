@@ -15,6 +15,5 @@
 #include-once
 
 #include "GUI\MOD_GUI_Control_MOD_Tab_Debug.au3"
-#include "GUI\MOD_GUI_Control_BBDropOrder.au3"
 #include "GUI\MOD_GUI_Control_Daily_Discounts.au3"
 #include "GUI\MOD_GUI_Control_MOD-Humanization.au3"

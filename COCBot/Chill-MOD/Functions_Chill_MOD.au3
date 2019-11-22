@@ -12,12 +12,6 @@
 ; Link ..........: https://github.com/MyBotRun/MyBot/wiki
 ; Example .......: No
 ; ===============================================================================================================================
-
-; Builder Base Attack
-#include "functions\BuilderBase\PrepareAttackBB.au3"
-#include "functions\BuilderBase\AttackBB.au3"
-#include "functions\BuilderBase\GetAttackBarBB.au3"
-
 ; Daily Discounts
 #include "functions\Village\DailyDiscounts.au3"
 

@@ -112,7 +112,7 @@ Func checkImglocError(ByRef $imglocvalue, $funcName, $sTileSource = "", $sImageA
 	;Return true if there is an error in imgloc return string
 	If IsArray($imglocvalue) Then ;despite beeing a string, AutoIt receives a array[0]
 		If $imglocvalue[0] = "0" Or $imglocvalue[0] = "" Then
-			If $g_bDebugSetlog Then SetDebugLog($funcName & " imgloc search returned no results" & ($sImageArea ? " in " & $sImageArea : "")  & ($sTileSource ? " for '" & $sTileSource & "' !" : "!"), $COLOR_WARNING)
+			If $g_bDebugSetlog Then SetDebugLog($funcName & " imgloc search returned no results" & ($sImageArea ? " in " & $sImageArea : "") & ($sTileSource ? " for '" & $sTileSource & "' !" : "!"), $COLOR_WARNING)
 			Return True
 		ElseIf StringLeft($imglocvalue[0], 2) = "-1" Then ;error
 			If $g_bDebugSetlog Then SetDebugLog($funcName & " - Imgloc DLL Error: " & $imglocvalue[0], $COLOR_ERROR)
@@ -135,6 +135,16 @@ Func checkImglocError(ByRef $imglocvalue, $funcName, $sTileSource = "", $sImageA
 		Return True
 	EndIf
 EndFunc   ;==>checkImglocError
+
+Func ClickB($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $iDelay = 100)
+	Local $aiButton = findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath, 1, True)
+	If IsArray($aiButton) And UBound($aiButton) >= 2 Then
+		ClickP($aiButton, 1)
+		If _Sleep($iDelay) Then Return
+		Return True
+	EndIf
+	Return False
+EndFunc   ;==>ClickB
 
 Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $maxReturnPoints = 1, $bForceCapture = True)
 
@@ -212,7 +222,7 @@ Func findButton($sButtonName, $buttonTileArrayOrPatternOrFullPath = Default, $ma
 				Return StringSplit($aCoords[1], ",", $STR_NOCOUNT) ; return just X,Y coord
 			ElseIf IsArray($aCoords) Then
 				Local $aReturnResult[0][2]
-				For $i = 1 To Ubound($aCoords) - 1
+				For $i = 1 To UBound($aCoords) - 1
 					_ArrayAdd($aReturnResult, $aCoords[$i], 0, ",", @CRLF, $ARRAYFILL_FORCE_NUMBER)
 				Next
 				Return $aReturnResult ; return 2D array
@@ -237,6 +247,10 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("0,600,160,720")
 		Case "OpenTrainWindow" ;Main Window Screen
 			$btnDiamond = "15,560|65,560|65,610|15,610"
+		Case "TrashEvent"
+			$btnDiamond = GetDiamondFromRect("100,200,840,540")
+		Case "EventFailed"
+			$btnDiamond = GetDiamondFromRect("230,130,777,560")
 		Case "OK"
 			$btnDiamond = "440,395|587,395|587,460|440,460"
 		Case "CANCEL"
@@ -245,7 +259,7 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = "357,545|502,545|502,607|357,607"
 		Case "Next" ; attackpage attackwindow
 			$btnDiamond = "697,542|850,542|850,610|697,610"
-		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury" ; Full size of object buttons at the bottom
+		Case "ObjectButtons", "BoostOne", "BoostCT", "Upgrade", "Research", "Treasury", "RemoveObstacle", "CollectLootCart" ; Full size of object buttons at the bottom
 			$btnDiamond = GetDiamondFromRect("140,591,720,671")
 		Case "GEM", "BOOSTBtn" ; Boost window button (full button size)
 			$btnDiamond = GetDiamondFromRect("359,412(148,66)")
@@ -253,10 +267,8 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("359,392(148,66)")
 		Case "EndBattleSurrender" ;surrender - attackwindow
 			$btnDiamond = "12,577|125,577|125,615|12,615"
-		Case "ExpandChat" ;mainwindow
-			$btnDiamond = "2,330|35,350|35,410|2,430"
-		Case "CollapseChat" ;mainwindow
-			$btnDiamond = "315,334|350,350|350,410|315,430"
+		Case "ClanChat"
+			$btnDiamond = GetDiamondFromRect("0,300,400,450")
 		Case "ChatOpenRequestPage" ;mainwindow - chat open
 			$btnDiamond = "5,688|65,688|65,615|5,725"
 		Case "Profile" ;mainwindow - only visible if chat closed
@@ -275,6 +287,14 @@ Func GetButtonDiamond($sButtonName)
 			$btnDiamond = GetDiamondFromRect("630,280,850,360")
 		Case "ArmyTab", "TrainTroopsTab", "BrewSpellsTab", "BuildSiegeMachinesTab", "QuickTrainTab"
 			$btnDiamond = GetDiamondFromRect("18,100,800,150")
+		Case "MessagesButton"
+			$btnDiamond = GetDiamondFromRect("0,0,250,250")
+		Case "AttackLogTab", "ShareReplayButton"
+			$btnDiamond = GetDiamondFromRect("280,85,600,300")
+		Case "EndBattle", "Surrender"
+			$btnDiamond = GetDiamondFromRect("1,570,140,628")
+		Case "Okay"
+			$btnDiamond = GetDiamondFromRect("241,249,616,478")
 		Case Else
 			$btnDiamond = "FV" ; use full image to locate button
 	EndSwitch
@@ -361,7 +381,7 @@ Func findImage($sImageName, $sImageTile, $sImageArea, $maxReturnPoints = 1, $bFo
 	EndIf
 
 	If checkImglocError($result, "findImage", $sImageTile, $sImageArea) Then
-		If $g_bDebugSetlog And $g_bDebugImageSave Then DebugImageSave("findImage_" & $sImageName, True)
+		If $g_bDebugSetlog And $g_bDebugImageSave Then SaveDebugImage("findImage_" & $sImageName, True)
 		Return $aCoords
 	EndIf
 
@@ -377,7 +397,7 @@ Func findImage($sImageName, $sImageTile, $sImageArea, $maxReturnPoints = 1, $bFo
 		EndIf
 	Else
 		If $g_bDebugSetlog Then SetDebugLog("findImage : " & $sImageName & " NOT FOUND " & $sImageTile)
-		If $g_bDebugSetlog And $g_bDebugImageSave Then DebugImageSave("findImage_" & $sImageName, True)
+		If $g_bDebugSetlog And $g_bDebugImageSave Then SaveDebugImage("findImage_" & $sImageName, True)
 		Return $aCoords
 	EndIf
 
@@ -558,8 +578,8 @@ Func GetDiamondFromArray($aRectArray)
 	;		  $aArray[3] = EndY
 
 	If UBound($aRectArray, 1) < 4 Then
-			SetDebugLog("GetDiamondFromArray: Bad Input Array!", $COLOR_ERROR)
-			Return ""
+		SetDebugLog("GetDiamondFromArray: Bad Input Array!", $COLOR_ERROR)
+		Return ""
 	EndIf
 	Local $iX = Number($aRectArray[0]), $iY = Number($aRectArray[1])
 	Local $iEndX = Number($aRectArray[2]), $iEndY = Number($aRectArray[3])
@@ -570,8 +590,8 @@ Func GetDiamondFromArray($aRectArray)
 
 	Local $sReturnDiamond = ""
 	$sReturnDiamond = $iX & "," & $iY & "|" & $iEndX & "," & $iY & "|" & $iEndX & "," & $iEndY & "|" & $iX & "," & $iEndY
-    Return $sReturnDiamond
-EndFunc
+	Return $sReturnDiamond
+EndFunc   ;==>GetDiamondFromArray
 
 Func FindImageInPlace($sImageName, $sImageTile, $place, $bForceCaptureRegion = True, $AndroidTag = Default)
 	;creates a reduced capture of the place area a finds the image in that area
@@ -701,165 +721,6 @@ Func SearchRedLinesMultipleTimes($sCocDiamond = "ECD", $iCount = 3, $iDelay = 30
 	Return $g_sImglocRedline
 EndFunc   ;==>SearchRedLinesMultipleTimes
 
-Func decodeTroopEnum($tEnum)
-	Switch $tEnum
-		Case $eBarb
-			Return "Barbarian"
-		Case $eArch
-			Return "Archer"
-		Case $eBall
-			Return "Balloon"
-		Case $eDrag
-			Return "Dragon"
-		Case $eGiant
-			Return "Giant"
-		Case $eGobl
-			Return "Goblin"
-		Case $eGole
-			Return "Golem"
-		Case $eHeal
-			Return "Healer"
-		Case $eHogs
-			Return "HogRider"
-		Case $eKing
-			Return "King"
-		Case $eLava
-			Return "LavaHound"
-		Case $eMini
-			Return "Minion"
-		Case $ePekk
-			Return "Pekka"
-		Case $eQueen
-			Return "Queen"
-		Case $eValk
-			Return "Valkyrie"
-		Case $eWall
-			Return "WallBreaker"
-		Case $eWarden
-			Return "Warden"
-		Case $eWitc
-			Return "Witch"
-		Case $eWiza
-			Return "Wizard"
-		Case $eBabyD
-			Return "BabyDragon"
-		Case $eMine
-			Return "Miner"
-		Case $eEDrag
-			Return "ElectroDragon"
-		Case $eBowl
-			Return "Bowler"
-		Case $eIceG
-			Return "IceGolem"
-		Case $eESpell
-			Return "EarthquakeSpell"
-		Case $eFSpell
-			Return "FreezeSpell"
-		Case $eHaSpell
-			Return "HasteSpell"
-		Case $eHSpell
-			Return "HealSpell"
-		Case $eJSpell
-			Return "JumpSpell"
-		Case $eLSpell
-			Return "LightningSpell"
-		Case $ePSpell
-			Return "PoisonSpell"
-		Case $eRSpell
-			Return "RageSpell"
-		Case $eSkSpell
-			Return "SkeletonSpell"
-		Case $eBtSpell
-			Return "BatSpell"
-		Case $eCSpell
-			Return "CloneSpell"
-		Case $eCastle
-			Return "Castle"
-	EndSwitch
-
-EndFunc   ;==>decodeTroopEnum
-
-
-Func decodeTroopName($sName)
-
-	Switch $sName
-		Case "Barbarian"
-			Return $eBarb
-		Case "Archer"
-			Return $eArch
-		Case "Balloon"
-			Return $eBall
-		Case "Dragon"
-			Return $eDrag
-		Case "Giant"
-			Return $eGiant
-		Case "Goblin"
-			Return $eGobl
-		Case "Golem"
-			Return $eGole
-		Case "Healer"
-			Return $eHeal
-		Case "HogRider"
-			Return $eHogs
-		Case "King"
-			Return $eKing
-		Case "LavaHound"
-			Return $eLava
-		Case "Minion"
-			Return $eMini
-		Case "Pekka"
-			Return $ePekk
-		Case "Queen"
-			Return $eQueen
-		Case "Valkyrie"
-			Return $eValk
-		Case "WallBreaker"
-			Return $eWall
-		Case "Warden"
-			Return $eWarden
-		Case "Witch"
-			Return $eWitc
-		Case "Wizard"
-			Return $eWiza
-		Case "BabyDragon"
-			Return $eBabyD
-		Case "Miner"
-			Return $eMine
-		Case "ElectroDragon"
-			Return $eEDrag
-		Case "Bowler"
-			Return $eBowl
-		Case "IceGolem"
-			Return $eIceG
-		Case "EarthquakeSpell"
-			Return $eESpell
-		Case "FreezeSpell"
-			Return $eFSpell
-		Case "HasteSpell"
-			Return $eHaSpell
-		Case "HealSpell"
-			Return $eHSpell
-		Case "JumpSpell"
-			Return $eJSpell
-		Case "LightningSpell"
-			Return $eLSpell
-		Case "PoisonSpell"
-			Return $ePSpell
-		Case "RageSpell"
-			Return $eRSpell
-		Case "SkeletonSpell"
-			Return $eSkSpell
-		Case "BatSpell"
-			Return $eBtSpell
-		Case "CloneSpell"
-			Return $eCSpell
-		Case "Castle"
-			Return $eCastle
-
-	EndSwitch
-
-EndFunc   ;==>decodeTroopName
-
 Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
 	If $iY < 490 Then
 		Switch $iX ; Troops & Spells Slots
@@ -922,7 +783,7 @@ Func Slot($iX, $iY) ; Return Slots for Quantity Reading on Army Window
 			Case 393 To 435 ; CC Troops Slot 6
 				Return 403
 
-			Case 450 To 510; CC Spell Slot 1
+			Case 450 To 510 ; CC Spell Slot 1
 				Return 475
 			Case 511 To 535 ; CC Spell Middle ( Happens with Clan Castles with the max. Capacity of 1!)
 				Return 510
@@ -939,7 +800,6 @@ Func GetDummyRectangle($sCoords, $ndistance)
 	Local $aCoords = StringSplit($sCoords, ",", $STR_NOCOUNT)
 	Return Number($aCoords[0]) - $ndistance & "," & Number($aCoords[1]) - $ndistance & "," & Number($aCoords[0]) + $ndistance & "," & Number($aCoords[1]) + $ndistance
 EndFunc   ;==>GetDummyRectangle
-
 
 Func ImgLogDebugProps($result)
 	If UBound($result) < 1 Then Return False

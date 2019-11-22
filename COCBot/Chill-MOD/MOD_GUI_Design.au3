@@ -16,6 +16,5 @@
 
 #include "GUI\MOD_GUI_Design_MOD.au3"
 #include "GUI\MOD_GUI_Design_MOD_Tab_Debug.au3"
-#include "GUI\MOD_GUI_Design_BBDropOrder.au3"
 #include "GUI\MOD_GUI_Design_Daily_Discounts.au3"
 #include "GUI\MOD_GUI_Design_WarPreparation.au3"

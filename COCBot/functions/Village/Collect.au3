@@ -73,38 +73,27 @@ Func Collect($bCheckTreasury = True)
 EndFunc   ;==>Collect
 
 Func CollectLootCart()
+	If Not $g_abNotNeedAllTime[0] Then Return
+
 	SetLog("Searching for a Loot Cart", $COLOR_INFO)
 
-	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, "ECD", 1, True))
+	Local $aLootCart = decodeSingleCoord(findImage("LootCart", $g_sImgCollectLootCart, GetDiamondFromRect("50,150,200,250"), 1, True))
 	If UBound($aLootCart) > 1 Then
-		If isInsideDiamond($aLootCart) Then
-			If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")
-			If _Sleep($DELAYCOLLECT1) Then Return
+		$aLootCart[1] += 15
+		If IsMainPage() Then ClickP($aLootCart, 1, 0, "#0330")
+		If _Sleep(400) Then Return
 
-			;Get LootCart info confirming the name
-			Local $sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-			If @error Then SetError(0, 0, 0)
-			Local $CountGetInfo = 0
-			While IsArray($sInfo) = False
-				$sInfo = BuildingInfo(242, 490 + $g_iBottomOffsetY) ; 860x780
-				If @error Then SetError(0, 0, 0)
-				If _Sleep($DELAYCOLLECT1) Then Return
-				$CountGetInfo += 1
-				If $CountGetInfo >= 5 Then Return
-			WEnd
-			If $g_bDebugSetlog Then SetDebugLog(_ArrayToString($sInfo, " "), $COLOR_DEBUG)
-			If @error Then Return SetError(0, 0, 0)
-			If $sInfo[0] > 1 Or $sInfo[0] = "" Then
-				If StringInStr($sInfo[1], "Loot") = 0 Then
-					If $g_bDebugSetlog Then SetDebugLog("Bad Loot Cart location", $COLOR_ACTION)
-				Else
-					If IsMainPage() Then Click($aLootCartBtn[0], $aLootCartBtn[1], 1, 0, "#0331") ;Click loot cart button
-				EndIf
-			EndIf
+		Local $aiCollectButton = findButton("CollectLootCart", Default, 1, True)
+		If IsArray($aiCollectButton) And UBound($aiCollectButton) = 2 Then
+			ClickP($aiCollectButton)
 		Else
-			SetLog("LootCart is not inside the Village (X: " & $aLootCart[0] & " | Y: " & $aLootCart[1] & ")", $COLOR_INFO)
+			SetLog("Cannot find Collect Button", $COLOR_ERROR)
+			Return False
 		EndIf
+
 	Else
 		SetLog("No Loot Cart found on your Village", $COLOR_SUCCESS)
 	EndIf
+
+	$g_abNotNeedAllTime[0] = False
 EndFunc   ;==>CollectLootCart

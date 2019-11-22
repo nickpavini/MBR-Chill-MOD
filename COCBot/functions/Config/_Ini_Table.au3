@@ -18,7 +18,7 @@
 ; ===============================================================================================================================
 #include-once
 
-Global Const $g_iIniLinesMax = 1500 ; As of 2017-02-24, the number of active config.ini lines is 685
+Global Const $g_iIniLinesMax = 2000 ; As of 2017-02-24, the number of active config.ini lines is 685
 Global $g_asIniTable[$g_iIniLinesMax][2] ; section|key, value
 Global $g_iIniLineCount = 0
 
@@ -79,7 +79,6 @@ Func _Ini_Save($filename)
 						$sCurrentSection = "attack" Or _
 						$sCurrentSection = "troop" Or _
 						$sCurrentSection = "spells" Or _
-						$sCurrentSection = "milkingattack" Or _
 						$sCurrentSection = "endbattle" Or _
 						$sCurrentSection = "collectors" Or _
 						$sCurrentSection = "DropOrder" Or _
@@ -98,7 +97,6 @@ Func _Ini_Save($filename)
 					$sCurrentSection = "attack" Or _
 					$sCurrentSection = "troop" Or _
 					$sCurrentSection = "spells" Or _
-					$sCurrentSection = "milkingattack" Or _
 					$sCurrentSection = "endbattle" Or _
 					$sCurrentSection = "collectors" Or _
 					$sCurrentSection = "DropOrder" Or _
@@ -147,7 +145,6 @@ EndFunc   ;==>_Ini_Delete
 Func _Ini_AddNewKeyValue($section, $key, $value)
 	If UBound($g_asIniTable) < $g_iIniLineCount + 1 Or UBound($g_asIniTable, 2) < 2 Then
 		SetDebugLog("_Ini_AddNewKeyValue: Incorrect Array size on section '" & $section & "' for key '" & $key & "' value '" & $value & "'")
-		SetDebugLog(UBound($g_asIniTable) & " " & $g_iIniLineCount + 1 & " " & UBound($g_asIniTable, 2))
 		Return
 	EndIf
 	$g_asIniTable[$g_iIniLineCount][0] = $section & "|" & $key

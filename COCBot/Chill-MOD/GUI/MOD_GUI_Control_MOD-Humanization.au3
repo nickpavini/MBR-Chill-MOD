@@ -26,21 +26,21 @@ Func chkUseBotHumanization()
 	EndIf
 EndFunc   ;==>chkUseBotHumanization
 
-Func chkUseAltRClick()
-	If GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED Then
-		Local $UserChoice = MsgBox(4 + 48, "Warning !!!", GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_01", "Full random click is a good feature to be as less BOT-Like as possible because it makes ALL BOT clicks random...") & _
-				@CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_02", "The crazy @RoroTiti use it all the time an he says there is no problem with it... BUT, it still an experimental feature which may cause unpredictable problems...") & _
-				@CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_03", "So, do you want to use it ? :)") & @CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_04", "PS : No support will be provided to you if you use this function..."))
-		If $UserChoice = 6 Then
-			$g_bUseAltRClick = True
-		Else
-			$g_bUseAltRClick = False
-			GUICtrlSetState($g_hChkUseAltRClick, $GUI_UNCHECKED)
-		EndIf
-	Else
-		$g_bUseAltRClick = False
-	EndIf
-EndFunc   ;==>chkUseAltRClick
+;~ Func chkUseAltRClick()
+;~ 	If GUICtrlRead($g_hChkUseAltRClick) = $GUI_CHECKED Then
+;~ 		Local $UserChoice = MsgBox(4 + 48, "Warning !!!", GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_01", "Full random click is a good feature to be as less BOT-Like as possible because it makes ALL BOT clicks random...") & _
+;~ 				@CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_02", "The crazy @RoroTiti use it all the time an he says there is no problem with it... BUT, it still an experimental feature which may cause unpredictable problems...") & _
+;~ 				@CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_03", "So, do you want to use it ? :)") & @CRLF & "" & @CRLF & GetTranslatedFileIni("MOD GUI Design - BotHumanization", "chkUseAltRClick_Info_04", "PS : No support will be provided to you if you use this function..."))
+;~ 		If $UserChoice = 6 Then
+;~ 			$g_bUseAltRClick = True
+;~ 		Else
+;~ 			$g_bUseAltRClick = False
+;~ 			GUICtrlSetState($g_hChkUseAltRClick, $GUI_UNCHECKED)
+;~ 		EndIf
+;~ 	Else
+;~ 		$g_bUseAltRClick = False
+;~ 	EndIf
+;~ EndFunc   ;==>chkUseAltRClick
 
 Func chkCollectAchievements()
 	If GUICtrlRead($g_hChkCollectAchievements) = $GUI_CHECKED Then

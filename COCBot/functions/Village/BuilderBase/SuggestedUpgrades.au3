@@ -58,14 +58,14 @@ Func chkActivateBBSuggestedUpgrades()
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, $GUI_ENABLE)
 		GUICtrlSetState($g_hChkPlacingNewBuildings, $GUI_ENABLE)
-		GUICtrlSetState($g_hChkBBIgnoreWalls, $GUI_ENABLE) ; MOD
+		GUICtrlSetState($g_hChkBBIgnoreWalls, $GUI_ENABLE) ; Chill MOD
 	Else
 		$g_iChkBBSuggestedUpgrades = 0
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreGold, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreElixir, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkBBSuggestedUpgradesIgnoreHall, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
 		GUICtrlSetState($g_hChkPlacingNewBuildings, BitOR($GUI_UNCHECKED, $GUI_DISABLE))
-		GUICtrlSetState($g_hChkBBIgnoreWalls, BitOR($GUI_UNCHECKED, $GUI_DISABLE)) ; MOD
+		GUICtrlSetState($g_hChkBBIgnoreWalls, BitOR($GUI_UNCHECKED, $GUI_DISABLE)) ; Chill MOD
 	EndIf
 EndFunc   ;==>chkActivateBBSuggestedUpgrades
 
@@ -331,7 +331,7 @@ Func NewBuildings($aResult)
 					ExitLoop
 				EndIf
 				; Coordinates for Slot Zone from Clock position
-				Local $x = ($Coordinates[0] + 20), $y = ($Coordinates[1] + 250) - 135, $x1 = ($Coordinates[0] + 20) + 220, $y1 = ($Coordinates[1] + 250) + 52
+				Local $x = ($Coordinates[0] + 20), $y = ($Coordinates[1] + 250), $x1 = ($Coordinates[0] + 20) + 160, $y1 = ($Coordinates[1] + 250) + 75
 				; Lets see if exist resources
 				If $g_bDebugSetlog Then SetDebugLog("[x]: " & $x & " [y]: " & $y & " [x1]: " & $x1 & " [y1]: " & $y1, $COLOR_DEBUG)
 				If QuickMIS("BC1", $g_sImgAutoUpgradeZero, $x, $y, $x1, $y1, $Screencap, $Debug) Then

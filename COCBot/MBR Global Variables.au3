@@ -106,10 +106,6 @@ Global $g_bDebugVillageSearchImages = False ; will fill drive with huge number o
 ; <><><><> Debug Dead Base search problems <><><><>
 Global $g_bDebugDeadBaseImage = False ; Enable collection of zombie base images where loot is above search filter, no dead base detected
 Global $g_aiSearchEnableDebugDeadBaseImage = 200 ; If $g_iDebugDeadBaseImage is 0 and more than these searches reached, set $g_iDebugDeadBaseImage = 1, 0 = disabled
-; <><><><> Enable when debugging Milk attack errors! <><><><>
-Global $g_bDebugResourcesOffset = False ;make images with offset to check correct adjust values
-Global $g_bDebugMilkingIMGmake = False
-Global $g_bDebugContinueSearchElixir = False ; SLOW... if =1 search elixir check all images even if capacity < mincapacity and make debug image in temp folder if no match all images
 ; <><><><> Enable this flag to test Donation code, but DOES NOT DONATE! <><><><>
 Global $g_bDebugOCRdonate = False ; Creates OCR/image data and simulate, but do not donate
 ; <><><><> Only enable this when debugging Android zoom out issues! <><><><>
@@ -354,6 +350,7 @@ Global $g_iAndroidProcessAffinityMask = 0
 ; Android details
 ; Supported Android Versions, used for some ImgLoc functions and in GetAndroidCodeName()
 Global Const $g_iAndroidJellyBean = 17
+Global Const $g_iAndroidKitKat = 19
 Global Const $g_iAndroidLollipop = 21
 Global Const $g_iAndroidNougat = 24
 Global $g_iAndroidVersionAPI = $g_iAndroidJellyBean ; getprop ro.build.version.sdk
@@ -513,16 +510,16 @@ Global $g_aiWeakBaseStats
 
 ; Directories to libraries, executables, icons, and CSVs
 Global Const $g_sLibPath = @ScriptDir & "\lib" ;lib directory contains dll's
-Global Const $g_sLibImageSearchPath = $g_sLibPath & "\ImageSearchDLL.dll" ; ImageSearch library
 Global Const $g_sMBRLib = "MyBot.run.dll"
+Global Const $g_sSQLiteLib = "sqlite3.dll"
 Global $g_bLibMyBotActive = False ; call to MyBot DLL is active
 Global Const $g_sLibMyBotPath = $g_sLibPath & "\" & $g_sMBRLib ; main MBR library (containing also ImgLoc, formally MBRFunctions.dll)
+Global Const $g_sLibSQLitePath = $g_sLibPath & "\" & $g_sSQLiteLib
 Global $g_hLibMyBot = -1 ; handle to MyBot.run.dll library
 Global $g_hLibNTDLL = DllOpen("ntdll.dll") ; handle to ntdll.dll, DllClose($g_hLibNTDLL) not required
 Global $g_hLibUser32DLL = DllOpen("user32.dll") ; handle to user32.dll, DllClose($g_hLibUser32DLL) not required
 
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
-Global Const $g_sTHSnipeAttacksPath = @ScriptDir & "\CSV\THSnipe"
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
 Global Const $g_sIcnMBisland = @ScriptDir & "\Images\bbico.png"
 Global Const $g_sIcnBldGold = @ScriptDir & "\Images\gold.png"
@@ -589,8 +586,6 @@ Global $g_bTogglePauseUpdateState = False ; If True, TooglePauseUpdateState() ca
 Global $g_bTogglePauseAllowed = True ; If False, pause will not immediately happen but on next call to _Sleep when $g_bTogglePauseAllowed = True again
 Global $g_bWaitShield = False
 Global $g_bGForcePBTUpdate = False
-Global $g_bQuicklyFirstStart = True
-Global $g_bQuickAttack = False
 Global $g_sTimeBeforeTrain = ""
 Global $g_hAttackTimer = 0 ; Timer for knowing when attack starts, in 30 Sec. attack automatically starts and lasts for 3 Minutes
 Global $g_iAttackTimerOffset = Default ; Offset of timer to attack really started
@@ -619,10 +614,10 @@ Global Enum $eBarb, $eArch, $eGiant, $eGobl, $eWall, $eBall, $eWiza, $eHeal, $eD
 		$eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell, $eWallW, $eBattleB, $eStoneS, $eArmyCount
 
 ; Attack types
-Global Enum $DB, $LB, $TS, $MA, $TB, $DT ; DeadBase, ActiveBase, TownhallSnipe, Milking Attack, TownhallBully, DropTrophy
+Global Enum $DB, $LB, $TB, $DT ; DeadBase, ActiveBase, TownhallBully, DropTrophy
 Global Const $g_iModeCount = 3
-Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Snipe / 3 Milking Attack / 4 TH Bully / 5 Drop Trophy
-Global Const $g_asModeText[6] = ["Dead Base", "Live Base", "TH Snipe", "Milking Attack", "TH Bully", "Drop Trophy"]
+Global $g_iMatchMode = 0 ; 0 Dead / 1 Live / 2 TH Bully / 2 Drop Trophy
+Global Const $g_asModeText[4] = ["Dead Base", "Live Base", "TH Bully", "Drop Trophy"]
 
 ; Troops
 Global Enum $eTroopBarbarian, $eTroopArcher, $eTroopGiant, $eTroopGoblin, $eTroopWallBreaker, $eTroopBalloon, _
@@ -670,6 +665,9 @@ Global Const $g_aiTroopCostPerLevel[$eTroopCount][10] = [ _
 		[5, 220, 240, 260, 280, 300]] 									    ; IceGolem
 Global Const $g_aiTroopDonateXP[$eTroopCount] = [1, 1, 5, 1, 2, 5, 4, 14, 20, 25, 10, 6, 30, 2, 5, 8, 30, 12, 30, 6, 15]
 
+Global Const $g_aiTroopOcrOffSet[$eTroopCount][2] = [[37, 37], [41, 30], [33, 38], [50, 38], [59, 32], [19, 67], [55, 39], [58, 34], [37, 42], [53, 30], [49, 47], [52, 40], [52, 44], _
+		[39, 34], [41, 42], [38, 32], [38, 32], [39, 31], [33, 40], [52, 30], [45, 42]]
+
 ; Spells
 Global Enum $eSpellLightning, $eSpellHeal, $eSpellRage, $eSpellJump, $eSpellFreeze, $eSpellClone, _
 		$eSpellPoison, $eSpellEarthquake, $eSpellHaste, $eSpellSkeleton, $eSpellBat, $eSpellCount
@@ -691,6 +689,8 @@ Global Const $g_aiSpellCostPerLevel[$eSpellCount][8] = [ _
 		[6, 110, 120, 130, 140, 150, 160], _ 					 ;SkeletonSpell
 		[5, 110, 120, 130, 140, 150]] 							 ;BatSpell
 Global Const $g_aiSpellDonateXP[$eSpellCount] = [10, 10, 10, 10, 10, 0, 5, 5, 5, 5, 5]
+
+Global Const $g_aiSpellOcrOffSet[$eSpellCount][2] = [[44, 29], [41, 27], [41, 27], [50, 19], [34, 50], [43, 25], [47, 19], [39, 45], [45, 22], [46, 18], [30, 46]]
 
 ;Siege Machines
 Global Enum $eSiegeWallWrecker, $eSiegeBattleBlimp, $eSiegeStoneSlammer, $eSiegeMachineCount
@@ -718,6 +718,7 @@ Global Const $g_asHeroShortNames[$eHeroCount] = ["King", "Queen", "Warden"]
 Global $g_aiHeroBoost[$eHeroCount] = ["1970/01/01 00:00:00", "1970/01/01 00:00:00", "1970/01/01 00:00:00"] ; Use Epoch as standard values :)
 
 ; Leagues
+Global $g_bLeagueAttack = False
 Global Enum $eLeagueUnranked, $eLeagueBronze, $eLeagueSilver, $eLeagueGold, $eLeagueCrystal, $eLeagueMaster, $eLeagueChampion, $eLeagueTitan, $eLeagueLegend, $eLeagueCount
 Global Const $g_asLeagueDetails[22][5] = [ _
 		["0", "Bronze III", "0", "B3", "400"], ["1000", "Bronze II", "0", "B2", "500"], ["1300", "Bronze I", "0", "B1", "600"], _
@@ -825,6 +826,7 @@ Global $g_bMakeScreenshotNow = False ; Used to create Screenshot in _Sleep if Sc
 ; <><><><> Village / Misc <><><><>
 Global $g_bChkBotStop = False, $g_iCmbBotCommand = 0, $g_iCmbBotCond = 0, $g_iCmbHoursStop = 0, $g_iCmbTimeStop = 0
 Global $g_abFullStorage[$eLootCount] = [False, False, False, False], $g_aiResumeAttackLoot[$eLootCount] = [0, 0, 0, 0], $g_iResumeAttackTime = 0
+Global $g_bCollectStarBonus = False
 Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
 Global $g_iTxtRestartDark = 500
@@ -836,6 +838,31 @@ Global $g_iTxtTreasuryElixir = 0
 Global $g_iTxtTreasuryDark = 0
 
 Global $g_bChkCollectBuilderBase = False, $g_bChkStartClockTowerBoost = False, $g_bChkCTBoostBlderBz = False, $g_bChkCleanBBYard = False
+
+; Builder Base Attack
+Global $g_hChkEnableBBAttack = 0, $g_hChkBBTrophyRange = 0, $g_hTxtBBTrophyLowerLimit = 0, $g_hTxtBBTrophyUpperLimit = 0, $g_hChkBBAttIfLootAvail = 0, $g_hChkBBWaitForMachine = 0
+Global $g_bChkEnableBBAttack = False, $g_bChkBBTrophyRange = False, $g_bChkBBAttIfLootAvail = False, $g_bChkBBWaitForMachine = False
+Global $g_iTxtBBTrophyLowerLimit = 0, $g_iTxtBBTrophyUpperLimit = 5000
+Global $g_bBBMachineReady = False
+Global $g_aBBMachine = [0,0] ; x,y coordinates of where to click for Battle machine on attack bar
+Global $g_iBBMachAbilityTime = 14000 ; in milliseconds, so 14 seconds between abilities
+Global Const $g_iBBNextTroopDelayDefault = 2000,  $g_iBBSameTroopDelayDefault = 300 ; default delay times
+Global $g_iBBNextTroopDelay = $g_iBBNextTroopDelayDefault,  $g_iBBSameTroopDelay = $g_iBBSameTroopDelayDefault; delay time between different and same troops
+Global $g_iBBNextTroopDelayIncrement = 400,  $g_iBBSameTroopDelayIncrement = 60 ; used for math to calculate delays based on selection
+Global $g_hCmbBBNextTroopDelay = 0, $g_hCmbBBSameTroopDelay = 0
+Global $g_apTL[10][2] = [ [22, 374], [59, 348], [102, 319], [137, 288], [176, 259], [209, 232], [239, 212], [270, 188], [307, 164], [347, 139] ]
+Global $g_apTR[10][2] = [ [831, 368], [791, 334], [747, 306], [714, 277], [684, 252], [647, 227], [615, 203], [577, 177], [539, 149], [506, 123] ]
+
+; BB Drop Order
+Global $g_hBtnBBDropOrder = 0
+Global $g_hGUI_BBDropOrder = 0
+Global $g_hChkBBCustomDropOrderEnable = 0
+Global $g_hBtnBBDropOrderSet = 0, $g_hBtnBBRemoveDropOrder = 0, $g_hBtnBBClose = 0
+Global $g_bBBDropOrderSet = False
+Global Const $g_iBBTroopCount = 11
+Global Const $g_sBBDropOrderDefault = "BoxerGiant|HogGlider|SuperPekka|DropShip|Witch|BabyDrag|WallBreaker|Barbarian|CannonCart|Archer|Minion"
+Global $g_sBBDropOrder = $g_sBBDropOrderDefault
+Global $g_ahCmbBBDropOrder[$g_iBBTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ; <><><><> Village / Donate - Request <><><><>
 Global $g_bRequestTroopsEnable = False
@@ -977,7 +1004,7 @@ Global $g_bQuickTrainEnable = False
 Global $g_bQuickTrainArmy[3] = [True, False, False]
 Global $g_aiArmyQuickTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiArmyQuickSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-Global $g_iTotalQuickTroops = 0, $g_iTotalQuickSpells = 0, $g_bQuickArmyMixed = False, $g_sQuickTrainCheckTime = ""
+Global $g_iTotalQuickTroops = 0, $g_iTotalQuickSpells = 0, $g_bQuickArmyMixed = False
 
 Global $g_abUseInGameArmy[3]
 Global $g_aiQuickTroopType[3][7] = [[-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1], [-1, -1, -1, -1, -1, -1, -1]]
@@ -991,6 +1018,9 @@ Global $g_aiQTEdit_TroopType[7] = [-1, -1, -1, -1, -1, -1, -1]
 Global $g_aiQTEdit_SpellType[7] = [-1, -1, -1, -1, -1, -1, -1]
 Global $g_iQTEdit_TotalTroop = 0, $g_iQTEdit_TotalSpell = 0
 
+Global $g_aiArmyCustomTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Global $g_aiArmyCustomSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 Global $g_aiArmyCompTroops[$eTroopCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiArmyCompSpells[$eSpellCount] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_aiArmyCompSiegeMachine[$eSiegeMachineCount] = [0, 0, 0]
@@ -1000,7 +1030,7 @@ Global $g_aiTrainArmySiegeMachineLevel[$eSiegeMachineCount] = [0, 0, 0]
 Global $g_iTrainArmyFullTroopPct = 100
 Global $g_bTotalCampForced = False, $g_iTotalCampForcedValue = 200
 Global $g_iTotalSpellValue = 0
-Global $g_bDoubleTrain
+Global $g_bDoubleTrain, $g_bPreciseArmy
 Global $g_bAllBarracksUpgd = False
 
 ; <><><><> Attack Plan / Train Army / Boost <><><><>
@@ -1059,8 +1089,8 @@ Global $g_bCloseWhileTrainingEnable = True, $g_bCloseWithoutShield = False, $g_b
 Global $g_iTrainClickDelay = 40
 Global $g_bTrainAddRandomDelayEnable = False, $g_iTrainAddRandomDelayMin = 5, $g_iTrainAddRandomDelayMax = 60
 
-; <><><><> Attack Plan / Search & Attack / {Common Across DeadBase, ActiveBase, TH Snipe, Bully} <><><><>
-Global $g_abAttackTypeEnable[$g_iModeCount + 3] = [True, False, False, -1, False, -1] ; $DB, $LB, $TS, $MA, $TB, $DT - $MA and $DT unused here
+; <><><><> Attack Plan / Search & Attack / {Common Across DeadBase, ActiveBase, Bully} <><><><>
+Global $g_abAttackTypeEnable[$g_iModeCount + 1] = [True, False, False, -1] ; $DB, $LB, $TB, $DT - $DT unused here
 ; Search - Start Search If
 Global $g_abSearchSearchesEnable[$g_iModeCount] = [True, False, False], $g_aiSearchSearchesMin[$g_iModeCount] = [0, 0, 0], $g_aiSearchSearchesMax[$g_iModeCount] = [0, 0, 0] ; Search count limit
 Global $g_abSearchTropiesEnable[$g_iModeCount] = [False, False, False], $g_aiSearchTrophiesMin[$g_iModeCount] = [0, 0, 0], $g_aiSearchTrophiesMax[$g_iModeCount] = [0, 0, 0] ; Trophy limit
@@ -1087,22 +1117,19 @@ Global $g_aiFilterMaxMortarLevel[$g_iModeCount] = [5, 5, 0], $g_aiFilterMaxWizTo
 Global $g_abFilterMeetOneConditionEnable[$g_iModeCount] = [False, False, False]
 ; Attack
 Global $g_iSlotsGiants = 1
-Global $g_aiAttackAlgorithm[$g_iModeCount] = [0, 0, 0], $g_aiAttackTroopSelection[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0], $g_aiAttackUseHeroes[$g_iModeCount] = [0, 0, 0], _
+Global $g_aiAttackAlgorithm[$g_iModeCount] = [0, 0, 0], $g_aiAttackTroopSelection[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackUseHeroes[$g_iModeCount] = [0, 0, 0], _
 		$g_abAttackDropCC[$g_iModeCount] = [0, 0, 0] , $g_aiAttackUseSiege[$g_iModeCount] = [0, 0, 0], $g_aiAttackUseWardenMode[$g_iModeCount] = [0, 0, 0]
 Global $g_abAttackUseLightSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseHealSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseRageSpell[$g_iModeCount] = [0, 0, 0], _
 		$g_abAttackUseJumpSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseFreezeSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseCloneSpell[$g_iModeCount] = [0, 0, 0], _
 		$g_abAttackUsePoisonSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseEarthquakeSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseHasteSpell[$g_iModeCount] = [0, 0, 0], _
 		$g_abAttackUseSkeletonSpell[$g_iModeCount] = [0, 0, 0], $g_abAttackUseBatSpell[$g_iModeCount] = [0, 0, 0]
-Global $g_bTHSnipeBeforeEnable[$g_iModeCount] = [False, False, False], $g_iTHSnipeBeforeTiles[$g_iModeCount] = [0, 0, 0], $g_iTHSnipeBeforeScript[$g_iModeCount] = [0, 0, 0]
 ; Attack - Standard
-Global $g_aiAttackStdDropOrder[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackStdDropSides[$g_iModeCount + 1] = [3, 3, 0, 1], $g_aiAttackStdUnitDelay[$g_iModeCount + 1] = [4, 4, 0, 4], _
-		$g_aiAttackStdWaveDelay[$g_iModeCount + 1] = [4, 4, 0, 4], $g_abAttackStdRandomizeDelay[$g_iModeCount + 1] = [True, True, False, True], _
-		$g_abAttackStdSmartAttack[$g_iModeCount + 3] = [True, True, False, True, False, False], $g_aiAttackStdSmartDeploy[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0]
-Global $g_abAttackStdSmartNearCollectors[$g_iModeCount + 3][3] = [[False, False, False], [False, False, False], [False, False, False], _
-		[False, False, False], [False, False, False], [False, False, False]]
+Global $g_aiAttackStdDropOrder[$g_iModeCount + 1] = [0, 0, 0, 0], $g_aiAttackStdDropSides[$g_iModeCount + 1] = [3, 3, 0, 1], _
+		$g_abAttackStdSmartAttack[$g_iModeCount + 1] = [True, True, False, False], $g_aiAttackStdSmartDeploy[$g_iModeCount + 1] = [0, 0, 0, 0]
+Global $g_abAttackStdSmartNearCollectors[$g_iModeCount + 1][3] = [[False, False, False], [False, False, False], [False, False, False], [False, False, False]]
 ; Attack - Scripted
-Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 3] = [$REDLINE_IMGLOC_RAW, $REDLINE_IMGLOC_RAW, 0, 0, 0, 0]
-Global $g_aiAttackScrDroplineEdge[$g_iModeCount + 3] = [$DROPLINE_EDGE_FIRST, $DROPLINE_EDGE_FIRST, 0, 0, 0, 0]
+Global $g_aiAttackScrRedlineRoutine[$g_iModeCount + 1] = [$REDLINE_IMGLOC_RAW, $REDLINE_IMGLOC_RAW, 0, 0]
+Global $g_aiAttackScrDroplineEdge[$g_iModeCount + 1] = [$DROPLINE_EDGE_FIRST, $DROPLINE_EDGE_FIRST, 0, 0]
 Global $g_sAttackScrScriptName[$g_iModeCount] = ["Barch four fingers", "Barch four fingers", ""]
 
 ; End Battle
@@ -1124,20 +1151,6 @@ Global $g_abStopAtkPctNoChangeEnable[$g_iModeCount] = [False, False, False], $g_
 
 ; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / Scripted <><><><>
 ; <<< nothing here - all in common Search & Attack grouping >>>
-
-; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / Milking <><><><>
-Global $g_iMilkAttackType = 1, $g_aiMilkFarmElixirParam[9] = [-1, -1, -1, -1, -1, -1, 2, 2, 2]
-Global $g_bMilkFarmLocateElixir = True, $g_bMilkFarmLocateMine = True, $g_bMilkFarmLocateDrill = True
-Global $g_iMilkFarmMineParam = 5 ;values 0-8 (0=mines level 1-4  ; 1= mines level 5; ... ; 8=mines level 12)
-Global $g_iMilkFarmDrillParam = 1 ;values 1-6 (1=drill level 1 ... 6=drill level 6)
-Global $g_iMilkFarmResMaxTilesFromBorder = 0, $g_bMilkFarmAttackGoldMines = True, $g_bMilkFarmAttackElixirExtractors = True, $g_bMilkFarmAttackDarkDrills = True, _
-		$g_iMilkFarmLimitGold = 9995000, $g_iMilkFarmLimitElixir = 9995000, $g_iMilkFarmLimitDark = 200000
-Global $g_iMilkFarmTroopForWaveMin = 4, $g_iMilkFarmTroopForWaveMax = 6, $g_iMilkFarmTroopMaxWaves = 3, $g_iMilkFarmDelayFromWavesMin = 3000, $g_iMilkFarmDelayFromWavesMax = 5000
-Global $g_iMilkingAttackDropGoblinAlgorithm = 1 ; 0= drop each goblin in different point, 1= drop all goblins in a point
-Global $g_iMilkingAttackStructureOrder = 1, $g_bMilkingAttackCheckStructureDestroyedBeforeAttack = False, $g_bMilkingAttackCheckStructureDestroyedAfterAttack = False
-Global $g_bMilkAttackAfterTHSnipeEnable = False, $g_iMilkFarmTHMaxTilesFromBorder = 1, $g_sMilkFarmAlgorithmTh = "Queen&GobTakeTH", $g_bMilkFarmSnipeEvenIfNoExtractorsFound = False, _
-		$g_bMilkAttackAfterScriptedAtkEnable = False, $g_sMilkAttackCSVscript = "Barch four fingers"
-Global $g_bMilkFarmForceToleranceEnable = False, $g_iMilkFarmForceToleranceNormal = 31, $g_iMilkFarmForceToleranceBoosted = 31, $g_iMilkFarmForceToleranceDestroyed = 31
 
 ; <><><><> Attack Plan / Search & Attack / Deadbase / Attack / SmartFarm <><><><>
 Global $g_iTxtInsidePercentage = 0 , $g_iTxtOutsidePercentage = 0 , $g_bDebugSmartFarm = False
@@ -1168,15 +1181,6 @@ Global $g_iCollectorToleranceOffset = 0
 
 ; <><><><> Attack Plan / Search & Attack / Activebase / End Battle <><><><>
 Global $g_bDESideEndEnable = False, $g_iDESideEndMin = 25, $g_bDESideDisableOther = False, $g_bDESideEndAQWeak = False, $g_bDESideEndBKWeak = False, $g_bDESideEndOneStar = False
-
-; <><><><> Attack Plan / Search & Attack / TH Snipe / Search <><><><>
-Global $g_iAtkTSAddTilesWhileTrain = 1, $g_iAtkTSAddTilesFullTroops = 0
-
-; <><><><> Attack Plan / Search & Attack / TH Snipe / Attack <><><><>
-Global $g_sAtkTSType = "Bam"
-
-; <><><><> Attack Plan / Search & Attack / TH Snipe / End Battle <><><><>
-Global $g_bEndTSCampsEnable = False, $g_iEndTSCampsPct = 0
 
 ; <><><><> Attack Plan / Search & Attack / Bully <><><><>
 Global $g_iAtkTBEnableCount = 150, $g_iAtkTBMaxTHLevel = 0, $g_iAtkTBMode = 0
@@ -1296,12 +1300,11 @@ Global $g_iNbrOfWallsUpped = 0, $g_iNbrOfWallsUppedGold = 0, $g_iNbrOfWallsUpped
 Global $g_iNbrOfBuildingsUppedGold = 0, $g_iNbrOfBuildingsUppedElixir = 0, $g_iNbrOfHeroesUpped = 0 ; number of wall, building, hero upgrades with gold, elixir, delixir
 Global $g_iSearchCost = 0, $g_iTrainCostElixir = 0, $g_iTrainCostDElixir = 0, $g_iTrainCostGold = 0 ; search and train troops cost
 Global $g_iNbrOfOoS = 0 ; number of Out of Sync occurred
-Global $g_iNbrOfTHSnipeFails = 0, $g_iNbrOfTHSnipeSuccess = 0 ; number of fails and success while TH Sniping
 Global $g_iGoldFromMines = 0, $g_iElixirFromCollectors = 0, $g_iDElixirFromDrills = 0 ; number of resources gain by collecting mines, collectors, drills
-Global $g_aiAttackedVillageCount[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0] ; number of attack villages for DB, LB, TB, TS
-Global $g_aiTotalGoldGain[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0], $g_aiTotalElixirGain[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0], $g_aiTotalDarkGain[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0], _
-		$g_aiTotalTrophyGain[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0] ; total resource gains for DB, LB, TB, TS
-Global $g_aiNbrOfDetectedMines[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0], $g_aiNbrOfDetectedCollectors[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0], $g_aiNbrOfDetectedDrills[$g_iModeCount + 3] = [0, 0, 0, 0, 0, 0] ; number of mines, collectors, drills detected for DB, LB, TB
+Global $g_aiAttackedVillageCount[$g_iModeCount] = [0, 0, 0] ; number of attack villages for DB, LB, TB
+Global $g_aiTotalGoldGain[$g_iModeCount] = [0, 0, 0], $g_aiTotalElixirGain[$g_iModeCount] = [0, 0, 0], $g_aiTotalDarkGain[$g_iModeCount] = [0, 0, 0], _
+		$g_aiTotalTrophyGain[$g_iModeCount] = [0, 0, 0] ; total resource gains for DB, LB, TB
+Global $g_aiNbrOfDetectedMines[$g_iModeCount] = [0, 0, 0], $g_aiNbrOfDetectedCollectors[$g_iModeCount] = [0, 0, 0], $g_aiNbrOfDetectedDrills[$g_iModeCount] = [0, 0, 0] ; number of mines, collectors, drills detected for DB, LB, TB
 Global $g_aiAttackedCount = 0 ; convert to global from UpdateStats to enable daily attack limits
 Global $g_iSearchCount = 0 ;Number of searches
 Global Const $g_iMaxTrainSkip = 40
@@ -1320,7 +1323,7 @@ Global $g_aiWardenAltarPos[2] = [-1, -1] ; position Grand Warden Altar
 Global $g_aiLaboratoryPos[2] = [-1, -1] ; Position of laboratory
 Global $g_aiClanCastlePos[2] = [-1, -1] ; Position of clan castle
 Global $g_iDetectedImageType = 0 ; Image theme; 0 = normal, 1 = snow
-Global $g_abNotNeedAllTime[2] = [True, True] ; ReArm, CheckTombs
+Global $g_abNotNeedAllTime[2] = [True, True] ; Collect LootCart, CheckTombs
 
 ;Builder Base
 Global $g_aiCurrentLootBB[$eLootCountBB] = [0, 0, 0] ; current stats on builders base
@@ -1459,9 +1462,6 @@ Global Const $g_aiUseBarcherHog[18] = [$eBarb, $eArch, $eHogs, $eKing, $eQueen, 
 Global Const $g_aiUseBarcherMinion[18] = [$eBarb, $eArch, $eMini, $eKing, $eQueen, $eWarden, $eCastle, $eLSpell, $eHSpell, $eRSpell, $eJSpell, $eFSpell, $eCSpell, $ePSpell, $eESpell, $eHaSpell, $eSkSpell, $eBtSpell]
 Global Const $g_aaiTroopsToBeUsed[12] = [$g_aiUseAllTroops, $g_aiUseBarracks, $g_aiUseBarbs, $g_aiUseArchs, $g_aiUseBarcher, $g_aiUseBarbGob, $g_aiUseArchGob, $g_aiUseBarcherGiant, $g_aiUseBarcherGobGiant, _
 		$g_aiUseBarcherHog, $g_aiUseBarcherMinion]
-Global $g_bTHSnipeUsedKing = False
-Global $g_bTHSnipeUsedQueen = False
-Global $g_bTHSnipeUsedWarden = False
 Global $g_avAttackTroops[22][6] ;11 Slots of troops -  Name, Amount, x-coord (+ 11 extended slots Slot11+)
 Global $g_bFullArmy = False ;Check for full army or not
 Global $g_iKingSlot = -1, $g_iQueenSlot = -1, $g_iWardenSlot = -1, $g_iClanCastleSlot = -1
@@ -1536,25 +1536,6 @@ Global $ATTACKVECTOR_M, $ATTACKVECTOR_N, $ATTACKVECTOR_O, $ATTACKVECTOR_P, $ATTA
 Global $ATTACKVECTOR_S, $ATTACKVECTOR_T, $ATTACKVECTOR_U, $ATTACKVECTOR_V, $ATTACKVECTOR_W, $ATTACKVECTOR_X
 Global $ATTACKVECTOR_Y, $ATTACKVECTOR_Z
 
-; Attack - Milking
-Global Const $g_iMilkFarmOffsetX = 56
-Global Const $g_iMilkFarmOffsetY = 41
-Global Const $g_iMilkFarmOffsetXStep = 35
-Global Const $g_iMilkFarmOffsetYStep = 26
-Global $g_asCapacityStructureElixir[9], $g_asDestroyedMineIMG[9], $g_asDestroyedElixirIMG[9], $g_asDestroyedDarkIMG[9]
-Global $g_bDuringMilkingAttack = False
-;adjust resource coordinates returned by dll ( [0] adjust coord for resource level 0-4, [1] adj. for level 5... [8] adjust coord. for level 12 )
-;									0	   1      2     3     4       5     6      7      8
-Global Const $g_asMilkFarmOffsetMine[9] = ["1-1", "1-1", "0-2", "0-4", "1-2", "1-1", "3-5", "3-6", "3-5"]
-Global Const $g_asMilkFarmOffsetElixir[9] = ["1-11", "1-11", "1-9", "1-13", "0-11", "0-11", "0-13", "0-11", "0-14"]
-Global Const $g_asMilkFarmOffsetDark[7] = ["0-0", "1-4", "1-3", "0-5", "4-8", "0-4", "0-3"]
-; type.level.xpos-y.pos.redarea1x-redarea1y.redarea2x,redarea2y,[...],redareanx,redareany|type.level.xpos,y.pos.redarea1x,redarea1y.redarea2x,redarea2y,[...],redareanx,redareany|....
-;[0]type:gomine,elixir,ddrill
-;[1]xpos and ypos
-;[2]...[n] redarea points
-Global $g_sMilkFarmObjectivesSTR = ""
-Global $g_bMilkingAttackOutside = False
-
 ; Train
 Global $g_bTrainEnabled = True
 Global $g_bIsFullArmywithHeroesAndSpells = False
@@ -1566,7 +1547,7 @@ Global $g_bCheckClanCastleTroops = False
 
 ; Donate
 Global Const $g_aiDonateTroopPriority[$eTroopCount] = [ _
-		$eTroopLavaHound, $eTroopElectroDragon, $eTroopGolem, $eTroopIceGolem, $eTroopPekka, $eTroopDragon, $eTroopWitch, $eTroopHealer, $eTroopBabyDragon, _
+		$eTroopLavaHound, $eTroopElectroDragon, $eTroopGolem, $eTroopPekka, $eTroopDragon, $eTroopIceGolem, $eTroopWitch, $eTroopHealer, $eTroopBabyDragon, _
 		$eTroopValkyrie, $eTroopBowler, $eTroopMiner, $eTroopGiant, $eTroopBalloon, $eTroopHogRider, $eTroopWizard, _
 		$eTroopWallBreaker, $eTroopMinion, $eTroopArcher, $eTroopBarbarian, $eTroopGoblin]
 Global Const $g_aiDonateSpellPriority[$eSpellCount] = [ _
@@ -1633,8 +1614,8 @@ Global Const $g_aDrillLevelHP[7] = [800, 860, 920, 980, 1060, 1160, 1280]
 Global Const $g_aDrillLevelTotal[7] = [160, 300, 540, 840, 1280, 1800, 2400]
 ; Array to hold Total Damage of Lightning Spell at each level (1-7)
 Global Const $g_aLSpellDmg[7] = [300, 360, 420, 480, 540, 600, 660]
-; Array to hold Total Damage of Earthquake Spell at each level (1-4)
-Global Const $g_aEQSpellDmg[4] = [0.14, 0.17, 0.21, 0.25]
+; Array to hold Total Damage of Earthquake Spell at each level (1-5)
+Global Const $g_aEQSpellDmg[5] = [0.14, 0.17, 0.21, 0.25, 0.29]
 
 ; Weak Base Defense Building Information
 Global Enum $eWeakEagle = 1, $eWeakInferno, $eWeakXBow, $eWeakWizard, $eWeakMortar, $eWeakAirDefense
@@ -1767,8 +1748,14 @@ Global $g_bChkClanGamesDebug = 0
 Global $g_iPurgeJobCount[8] = [0, 0, 0, 0, 0, 0, 0, 0]
 Global $g_iPurgeMax = 5 ; [0] is unlimited , 1-10
 
+Global $g_sClanGamesScore = "N/A", $g_sClanGamesTimeRemaining = "N/A"
+
 ; Collect Free Magic Items
 Global $g_bChkCollectFreeMagicItems = True
+
+; Daily challenge
+Global $g_bChkCollectRewards = True
+Global $g_iBuilderBoostDiscount = 0 ; in percent
 
 ; SC_ID without shared_prefs
 Global $g_bOnlySCIDAccounts = False
@@ -1804,6 +1791,5 @@ Global $g_sStarsEarned = Null
 Func _ArrayIndexValid(Const ByRef $a, Const $idx)
 	Return $idx >= 0 And $idx < UBound($a)
 EndFunc   ;==>_ArrayIndexValid
-
 
 #include "Chill-MOD\Globals_Chill_MOD.au3" ; Moved to bottom to avoid issues with not finding variables for MOD globals

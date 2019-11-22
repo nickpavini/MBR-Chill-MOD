@@ -56,20 +56,6 @@ Func SaveConfig_MOD()
 	_Ini_Add("Bot Humanization", "cmbMaxActionsNumber", _GUICtrlComboBox_GetCurSel($g_hCmbMaxActionsNumber))
 	_Ini_Add("Bot Humanization", "challengeMessage", GUICtrlRead($g_hChallengeMessage))
 
-	; Builder Base Attack
-	_Ini_Add("other", "ChkEnableBBAttack", $g_bChkEnableBBAttack)
-	_Ini_Add("other", "ChkBBTrophyRange", $g_bChkBBTrophyRange)
-	_Ini_Add("other", "TxtBBTrophyLowerLimit", $g_iTxtBBTrophyLowerLimit)
-	_Ini_Add("other", "TxtBBTrophyUpperLimit", $g_iTxtBBTrophyUpperLimit)
-	_Ini_Add("other", "ChkBBAttIfLootAvail", $g_bChkBBAttIfLootAvail)
-	_Ini_Add("other", "ChkBBWaitForMachine", $g_bChkBBWaitForMachine)
-	_Ini_Add("other", "iBBNextTroopDelay", $g_iBBNextTroopDelay)
-	_Ini_Add("other", "iBBSameTroopDelay", $g_iBBSameTroopDelay)
-
-	; Builder Base Drop Order
-	_Ini_Add("other", "bBBDropOrderSet", $g_bBBDropOrderSet)
-	_Ini_Add("other", "sBBDropOrder", $g_sBBDropOrder)
-
 	; BB Suggested Upgrades
 	_Ini_Add("other", "ChkBBIgnoreWalls", $g_bChkBBIgnoreWalls)
 

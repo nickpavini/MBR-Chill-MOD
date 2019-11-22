@@ -13,57 +13,6 @@
 ; Example .......: ---
 ;================================================================================================================================
 
-; ================================================== RANDOM CLICK/SLEEP PART ================================================== ;
-Func Click($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-
-	; !!! Not original function but randomization calculation which is linked to original function renamed FClick !!!
-	; !!! Still compatible with all original function parameters !!!
-
-	If $g_bUseAltRClick = True Then
-		Local $xclick = Random($x - 5, $x, 1)
-		Local $yclick = Random($y, $y + 5, 1)
-		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
-		FClick($xclick, $yclick, $times, $speed, $debugtxt)
-	Else
-		FClick($x, $y, $times, $speed, $debugtxt)
-	EndIf
-
-EndFunc   ;==>Click
-
-Func PureClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-
-	; !!! Not original function but randomization calculation which is linked to original function renamed FPureClick !!!
-	; !!! Still compatible with all original function parameters !!!
-
-	If $g_bUseAltRClick = True Then
-		Local $xclick = Random($x - 5, $x, 1)
-		Local $yclick = Random($y, $y + 5, 1)
-		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
-		FPureClick($xclick, $yclick, $times, $speed, $debugtxt)
-	Else
-		FPureClick($x, $y, $times, $speed, $debugtxt)
-	EndIf
-
-EndFunc   ;==>PureClick
-
-Func GemClick($x, $y, $times = 1, $speed = 0, $debugtxt = "")
-
-	; !!! Not original function but randomization calculation which is linked to original function renamed FGemClick !!!
-	; !!! Still compatible with all original function parameters !!!
-
-	If $g_bUseAltRClick = True Then
-		Local $xclick = Random($x - 5, $x, 1)
-		Local $yclick = Random($y, $y + 5, 1)
-		If $xclick <= 0 Or $xclick >= 860 Then $xclick = $x ; Out Of Screen protection
-		If $yclick <= 0 Or $yclick >= 650 + ($g_iMidOffsetY) Then $yclick = $y ; Out Of Screen protection
-		FGemClick($xclick, $yclick, $times, $speed, $debugtxt)
-	Else
-		FGemClick($x, $y, $times, $speed, $debugtxt)
-	EndIf
-
-EndFunc   ;==>GemClick
 ; ================================================== HUMAN FUNCTIONS PART ================================================== ;
 
 Func BotHumanization()

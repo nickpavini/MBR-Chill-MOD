@@ -18,15 +18,14 @@ Func LookAtWarLog()
 	randomSleep(3000)
 
 	If ChatOpen() Then
-		Click(230, 20) ; go to clan chat
 		randomSleep(1500)
 
 		If IsClanChat() Then
-			Click(120, 60) ; open the clan menu
+			Click(120, 30) ; open the clan menu
 			randomSleep(1500)
 
 			If IsClanOverview() Then
-				If QuickMIS("BC1", $g_sImgHumanizationWarLog, 20, 360 + $g_iMidOffsetY, 150, 390 + $g_iMidOffsetY) Then ; October Update Changed
+				If QuickMIS("BC1", $g_sImgHumanizationWarLog) Then ; October Update Changed
 					Click($g_iQuickMISWOffSetX, $g_iQuickMISWOffSetY) ; open war log
 					randomSleep(500)
 					Click(258, 135) ;Click Classic War Log
@@ -56,11 +55,10 @@ Func VisitClanmates()
 	randomSleep(3000)
 
 	If ChatOpen() Then
-		Click(230, 20) ; go to clan chat
 		randomSleep(1500)
 
 		If IsClanChat() Then
-			Click(120, 60) ; open the clan menu
+			Click(120, 30) ; open the clan menu
 			randomSleep(1500)
 
 			If IsClanOverview() Then

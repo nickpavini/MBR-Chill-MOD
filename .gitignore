@@ -7,7 +7,6 @@
 *.orig
 *.png
 *.jpg
-*.exe
 *.bmp
 *.zip
 
@@ -157,7 +156,6 @@ ImgLocDebug.txt
 # Release files
 LastVersion*.txt
 TestVersion*.txt
-*_stripped.au3
 lib/*.html
 SQLite_exportedData.csv
 build/au3Stripper/Au3Stripper.Log
